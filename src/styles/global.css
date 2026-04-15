@@ -1,0 +1,32 @@
+/* src/styles/global.css */
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0d1117;
+  --color-surface: #161b22;
+  --color-border: #21262d;
+  --color-border-subtle: #30363d;
+  --color-text: #e6edf3;
+  --color-muted: #8b949e;
+  --color-blue: #388bfd;
+  --color-blue-light: #79c0ff;
+  --color-green: #3fb950;
+  --color-purple: #d2a8ff;
+
+  --font-family-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@layer base {
+  html { background-color: #0d1117; color: #e6edf3; }
+  h1, h2, h3, h4 { color: #e6edf3; }
+  a { color: #388bfd; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: #161b22;
+    border: 1px solid #21262d;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 0.875em;
+  }
+  pre code { background: none; border: none; padding: 0; }
+}
