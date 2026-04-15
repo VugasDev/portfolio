@@ -1,0 +1,59 @@
+backend:
+  name: github
+  repo: VugasDev/portfolio
+  branch: main
+  base_url: https://vugas.de
+  auth_endpoint: /api/auth
+
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  - name: blog
+    label: Blog Posts
+    folder: src/content/blog
+    create: true
+    slug: "{{slug}}"
+    extension: md
+    fields:
+      - { name: title,       label: Titel,          widget: string }
+      - { name: description, label: Beschreibung,   widget: string }
+      - { name: date,        label: Datum,           widget: datetime, format: "YYYY-MM-DD" }
+      - { name: tags,        label: Tags,            widget: list, default: [] }
+      - { name: draft,       label: Entwurf,         widget: boolean, default: false }
+      - { name: body,        label: Inhalt,          widget: markdown }
+
+  - name: guides
+    label: Guides
+    folder: src/content/guides
+    create: true
+    slug: "{{slug}}"
+    extension: md
+    fields:
+      - { name: title,       label: Titel,           widget: string }
+      - { name: description, label: Beschreibung,    widget: string }
+      - name: difficulty
+        label: Schwierigkeitsgrad
+        widget: select
+        options: [Einsteiger, Fortgeschritten, Experte]
+      - { name: tags,        label: Tags,            widget: list, default: [] }
+      - { name: series,      label: "Serie (optional)", widget: string, required: false }
+      - { name: order,       label: "Kapitel-Nr",    widget: number, required: false }
+      - { name: draft,       label: Entwurf,         widget: boolean, default: false }
+      - { name: body,        label: Inhalt,          widget: markdown }
+
+  - name: projects
+    label: Projekte
+    folder: src/content/projects
+    create: true
+    extension: json
+    fields:
+      - { name: name,        label: Name,            widget: string }
+      - { name: description, label: Beschreibung,    widget: string }
+      - { name: tags,        label: Tags,            widget: list }
+      - name: status
+        label: Status
+        widget: select
+        options: [aktiv, "in Arbeit", Planung, archiviert]
+      - { name: github,      label: GitHub URL,      widget: string, required: false }
+      - { name: url,         label: Live URL,        widget: string, required: false }
