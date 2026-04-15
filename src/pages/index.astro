@@ -1,17 +1,98 @@
 ---
-import '../styles/global.css';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const recentPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const recentProjects = (await getCollection('projects'))
+  .filter(p => p.data.status === 'aktiv' || p.data.status === 'in Arbeit')
+  .slice(0, 3);
+
+const featuredGuides = (await getCollection('guides', ({ data }) => !data.draft))
+  .slice(0, 3);
+
+const techBadges = ['Proxmox', 'Docker', 'OPNsense', 'Jellyfin & *arr', 'n8n', 'AI Agents', 'MCP'];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Home" description="Homelab, Self-Hosting und AI Agents — Lars Meykel">
+  <section class="mb-12">
+    <p class="font-mono text-muted text-xs mb-2">// Willkommen</p>
+    <h1 class="text-4xl font-bold text-text mb-2">Lars Meykel</h1>
+    <p class="font-mono text-blue text-base mb-4">Homelab Engineer · Self-Hosting · AI Agents</p>
+    <p class="text-muted text-sm leading-relaxed max-w-xl mb-6">
+      Ich baue modulare Homelab-Infrastruktur, automatisiere mit n8n und AI-Agenten,
+      und dokumentiere alles — damit du es auch kannst.
+    </p>
+    <div class="flex gap-3 flex-wrap">
+      <a href="/projects" class="bg-surface border border-border text-blue-light px-4 py-2 rounded font-mono text-xs hover:border-blue transition-colors no-underline">
+        → Projekte ansehen
+      </a>
+      <a href="/guides" class="bg-surface border border-border text-muted px-4 py-2 rounded font-mono text-xs hover:text-text hover:border-border-subtle transition-colors no-underline">
+        → Guides lesen
+      </a>
+    </div>
+  </section>
+
+  <section class="mb-12 flex flex-wrap gap-2">
+    {techBadges.map(badge => (
+      <span class="bg-surface border border-border text-blue-light px-3 py-1 rounded-full text-xs font-mono">
+        {badge}
+      </span>
+    ))}
+  </section>
+
+  <div class="border-t border-border mb-10"></div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-surface border border-border rounded-lg p-5">
+      <p class="font-mono text-blue text-xs mb-2">// Projekte</p>
+      <h2 class="text-sm font-semibold text-text mb-3">Aktuelle Projekte</h2>
+      {recentProjects.length > 0 ? (
+        <ul class="space-y-2">
+          {recentProjects.map(p => (
+            <li class="text-xs text-muted">{p.data.name}</li>
+          ))}
+        </ul>
+      ) : (
+        <p class="text-xs text-muted">Demnächst...</p>
+      )}
+      <a href="/projects" class="inline-block mt-4 text-xs text-blue hover:text-blue-light font-mono no-underline">alle →</a>
+    </div>
+
+    <div class="bg-surface border border-border rounded-lg p-5">
+      <p class="font-mono text-green text-xs mb-2">// Blog</p>
+      <h2 class="text-sm font-semibold text-text mb-3">Letzte Posts</h2>
+      {recentPosts.length > 0 ? (
+        <ul class="space-y-2">
+          {recentPosts.map(p => (
+            <li>
+              <a href={`/blog/${p.id}`} class="text-xs text-muted hover:text-text no-underline">{p.data.title}</a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="text-xs text-muted">Demnächst...</p>
+      )}
+      <a href="/blog" class="inline-block mt-4 text-xs text-green hover:text-green/80 font-mono no-underline">alle →</a>
+    </div>
+
+    <div class="bg-surface border border-border rounded-lg p-5">
+      <p class="font-mono text-purple text-xs mb-2">// Guides</p>
+      <h2 class="text-sm font-semibold text-text mb-3">Anleitungen</h2>
+      {featuredGuides.length > 0 ? (
+        <ul class="space-y-2">
+          {featuredGuides.map(g => (
+            <li>
+              <a href={`/guides/${g.id}`} class="text-xs text-muted hover:text-text no-underline">{g.data.title}</a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="text-xs text-muted">Demnächst...</p>
+      )}
+      <a href="/guides" class="inline-block mt-4 text-xs text-purple hover:text-purple/80 font-mono no-underline">alle →</a>
+    </div>
+  </div>
+</BaseLayout>
