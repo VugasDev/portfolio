@@ -20,3 +20,12 @@ services:
       - APP_DIR=/app
     ports:
       - "9000:9000"
+
+  newt:
+    image: fosrl/newt
+    container_name: portfolio-newt
+    restart: unless-stopped
+    environment:
+      - PANGOLIN_ENDPOINT=https://pangolin.spawnpoint.win
+      - NEWT_ID=${NEWT_ID}
+      - NEWT_SECRET=${NEWT_SECRET}
