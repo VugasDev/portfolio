@@ -1,0 +1,37 @@
+---
+// src/pages/about.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Über mich" description="Wer ich bin und was mich antreibt.">
+  <p class="font-mono text-muted text-xs mb-2">// Über mich</p>
+  <h1 class="text-3xl font-bold text-text mb-8">Lars Meykel</h1>
+
+  <div class="prose prose-invert max-w-none">
+    <p>
+      Ich bin Lars, Homelab-Enthusiast und Self-Hosting-Fan aus Deutschland.
+      Ich baue und betreibe eine eigene Infrastruktur auf Basis von Proxmox, Docker und OPNsense —
+      komplett selbst verwaltet, von Netzwerk-Segmentierung bis zum AI-Agenten-System.
+    </p>
+
+    <h2>Was ich baue</h2>
+    <ul>
+      <li><strong>Infrastruktur:</strong> Proxmox Hypervisor, VLANs, Zero-Trust-Firewall, WireGuard VPN</li>
+      <li><strong>Medien:</strong> Jellyfin + vollständige *arr Suite (Sonarr, Radarr, Prowlarr, Bazarr)</li>
+      <li><strong>Automatisierung:</strong> n8n Workflows, AI-Agenten mit lokalem Ollama und Claude API</li>
+      <li><strong>Tools:</strong> MCP-Server für Claude Code, eigene CLI-Tools und Dashboards</li>
+    </ul>
+
+    <h2>Philosophie</h2>
+    <p>
+      Ich glaube daran, dass man durch das Bauen und Dokumentieren von Dingen am meisten lernt.
+      Diese Website ist mein öffentliches Notizbuch — ich schreibe auf was funktioniert hat,
+      was nicht, und warum.
+    </p>
+
+    <h2>Kontakt</h2>
+    <ul>
+      <li>GitHub: <a href="https://github.com/VugasDev">VugasDev</a></li>
+    </ul>
+  </div>
+</BaseLayout>
