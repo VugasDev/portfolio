@@ -1,4 +1,7 @@
 // tailwind.config.mjs
+// HINWEIS: Dieses Projekt verwendet Tailwind CSS 4.
+// Diese Datei wird von Tailwind 4 IGNORIERT.
+// Farben und Fonts sind ausschließlich in src/styles/global.css via @theme definiert.
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,ts,tsx}'],
