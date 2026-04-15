@@ -1,0 +1,78 @@
+---
+// src/pages/guides/[id].astro
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides', ({ data }) => !data.draft);
+  return guides.map(guide => ({ params: { id: guide.id } }));
+}
+
+const { id } = Astro.params;
+const guides = await getCollection('guides');
+const guide = guides.find(g => g.id === id);
+if (!guide) return Astro.redirect('/guides');
+
+const { Content } = await render(guide);
+
+// Kapitel-Navigation für mehrteilige Guides
+let chapters: typeof guides = [];
+if (guide.data.series) {
+  chapters = guides
+    .filter(g => g.data.series === guide.data.series && !g.data.draft)
+    .sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+}
+---
+
+<BaseLayout title={guide.data.title} description={guide.data.description}>
+  <nav class="font-mono text-xs text-muted mb-8">
+    <a href="/guides" class="hover:text-blue no-underline">Guides</a>
+    {guide.data.series && (
+      <>
+        <span class="mx-2">/</span>
+        <span>{guide.data.series}</span>
+      </>
+    )}
+    <span class="mx-2">/</span>
+    <span class="text-text">{guide.data.title}</span>
+  </nav>
+
+  <div class:list={['flex gap-8', chapters.length > 0 ? 'items-start' : '']}>
+    {chapters.length > 0 && (
+      <aside class="hidden md:block w-48 shrink-0 sticky top-8">
+        <p class="font-mono text-muted text-xs mb-3 uppercase tracking-widest">Kapitel</p>
+        <nav class="flex flex-col gap-1">
+          {chapters.map((ch, i) => (
+            <a
+              href={`/guides/${ch.id}`}
+              class:list={[
+                'text-xs px-3 py-1.5 rounded font-mono no-underline transition-colors',
+                ch.id === id
+                  ? 'bg-purple/20 text-purple border border-purple/30'
+                  : 'text-muted hover:text-text hover:bg-surface',
+              ]}
+            >
+              {i + 1}. {ch.data.title}
+            </a>
+          ))}
+        </nav>
+      </aside>
+    )}
+
+    <article class="prose prose-invert max-w-none flex-1">
+      <header class="not-prose mb-8">
+        <span class:list={[
+          'text-xs px-2 py-0.5 rounded-full border font-mono',
+          guide.data.difficulty === 'Einsteiger' ? 'text-green border-green/30 bg-green/10' :
+          guide.data.difficulty === 'Fortgeschritten' ? 'text-blue border-blue/30 bg-blue/10' :
+          'text-purple border-purple/30 bg-purple/10'
+        ]}>
+          {guide.data.difficulty}
+        </span>
+        <h1 class="text-3xl font-bold text-text mt-4 mb-3">{guide.data.title}</h1>
+        <p class="text-muted text-sm">{guide.data.description}</p>
+      </header>
+      <Content />
+    </article>
+  </div>
+</BaseLayout>

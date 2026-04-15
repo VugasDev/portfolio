@@ -1,0 +1,55 @@
+---
+// src/pages/guides/index.astro
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideCard from '../../components/GuideCard.astro';
+import { getCollection } from 'astro:content';
+
+const guides = (await getCollection('guides', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+const standalone = guides.filter(g => !g.data.series);
+
+// Bei Serien: nur den ersten Eintrag (niedrigste order) als Einstiegspunkt zeigen
+const seriesMap = new Map<string, typeof guides[0]>();
+for (const g of guides.filter(g => g.data.series)) {
+  const key = g.data.series!;
+  const existing = seriesMap.get(key);
+  if (!existing || (g.data.order ?? 0) < (existing.data.order ?? 0)) {
+    seriesMap.set(key, g);
+  }
+}
+const seriesEntries = [...seriesMap.values()];
+---
+
+<BaseLayout title="Guides" description="Anleitungen für Self-Hosting, Homelab und AI.">
+  <p class="font-mono text-muted text-xs mb-2">// Guides</p>
+  <h1 class="text-3xl font-bold text-text mb-8">Guides</h1>
+
+  {standalone.length > 0 && (
+    <section class="mb-10">
+      <h2 class="text-xs font-mono text-muted uppercase tracking-widest mb-4">Anleitungen</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {standalone.map(g => (
+          <GuideCard title={g.data.title} description={g.data.description}
+            difficulty={g.data.difficulty} id={g.id} tags={g.data.tags} />
+        ))}
+      </div>
+    </section>
+  )}
+
+  {seriesEntries.length > 0 && (
+    <section>
+      <h2 class="text-xs font-mono text-muted uppercase tracking-widest mb-4">Mehrteilige Guides</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {seriesEntries.map(g => (
+          <GuideCard title={g.data.series!} description={g.data.description}
+            difficulty={g.data.difficulty} id={g.id} tags={g.data.tags} />
+        ))}
+      </div>
+    </section>
+  )}
+
+  {guides.length === 0 && (
+    <p class="text-muted text-sm font-mono">// Guides werden geschrieben. Bald...</p>
+  )}
+</BaseLayout>
