@@ -2,8 +2,8 @@ backend:
   name: github
   repo: VugasDev/portfolio
   branch: main
-  auth_type: pkce
-  app_id: Ov23liwoSGUTmfBTsIB4
+  base_url: https://vugas.de
+  auth_endpoint: /api/auth
 
 media_folder: public/uploads
 public_folder: /uploads
