@@ -1,0 +1,32 @@
+---
+// src/components/Nav.astro
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/projects', label: 'Projekte' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/guides', label: 'Guides' },
+  { href: '/about', label: 'Über mich' },
+];
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="flex items-center justify-between px-6 py-4 border-b border-border">
+  <a href="/" class="font-mono font-bold text-text no-underline text-sm">
+    vugasdev<span class="text-blue">.lab</span>
+  </a>
+  <div class="flex gap-6 text-sm">
+    {navItems.map(({ href, label }) => (
+      <a
+        href={href}
+        class:list={[
+          'no-underline transition-colors',
+          currentPath === href || (href !== '/' && currentPath.startsWith(href))
+            ? 'text-blue'
+            : 'text-muted hover:text-text',
+        ]}
+      >
+        {label}
+      </a>
+    ))}
+  </div>
+</nav>

@@ -1,0 +1,31 @@
+---
+// src/layouts/BaseLayout.astro
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Homelab, Self-Hosting und AI Agents — Lars Meykel' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title} · vugasdev.lab</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="min-h-screen bg-bg text-text">
+    <Nav />
+    <main class="max-w-4xl mx-auto px-6 py-12">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
