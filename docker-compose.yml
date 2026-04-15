@@ -1,0 +1,22 @@
+services:
+  portfolio:
+    build: .
+    container_name: portfolio
+    restart: unless-stopped
+    ports:
+      - "3010:80"
+
+  webhook:
+    image: node:22-alpine
+    container_name: portfolio-webhook
+    restart: unless-stopped
+    working_dir: /webhook
+    command: node server.js
+    volumes:
+      - ./webhook:/webhook
+      - .:/app
+    environment:
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET}
+      - APP_DIR=/app
+    ports:
+      - "9000:9000"
