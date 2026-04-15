@@ -1,0 +1,33 @@
+---
+// src/components/GuideCard.astro
+interface Props {
+  title: string;
+  description: string;
+  difficulty: string;
+  id: string;
+  tags: string[];
+}
+const { title, description, difficulty, id, tags } = Astro.props;
+
+const difficultyColor: Record<string, string> = {
+  'Einsteiger':    'text-green border-green/30 bg-green/10',
+  'Fortgeschritten':'text-blue border-blue/30 bg-blue/10',
+  'Experte':       'text-purple border-purple/30 bg-purple/10',
+};
+---
+
+<a href={`/guides/${id}`} class="block bg-surface border border-border rounded-lg p-5 hover:border-border-subtle transition-colors no-underline group">
+  <div class="flex items-center justify-between mb-2">
+    <p class="font-mono text-purple text-xs">// Guide</p>
+    <span class:list={['text-xs px-2 py-0.5 rounded-full border font-mono', difficultyColor[difficulty] ?? difficultyColor['Einsteiger']]}>
+      {difficulty}
+    </span>
+  </div>
+  <h3 class="text-sm font-semibold text-text group-hover:text-purple transition-colors mb-2">{title}</h3>
+  <p class="text-xs text-muted leading-relaxed mb-3">{description}</p>
+  <div class="flex flex-wrap gap-1.5">
+    {tags.map(tag => (
+      <span class="text-xs font-mono text-purple bg-purple/10 border border-purple/20 px-2 py-0.5 rounded-full">{tag}</span>
+    ))}
+  </div>
+</a>
