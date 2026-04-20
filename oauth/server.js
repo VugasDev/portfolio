@@ -52,6 +52,15 @@ function renderCallback(status, tokenOrError) {
       L('target origin=' + origin);
       L('message=' + message);
 
+      // Sveltia CMS / Decap CMS BroadcastChannel Support
+      try {
+        var bc = new BroadcastChannel('sveltia-cms-auth');
+        bc.postMessage(message);
+        L('sent via BroadcastChannel (sveltia-cms-auth)');
+      } catch (e) {
+        L('BroadcastChannel error: ' + e.message);
+      }
+
       function send(target, tag) {
         if (!window.opener) { L('send skipped: no opener'); return; }
         try {
@@ -76,6 +85,8 @@ function renderCallback(status, tokenOrError) {
       var iv = setInterval(function() {
         tries++;
         send(origin, 'retry-' + tries);
+        // Auch via BroadcastChannel periodisch senden, falls Sveltia noch nicht bereit war
+        if (bc) bc.postMessage(message);
         if (tries >= 10) clearInterval(iv);
       }, 500);
     })();
@@ -101,6 +112,8 @@ async function exchangeCode(code) {
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, `http://${req.headers.host}`);
+    console.log(`[${new Date().toISOString()}] ${req.method} ${url.pathname}${url.search}`);
+
     if (url.pathname === '/auth') {
       const state = crypto.randomBytes(16).toString('hex');
       const gh = new URL('https://github.com/login/oauth/authorize');
@@ -108,22 +121,40 @@ const server = http.createServer(async (req, res) => {
       gh.searchParams.set('redirect_uri', REDIRECT_URL);
       gh.searchParams.set('scope', SCOPE);
       gh.searchParams.set('state', state);
+      
+      console.log(`Redirecting to GitHub with client_id: ${OAUTH_CLIENT_ID.slice(0, 5)}...`);
       res.writeHead(302, { Location: gh.toString() });
       res.end();
       return;
     }
+    
     if (url.pathname === '/callback') {
       const code = url.searchParams.get('code');
-      if (!code) {
+      const error = url.searchParams.get('error');
+      const errorDesc = url.searchParams.get('error_description');
+
+      if (error) {
+        console.error(`GitHub returned error: ${error} - ${errorDesc}`);
         res.writeHead(400, { 'Content-Type': 'text/html' });
-        res.end(renderCallback('error', 'missing code'));
+        res.end(renderCallback('error', `${error}: ${errorDesc}`));
         return;
       }
+
+      if (!code) {
+        console.error('No code received from GitHub. Query params:', Object.fromEntries(url.searchParams));
+        res.writeHead(400, { 'Content-Type': 'text/html' });
+        res.end(renderCallback('error', 'No code received from GitHub'));
+        return;
+      }
+
       try {
+        console.log('Exchanging code for token...');
         const token = await exchangeCode(code);
+        console.log('Token exchange successful.');
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(renderCallback('success', token));
       } catch (err) {
+        console.error('Token exchange failed:', err.message);
         res.writeHead(500, { 'Content-Type': 'text/html' });
         res.end(renderCallback('error', err.message));
       }
