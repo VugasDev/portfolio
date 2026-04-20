@@ -22,15 +22,19 @@ services:
       - "9000:9000"
 
   oauth:
-    image: vencax/netlify-cms-github-oauth-provider
+    image: node:22-alpine
     container_name: portfolio-oauth
     restart: unless-stopped
+    working_dir: /oauth
+    command: node server.js
+    volumes:
+      - ./oauth:/oauth
     environment:
       - NODE_ENV=production
+      - PORT=3000
       - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
       - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
       - ORIGIN=${ORIGINS}
-      - ORIGINS=${ORIGINS}
       - REDIRECT_URL=${REDIRECT_URL}
 
   newt:
