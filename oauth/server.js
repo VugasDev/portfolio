@@ -36,35 +36,51 @@ function renderCallback(status, tokenOrError) {
     ? { token: tokenOrError, provider: 'github' }
     : { error: String(tokenOrError) };
   const msg = `authorization:github:${status}:${JSON.stringify(payload)}`;
-  return `<!doctype html><html><body><script>
+  return `<!doctype html><html><body style="font-family:monospace;padding:1rem;background:#111;color:#eee">
+    <h3>OAuth Debug</h3>
+    <pre id="log" style="white-space:pre-wrap;font-size:12px"></pre>
+    <script>
     (function() {
       var message = ${JSON.stringify(msg)};
       var origin  = ${JSON.stringify(ORIGIN)};
-      var sent = false;
-      function send(target) {
-        if (!window.opener) return;
-        try { window.opener.postMessage(message, target); sent = true; } catch (e) {}
-      }
-      function receiveMessage(e) {
-        // Opener (Decap) sendet 'authorizing:github' — jetzt antworten
-        if (typeof e.data === 'string' && e.data.indexOf('authorizing:') === 0) {
-          send(e.origin);
-        }
-      }
-      window.addEventListener('message', receiveMessage, false);
+      var log = document.getElementById('log');
+      function L(s){ log.textContent += s + '\\n'; console.log('[oauth-popup]', s); }
 
-      // 1. Direkt senden (falls Opener bereits lauscht)
-      send(origin);
-      // 2. Handshake anstoßen (falls Opener erst auf authorizing:github wartet)
-      if (window.opener) window.opener.postMessage('authorizing:github', '*');
-      // 3. Retry-Loop für Race-Conditions
+      L('status=${status}');
+      L('has opener=' + !!window.opener);
+      L('my origin=' + window.location.origin);
+      L('target origin=' + origin);
+      L('message=' + message);
+
+      function send(target, tag) {
+        if (!window.opener) { L('send skipped: no opener'); return; }
+        try {
+          window.opener.postMessage(message, target);
+          L('sent via ' + tag + ' to target=' + target);
+        } catch (e) { L('send error: ' + e.message); }
+      }
+
+      window.addEventListener('message', function(e) {
+        L('received msg origin=' + e.origin + ' data=' + JSON.stringify(e.data).slice(0, 80));
+        if (typeof e.data === 'string' && e.data.indexOf('authorizing:') === 0) {
+          send(e.origin, 'handshake-response');
+        }
+      }, false);
+
+      send(origin, 'direct');
+      if (window.opener) {
+        window.opener.postMessage('authorizing:github', '*');
+        L('sent authorizing:github handshake');
+      }
       var tries = 0;
       var iv = setInterval(function() {
-        if (sent || tries++ > 20) clearInterval(iv);
-        send(origin);
-      }, 250);
+        tries++;
+        send(origin, 'retry-' + tries);
+        if (tries >= 10) clearInterval(iv);
+      }, 500);
     })();
-  </script><p>Anmeldung abgeschlossen. Du kannst dieses Fenster schließen.</p></body></html>`;
+    </script>
+  </body></html>`;
 }
 
 async function exchangeCode(code) {
