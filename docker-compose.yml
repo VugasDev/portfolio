@@ -29,6 +29,9 @@ services:
       - NODE_ENV=production
       - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
       - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
+      - ORIGIN=${ORIGINS}
+      - ORIGINS=${ORIGINS}
+      - REDIRECT_URL=${REDIRECT_URL}
 
   newt:
     image: fosrl/newt
