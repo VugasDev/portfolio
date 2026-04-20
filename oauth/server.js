@@ -38,11 +38,14 @@ function renderCallback(status, tokenOrError) {
   const msg = `authorization:github:${status}:${JSON.stringify(payload)}`;
   return `<!doctype html><html><body><script>
     (function() {
-      function send(){ if(window.opener){ window.opener.postMessage(${JSON.stringify(msg)}, ${JSON.stringify(ORIGIN)}); } }
-      window.addEventListener('message', function(e){
-        if (e.data === 'authorizing:github') send();
-      }, false);
-      send();
+      var message = ${JSON.stringify(msg)};
+      function receiveMessage(e) {
+        // Opener meldet sich zurück — jetzt Token an dessen Origin senden
+        window.opener.postMessage(message, e.origin);
+      }
+      window.addEventListener('message', receiveMessage, false);
+      // Handshake initiieren (Opener-Origin unbekannt, daher "*")
+      window.opener.postMessage('authorizing:github', '*');
     })();
   </script><p>Anmeldung abgeschlossen. Du kannst dieses Fenster schließen.</p></body></html>`;
 }
