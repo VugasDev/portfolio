@@ -1,29 +1,59 @@
 ---
-// src/pages/blog/index.astro
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import BlogCard from '../../components/BlogCard.astro';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const groupedByYear = new Map<number, typeof posts>();
+for (const p of posts) {
+  const y = p.data.date.getFullYear();
+  if (!groupedByYear.has(y)) groupedByYear.set(y, []);
+  groupedByYear.get(y)!.push(p);
+}
+const years = [...groupedByYear.keys()].sort((a, b) => b - a);
 ---
 
 <BaseLayout title="Blog" description="Posts über Homelab, Self-Hosting und AI Agents.">
-  <p class="font-mono text-muted text-xs mb-2">// Blog</p>
-  <h1 class="text-3xl font-bold text-text mb-8">Blog</h1>
+  <header class="grid grid-cols-12 gap-6 pt-8 pb-16">
+    <div class="col-span-12 md:col-span-8">
+      <div class="rise rise-1 section-num mb-4">03 / Blog</div>
+      <h1 class="rise rise-2 display-xl mb-6">Notizen aus dem <span class="text-accent">Lab</span>.</h1>
+      <p class="rise rise-3 text-text-soft leading-relaxed max-w-[60ch]">
+        Was funktioniert, was nicht, und warum. Manchmal ein Sprint, manchmal ein Essay.
+      </p>
+    </div>
+  </header>
 
   {posts.length === 0 ? (
-    <p class="text-muted text-sm font-mono">// Noch keine Posts. Bald...</p>
+    <p class="text-muted" style="font-family: var(--font-mono)">// Noch keine Posts.</p>
   ) : (
-    <div class="flex flex-col gap-4">
-      {posts.map(post => (
-        <BlogCard
-          title={post.data.title}
-          description={post.data.description}
-          date={post.data.date}
-          id={post.id}
-          tags={post.data.tags}
-        />
+    <div class="space-y-14">
+      {years.map(y => (
+        <section class="rise rise-3">
+          <div class="rule mb-5"><span>{y}</span></div>
+          <ul class="divide-y divide-border/70">
+            {groupedByYear.get(y)!.map(p => (
+              <li>
+                <a href={`/blog/${p.id}`} class="group grid grid-cols-[5rem_1fr_auto] items-baseline gap-4 py-4 transition-colors">
+                  <time class="text-muted-deep text-[0.72rem] tracking-widest tabular-nums" style="font-family: var(--font-mono)">
+                    {p.data.date.toLocaleDateString('de-DE', { month: 'short', day: '2-digit' })}
+                  </time>
+                  <div>
+                    <h3 class="text-[1rem] text-text-soft group-hover:text-accent transition-colors" style="font-family: var(--font-display)">
+                      {p.data.title}
+                    </h3>
+                    <p class="text-sm text-muted mt-1 max-w-[68ch] leading-relaxed">{p.data.description}</p>
+                    <div class="flex flex-wrap gap-1.5 mt-2.5">
+                      {p.data.tags.slice(0, 4).map(t => <span class="tag">{t}</span>)}
+                    </div>
+                  </div>
+                  <span class="text-muted-deep group-hover:text-accent group-hover:translate-x-1 transition-all duration-200" aria-hidden="true">→</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
       ))}
     </div>
   )}

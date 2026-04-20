@@ -1,10 +1,37 @@
 ---
-// src/components/Footer.astro
+const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-border mt-16 px-6 py-8">
-  <div class="max-w-4xl mx-auto flex items-center justify-between text-xs text-muted font-mono">
-    <span>// Lars Meykel — <a href="https://github.com/VugasDev" class="text-blue-light hover:text-blue">VugasDev</a></span>
-    <span>Self-hosted · Proxmox · Docker</span>
+<footer class="border-t border-border/60 mt-24">
+  <div class="mx-auto max-w-6xl px-6 md:px-10 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="space-y-2">
+      <div class="section-num">/EOF</div>
+      <p style="font-family: var(--font-display)" class="text-sm text-text">Lars Meykel</p>
+      <p class="text-[0.72rem] text-muted" style="font-family: var(--font-mono)">
+        © {year} · selbst gehostet auf eigener Infrastruktur.
+      </p>
+    </div>
+
+    <div class="space-y-2">
+      <div class="section-num">Kontakt</div>
+      <ul class="space-y-1" style="font-family: var(--font-mono); font-size: 0.78rem">
+        <li><a class="arrow" href="https://github.com/VugasDev"><span class="glyph">↗</span>github.com/VugasDev</a></li>
+      </ul>
+    </div>
+
+    <div class="space-y-2">
+      <div class="section-num">Stack</div>
+      <p class="text-[0.72rem] text-muted leading-relaxed" style="font-family: var(--font-mono)">
+        Astro · Tailwind · Docker · Proxmox · OPNsense · Pangolin/Newt · nginx · GitHub Webhooks
+      </p>
+    </div>
+  </div>
+
+  <!-- Terminal-Strip -->
+  <div class="border-t border-border/60">
+    <div class="mx-auto max-w-6xl px-6 md:px-10 h-9 flex items-center justify-between text-[0.68rem] tracking-widest uppercase text-muted-deep" style="font-family: var(--font-mono)">
+      <span>lars@vugas:~$</span>
+      <span class="live">ONLINE</span>
+    </div>
   </div>
 </footer>

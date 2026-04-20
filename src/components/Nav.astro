@@ -1,32 +1,60 @@
 ---
-// src/components/Nav.astro
 const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/projects', label: 'Projekte' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/guides', label: 'Guides' },
-  { href: '/about', label: 'Über mich' },
+  { href: '/',         label: 'index',    num: '01' },
+  { href: '/projects', label: 'projects', num: '02' },
+  { href: '/blog',     label: 'blog',     num: '03' },
+  { href: '/guides',   label: 'guides',   num: '04' },
+  { href: '/about',    label: 'about',    num: '05' },
 ];
 const currentPath = Astro.url.pathname;
+const isActive = (href: string) =>
+  currentPath === href || (href !== '/' && currentPath.startsWith(href));
 ---
 
-<nav class="flex items-center justify-between px-6 py-4 border-b border-border">
-  <a href="/" class="font-mono font-bold text-text no-underline text-sm">
-    vugasdev<span class="text-blue">.lab</span>
-  </a>
-  <div class="flex gap-6 text-sm">
-    {navItems.map(({ href, label }) => (
-      <a
-        href={href}
-        class:list={[
-          'no-underline transition-colors',
-          currentPath === href || (href !== '/' && currentPath.startsWith(href))
-            ? 'text-blue'
-            : 'text-muted hover:text-text',
-        ]}
-      >
-        {label}
-      </a>
-    ))}
+<nav class="w-full border-b border-border/60 backdrop-blur-sm sticky top-0 z-40 bg-bg/80">
+  <div class="mx-auto max-w-6xl px-6 md:px-10 h-14 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2 group">
+      <span class="inline-block w-2 h-2 bg-accent" aria-hidden="true"></span>
+      <span style="font-family: var(--font-display)" class="text-sm tracking-tight text-text group-hover:text-accent transition-colors">
+        vugasdev<span class="text-accent">.lab</span>
+      </span>
+    </a>
+
+    <ul class="hidden md:flex items-center gap-1">
+      {navItems.map(({ href, label, num }) => (
+        <li>
+          <a
+            href={href}
+            class:list={[
+              'group inline-flex items-baseline gap-1.5 px-2.5 py-1.5 text-[0.8rem]',
+              'transition-colors duration-200',
+            ]}
+            style="font-family: var(--font-mono)"
+          >
+            <span class="text-muted-deep text-[0.65rem] tracking-widest">{num}</span>
+            <span
+              class:list={[
+                'transition-colors',
+                isActive(href) ? 'text-accent' : 'text-muted-deep group-hover:text-text',
+              ]}
+            >
+              {label}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <!-- Mobile: kondensiert -->
+    <ul class="flex md:hidden gap-3" style="font-family: var(--font-mono)">
+      {navItems.slice(1).map(({ href, label }) => (
+        <li>
+          <a href={href} class:list={[
+            'text-xs transition-colors',
+            isActive(href) ? 'text-accent' : 'text-muted',
+          ]}>{label}</a>
+        </li>
+      ))}
+    </ul>
   </div>
 </nav>
