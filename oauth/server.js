@@ -39,13 +39,30 @@ function renderCallback(status, tokenOrError) {
   return `<!doctype html><html><body><script>
     (function() {
       var message = ${JSON.stringify(msg)};
+      var origin  = ${JSON.stringify(ORIGIN)};
+      var sent = false;
+      function send(target) {
+        if (!window.opener) return;
+        try { window.opener.postMessage(message, target); sent = true; } catch (e) {}
+      }
       function receiveMessage(e) {
-        // Opener meldet sich zurück — jetzt Token an dessen Origin senden
-        window.opener.postMessage(message, e.origin);
+        // Opener (Decap) sendet 'authorizing:github' — jetzt antworten
+        if (typeof e.data === 'string' && e.data.indexOf('authorizing:') === 0) {
+          send(e.origin);
+        }
       }
       window.addEventListener('message', receiveMessage, false);
-      // Handshake initiieren (Opener-Origin unbekannt, daher "*")
-      window.opener.postMessage('authorizing:github', '*');
+
+      // 1. Direkt senden (falls Opener bereits lauscht)
+      send(origin);
+      // 2. Handshake anstoßen (falls Opener erst auf authorizing:github wartet)
+      if (window.opener) window.opener.postMessage('authorizing:github', '*');
+      // 3. Retry-Loop für Race-Conditions
+      var tries = 0;
+      var iv = setInterval(function() {
+        if (sent || tries++ > 20) clearInterval(iv);
+        send(origin);
+      }, 250);
     })();
   </script><p>Anmeldung abgeschlossen. Du kannst dieses Fenster schließen.</p></body></html>`;
 }
