@@ -4,6 +4,7 @@ backend:
   branch: main
   base_url: https://vugas.de
   auth_endpoint: /api/auth
+  client_id: Ov23liwoSGUTmfBTsIB4
 
 media_folder: public/uploads
 public_folder: /uploads
