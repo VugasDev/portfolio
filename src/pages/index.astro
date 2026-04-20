@@ -8,91 +8,186 @@ const recentPosts = (await getCollection('blog', ({ data }) => !data.draft))
 
 const recentProjects = (await getCollection('projects'))
   .filter(p => p.data.status === 'aktiv' || p.data.status === 'in Arbeit')
-  .slice(0, 3);
+  .slice(0, 4);
 
 const featuredGuides = (await getCollection('guides', ({ data }) => !data.draft))
   .slice(0, 3);
 
-const techBadges = ['Proxmox', 'Docker', 'OPNsense', 'Jellyfin & *arr', 'n8n', 'AI Agents', 'MCP'];
+const stack = [
+  { label: 'Proxmox',   kind: 'hyp' },
+  { label: 'Docker',    kind: 'ctr' },
+  { label: 'OPNsense',  kind: 'net' },
+  { label: 'WireGuard', kind: 'vpn' },
+  { label: 'n8n',       kind: 'auto' },
+  { label: 'Ollama',    kind: 'ai' },
+  { label: 'Jellyfin',  kind: 'media' },
+  { label: 'Claude',    kind: 'ai' },
+  { label: 'MCP',       kind: 'ai' },
+];
 ---
 
 <BaseLayout title="Home" description="Homelab, Self-Hosting und AI Agents — Lars Meykel">
-  <section class="mb-12">
-    <p class="font-mono text-muted text-xs mb-2">// Willkommen</p>
-    <h1 class="text-4xl font-bold text-text mb-2">Lars Meykel</h1>
-    <p class="font-mono text-blue text-base mb-4">Homelab Engineer · Self-Hosting · AI Agents</p>
-    <p class="text-muted text-sm leading-relaxed max-w-xl mb-6">
-      Ich baue modulare Homelab-Infrastruktur, automatisiere mit n8n und AI-Agenten,
-      und dokumentiere alles — damit du es auch kannst.
-    </p>
-    <div class="flex gap-3 flex-wrap">
-      <a href="/projects" class="bg-surface border border-border text-blue-light px-4 py-2 rounded font-mono text-xs hover:border-blue transition-colors no-underline">
-        → Projekte ansehen
-      </a>
-      <a href="/guides" class="bg-surface border border-border text-muted px-4 py-2 rounded font-mono text-xs hover:text-text hover:border-border-subtle transition-colors no-underline">
-        → Guides lesen
-      </a>
-    </div>
-  </section>
 
-  <section class="mb-12 flex flex-wrap gap-2">
-    {techBadges.map(badge => (
-      <span class="bg-surface border border-border text-blue-light px-3 py-1 rounded-full text-xs font-mono">
-        {badge}
-      </span>
-    ))}
-  </section>
+  <!-- HERO: asymmetric 12-col -->
+  <section class="grid grid-cols-12 gap-6 md:gap-10 pt-8 md:pt-20 pb-20">
+    <div class="col-span-12 md:col-span-8">
+      <div class="rise rise-1 flex items-center gap-3 mb-6">
+        <span class="live">SYSTEM READY</span>
+        <span class="text-muted-deep text-[0.7rem]" style="font-family: var(--font-mono)">
+          uptime · 412d
+        </span>
+      </div>
 
-  <div class="border-t border-border mb-10"></div>
+      <h1 class="rise rise-2 display-xl mb-6">
+        Homelab,<br/>
+        <span class="text-accent">dokumentiert</span><span class="cursor"></span>
+      </h1>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <div class="bg-surface border border-border rounded-lg p-5">
-      <p class="font-mono text-blue text-xs mb-2">// Projekte</p>
-      <h2 class="text-sm font-semibold text-text mb-3">Aktuelle Projekte</h2>
-      {recentProjects.length > 0 ? (
-        <ul class="space-y-2">
-          {recentProjects.map(p => (
-            <li class="text-xs text-muted">{p.data.name}</li>
-          ))}
-        </ul>
-      ) : (
-        <p class="text-xs text-muted">Demnächst...</p>
-      )}
-      <a href="/projects" class="inline-block mt-4 text-xs text-blue hover:text-blue-light font-mono no-underline">alle →</a>
+      <p class="rise rise-3 text-text-soft text-[1.02rem] leading-relaxed max-w-[58ch] mb-10">
+        Ich bin Lars. Ich baue Infrastruktur — Proxmox, Docker, AI-Agents — und schreibe auf,
+        was funktioniert und was nicht. Damit du es nachbauen kannst, ohne die Nacht zu verlieren.
+      </p>
+
+      <div class="rise rise-4 flex flex-wrap items-center gap-3">
+        <a href="/projects" class="btn btn-primary">
+          <span>Projekte</span>
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href="/guides" class="btn">
+          <span>Guides lesen</span>
+        </a>
+        <a href="/about" class="arrow ml-2">
+          <span>über mich</span>
+          <span class="glyph">↗</span>
+        </a>
+      </div>
     </div>
 
-    <div class="bg-surface border border-border rounded-lg p-5">
-      <p class="font-mono text-green text-xs mb-2">// Blog</p>
-      <h2 class="text-sm font-semibold text-text mb-3">Letzte Posts</h2>
+    <!-- Right rail: meta info, asymmetrisch -->
+    <aside class="col-span-12 md:col-span-4 md:pt-4">
+      <div class="rise rise-3 grid grid-cols-2 gap-x-6 gap-y-5">
+        <dl class="stat">
+          <dt>Standort</dt>
+          <dd>DE · de</dd>
+        </dl>
+        <dl class="stat">
+          <dt>Nodes</dt>
+          <dd>7 lxc</dd>
+        </dl>
+        <dl class="stat">
+          <dt>VLANs</dt>
+          <dd>6</dd>
+        </dl>
+        <dl class="stat">
+          <dt>Storage</dt>
+          <dd>18 TB</dd>
+        </dl>
+      </div>
+    </aside>
+  </section>
+
+  <!-- Stack: horizontale Zeile, kein Pill -->
+  <section class="rise rise-5 mb-24">
+    <div class="rule mb-4"><span>Stack</span></div>
+    <ul class="flex flex-wrap gap-x-6 gap-y-2" style="font-family: var(--font-mono); font-size: 0.82rem">
+      {stack.map((s, i) => (
+        <li class="flex items-baseline gap-1.5">
+          <span class="text-muted-deep text-[0.65rem]">{String(i + 1).padStart(2, '0')}</span>
+          <span class="text-text-soft">{s.label}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- PROJECTS (ohne Card-Wrap drumherum) -->
+  <section class="mb-24">
+    <header class="flex items-end justify-between mb-8">
+      <div class="flex items-baseline gap-3">
+        <span class="section-num">01 /</span>
+        <h2 class="display-lg">Projekte</h2>
+      </div>
+      <a href="/projects" class="arrow"><span>alle Projekte</span><span class="glyph">→</span></a>
+    </header>
+
+    {recentProjects.length > 0 ? (
+      <ul class="grid grid-cols-1 md:grid-cols-2 gap-[1px] bg-border">
+        {recentProjects.map(p => (
+          <li class="bg-bg">
+            <a href={p.data.github ?? p.data.url ?? '/projects'} class="block p-5 md:p-6 h-full hover:bg-surface transition-colors duration-200">
+              <div class="flex items-start justify-between gap-4">
+                <h3 class="text-[1.05rem] text-text" style="font-family: var(--font-display)">{p.data.name}</h3>
+                <span class="tag tag-accent whitespace-nowrap">{p.data.status}</span>
+              </div>
+              <p class="text-sm text-muted leading-relaxed mt-3 max-w-[60ch]">{p.data.description}</p>
+              <div class="mt-5 flex flex-wrap gap-1.5">
+                {p.data.tags.slice(0, 4).map(t => <span class="tag">{t}</span>)}
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="text-muted" style="font-family: var(--font-mono)">// Projekte folgen...</p>
+    )}
+  </section>
+
+  <!-- BLOG + GUIDES nebeneinander, asymmetrisch 7/5 -->
+  <section class="grid grid-cols-12 gap-10">
+    <div class="col-span-12 md:col-span-7">
+      <header class="flex items-end justify-between mb-6">
+        <div class="flex items-baseline gap-3">
+          <span class="section-num">02 /</span>
+          <h2 class="display-lg">Blog</h2>
+        </div>
+        <a href="/blog" class="arrow"><span>alle Posts</span><span class="glyph">→</span></a>
+      </header>
       {recentPosts.length > 0 ? (
-        <ul class="space-y-2">
+        <ul class="divide-y divide-border/70">
           {recentPosts.map(p => (
             <li>
-              <a href={`/blog/${p.id}`} class="text-xs text-muted hover:text-text no-underline">{p.data.title}</a>
+              <a href={`/blog/${p.id}`} class="group flex items-baseline gap-4 py-3.5 hover:text-accent transition-colors">
+                <time class="shrink-0 text-muted-deep text-[0.7rem] tabular-nums w-20" style="font-family: var(--font-mono)">
+                  {p.data.date.toLocaleDateString('de-DE', { year: '2-digit', month: '2-digit', day: '2-digit' })}
+                </time>
+                <span class="text-text-soft group-hover:text-accent transition-colors">{p.data.title}</span>
+                <span class="ml-auto text-muted-deep text-xs group-hover:text-accent transition-colors" aria-hidden="true">→</span>
+              </a>
             </li>
           ))}
         </ul>
       ) : (
-        <p class="text-xs text-muted">Demnächst...</p>
+        <p class="text-muted" style="font-family: var(--font-mono)">// kein Post bisher.</p>
       )}
-      <a href="/blog" class="inline-block mt-4 text-xs text-green hover:text-green/80 font-mono no-underline">alle →</a>
     </div>
 
-    <div class="bg-surface border border-border rounded-lg p-5">
-      <p class="font-mono text-purple text-xs mb-2">// Guides</p>
-      <h2 class="text-sm font-semibold text-text mb-3">Anleitungen</h2>
+    <div class="col-span-12 md:col-span-5">
+      <header class="flex items-end justify-between mb-6">
+        <div class="flex items-baseline gap-3">
+          <span class="section-num">03 /</span>
+          <h2 class="display-lg">Guides</h2>
+        </div>
+        <a href="/guides" class="arrow"><span>alle</span><span class="glyph">→</span></a>
+      </header>
       {featuredGuides.length > 0 ? (
-        <ul class="space-y-2">
+        <ul class="space-y-3">
           {featuredGuides.map(g => (
             <li>
-              <a href={`/guides/${g.id}`} class="text-xs text-muted hover:text-text no-underline">{g.data.title}</a>
+              <a href={`/guides/${g.id}`} class="card block group">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="tag">{g.data.difficulty}</span>
+                  <span class="text-muted-deep text-xs group-hover:text-accent transition-colors" aria-hidden="true">↗</span>
+                </div>
+                <h3 class="text-sm text-text group-hover:text-accent transition-colors" style="font-family: var(--font-display)">
+                  {g.data.title}
+                </h3>
+              </a>
             </li>
           ))}
         </ul>
       ) : (
-        <p class="text-xs text-muted">Demnächst...</p>
+        <p class="text-muted" style="font-family: var(--font-mono)">// kein Guide bisher.</p>
       )}
-      <a href="/guides" class="inline-block mt-4 text-xs text-purple hover:text-purple/80 font-mono no-underline">alle →</a>
     </div>
-  </div>
+  </section>
+
 </BaseLayout>

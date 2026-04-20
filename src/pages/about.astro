@@ -1,37 +1,94 @@
 ---
-// src/pages/about.astro
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const facts = [
+  ['Role',     'Homelab Engineer'],
+  ['Standort', 'Deutschland'],
+  ['Stack',    'Proxmox · Docker · OPNsense'],
+  ['Kontakt',  'github.com/VugasDev'],
+];
+
+const nowItems = [
+  'Cortex — modulares AI-Agenten-System mit LiteLLM und Plane',
+  'Mediastack ausbauen: NVIDIA-Transcoding, Jellyseerr-Flow polieren',
+  'Zero-Trust-Firewall über OPNsense sauber dokumentieren',
+  'Mehr Guides. Weniger halbfertige Drafts.',
+];
 ---
 
 <BaseLayout title="Über mich" description="Wer ich bin und was mich antreibt.">
-  <p class="font-mono text-muted text-xs mb-2">// Über mich</p>
-  <h1 class="text-3xl font-bold text-text mb-8">Lars Meykel</h1>
 
-  <div class="prose prose-invert max-w-none">
-    <p>
-      Ich bin Lars, Homelab-Enthusiast und Self-Hosting-Fan aus Deutschland.
-      Ich baue und betreibe eine eigene Infrastruktur auf Basis von Proxmox, Docker und OPNsense —
-      komplett selbst verwaltet, von Netzwerk-Segmentierung bis zum AI-Agenten-System.
-    </p>
+  <header class="grid grid-cols-12 gap-6 pt-8 pb-16">
+    <div class="col-span-12 md:col-span-8">
+      <div class="rise rise-1 section-num mb-4">05 / Über mich</div>
+      <h1 class="rise rise-2 display-xl mb-6">
+        Lars <span class="text-accent">Meykel</span>.
+      </h1>
+      <p class="rise rise-3 text-text-soft text-[1.02rem] leading-relaxed max-w-[62ch]">
+        Ich bin Homelab-Enthusiast und Self-Hosting-Fan. Seit Jahren baue und betreibe ich eine
+        eigene Infrastruktur — von VLAN-Segmentierung bis zum AI-Agenten-System — und schreibe
+        dabei alles auf, damit andere es nachbauen können.
+      </p>
+    </div>
 
-    <h2>Was ich baue</h2>
-    <ul>
-      <li><strong>Infrastruktur:</strong> Proxmox Hypervisor, VLANs, Zero-Trust-Firewall, WireGuard VPN</li>
-      <li><strong>Medien:</strong> Jellyfin + vollständige *arr Suite (Sonarr, Radarr, Prowlarr, Bazarr)</li>
-      <li><strong>Automatisierung:</strong> n8n Workflows, AI-Agenten mit lokalem Ollama und Claude API</li>
-      <li><strong>Tools:</strong> MCP-Server für Claude Code, eigene CLI-Tools und Dashboards</li>
-    </ul>
+    <aside class="col-span-12 md:col-span-4 md:pt-3">
+      <div class="rise rise-3 rule mb-4"><span>Fakten</span></div>
+      <dl class="rise rise-4 grid grid-cols-2 gap-x-5 gap-y-4" style="font-family: var(--font-mono)">
+        {facts.map(([k, v]) => (
+          <>
+            <dt class="text-muted-deep text-[0.68rem] tracking-widest uppercase">{k}</dt>
+            <dd class="text-text-soft text-[0.82rem]">{v}</dd>
+          </>
+        ))}
+      </dl>
+    </aside>
+  </header>
 
-    <h2>Philosophie</h2>
-    <p>
-      Ich glaube daran, dass man durch das Bauen und Dokumentieren von Dingen am meisten lernt.
-      Diese Website ist mein öffentliches Notizbuch — ich schreibe auf was funktioniert hat,
-      was nicht, und warum.
-    </p>
+  <section class="grid grid-cols-12 gap-10 mb-20">
+    <div class="col-span-12 md:col-span-7">
+      <div class="rule mb-5"><span>Was ich baue</span></div>
+      <ul class="space-y-4" style="font-family: var(--font-sans)">
+        <li class="grid grid-cols-[6.5rem_1fr] gap-4">
+          <span class="text-accent text-[0.72rem] tracking-widest uppercase pt-1" style="font-family: var(--font-mono)">Infra</span>
+          <p class="text-text-soft leading-relaxed">Proxmox-Hypervisor, VLANs, Zero-Trust-Firewall via OPNsense, WireGuard Site-to-Site.</p>
+        </li>
+        <li class="grid grid-cols-[6.5rem_1fr] gap-4">
+          <span class="text-accent text-[0.72rem] tracking-widest uppercase pt-1" style="font-family: var(--font-mono)">Medien</span>
+          <p class="text-text-soft leading-relaxed">Jellyfin mit vollständiger *arr Suite — Sonarr, Radarr, Prowlarr, Bazarr, Recyclarr.</p>
+        </li>
+        <li class="grid grid-cols-[6.5rem_1fr] gap-4">
+          <span class="text-accent text-[0.72rem] tracking-widest uppercase pt-1" style="font-family: var(--font-mono)">Autom.</span>
+          <p class="text-text-soft leading-relaxed">n8n-Workflows, lokale AI-Agenten via Ollama, Claude API für komplexere Tasks.</p>
+        </li>
+        <li class="grid grid-cols-[6.5rem_1fr] gap-4">
+          <span class="text-accent text-[0.72rem] tracking-widest uppercase pt-1" style="font-family: var(--font-mono)">Tools</span>
+          <p class="text-text-soft leading-relaxed">Eigene MCP-Server für Claude Code, CLI-Tools, kleine Dashboards.</p>
+        </li>
+      </ul>
+    </div>
 
-    <h2>Kontakt</h2>
-    <ul>
-      <li>GitHub: <a href="https://github.com/VugasDev">VugasDev</a></li>
-    </ul>
-  </div>
+    <div class="col-span-12 md:col-span-5">
+      <div class="rule mb-5"><span>/now</span></div>
+      <ul class="space-y-3">
+        {nowItems.map((n, i) => (
+          <li class="flex items-baseline gap-3">
+            <span class="text-muted-deep text-[0.68rem] tabular-nums" style="font-family: var(--font-mono)">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <span class="text-text-soft text-sm leading-relaxed">{n}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="mb-8">
+    <div class="rule mb-5"><span>Philosophie</span></div>
+    <blockquote class="border-l-0 pl-0">
+      <p class="display-lg max-w-[22ch] text-text leading-[1.1]">
+        Man lernt durch Bauen. Und dann durch <span class="text-accent">Aufschreiben</span>.
+      </p>
+    </blockquote>
+  </section>
+
 </BaseLayout>

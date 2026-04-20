@@ -1,63 +1,38 @@
 ---
-// src/pages/projects/index.astro
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
 
-const allProjects = await getCollection('projects');
-
-const byStatus = (status: string) =>
-  allProjects.filter(p => p.data.status === status);
-
-const active   = byStatus('aktiv');
-const wip      = byStatus('in Arbeit');
-const planning = byStatus('Planung');
-const archived = byStatus('archiviert');
+const all = await getCollection('projects');
+const byStatus = (s: string) => all.filter(p => p.data.status === s);
+const groups = [
+  { key: 'aktiv',      label: 'aktiv',       items: byStatus('aktiv') },
+  { key: 'inarbeit',   label: 'in Arbeit',   items: byStatus('in Arbeit') },
+  { key: 'Planung',    label: 'Planung',     items: byStatus('Planung') },
+  { key: 'archiviert', label: 'archiviert',  items: byStatus('archiviert') },
+];
 ---
 
 <BaseLayout title="Projekte" description="Alle Homelab-Projekte — Proxmox, Docker, AI Agents und mehr.">
-  <p class="font-mono text-muted text-xs mb-2">// Projekte</p>
-  <h1 class="text-3xl font-bold text-text mb-8">Projekte</h1>
+  <header class="grid grid-cols-12 gap-6 pt-8 pb-16">
+    <div class="col-span-12 md:col-span-8">
+      <div class="rise rise-1 section-num mb-4">02 / Projekte</div>
+      <h1 class="rise rise-2 display-xl mb-6">Was ich <span class="text-accent">baue</span>.</h1>
+      <p class="rise rise-3 text-text-soft leading-relaxed max-w-[60ch]">
+        Vom Proxmox-Cluster bis zum eigenen AI-Stack — jedes Projekt liegt öffentlich auf GitHub
+        und wird im Homelab produktiv betrieben.
+      </p>
+    </div>
+  </header>
 
-  {active.length > 0 && (
-    <section class="mb-10">
-      <h2 class="text-xs font-mono text-green uppercase tracking-widest mb-4 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-green inline-block"></span> Aktiv
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {active.map(p => <ProjectCard {...p.data} />)}
-      </div>
-    </section>
-  )}
-
-  {wip.length > 0 && (
-    <section class="mb-10">
-      <h2 class="text-xs font-mono text-blue uppercase tracking-widest mb-4 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-blue inline-block"></span> In Arbeit
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {wip.map(p => <ProjectCard {...p.data} />)}
-      </div>
-    </section>
-  )}
-
-  {planning.length > 0 && (
-    <section class="mb-10">
-      <h2 class="text-xs font-mono text-purple uppercase tracking-widest mb-4 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-purple inline-block"></span> Planung
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {planning.map(p => <ProjectCard {...p.data} />)}
-      </div>
-    </section>
-  )}
-
-  {archived.length > 0 && (
-    <section>
-      <h2 class="text-xs font-mono text-muted uppercase tracking-widest mb-4">Archiviert</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {archived.map(p => <ProjectCard {...p.data} />)}
-      </div>
-    </section>
-  )}
+  <div class="space-y-16">
+    {groups.filter(g => g.items.length > 0).map((g, gi) => (
+      <section class={`rise rise-${Math.min(gi + 2, 6)}`}>
+        <div class="rule mb-6"><span>{g.label} · {g.items.length}</span></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {g.items.map(p => <ProjectCard {...p.data} />)}
+        </div>
+      </section>
+    ))}
+  </div>
 </BaseLayout>

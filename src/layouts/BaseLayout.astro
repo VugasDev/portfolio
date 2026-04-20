@@ -1,5 +1,4 @@
 ---
-// src/layouts/BaseLayout.astro
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
@@ -20,10 +19,17 @@ const { title, description = 'Homelab, Self-Hosting und AI Agents — Lars Meyke
     <meta name="description" content={description} />
     <title>{title} · vugasdev.lab</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Departure+Mono&display=swap"
+    />
   </head>
-  <body class="min-h-screen bg-bg text-text">
+  <body class="min-h-screen">
     <Nav />
-    <main class="max-w-4xl mx-auto px-6 py-12">
+    <main class="mx-auto w-full max-w-6xl px-6 md:px-10 pt-10 pb-24">
       <slot />
     </main>
     <Footer />
