@@ -7,17 +7,21 @@ services:
       - "3010:80"
 
   webhook:
-    image: node:22-alpine
+    image: node:22-slim       # needs git for fetch/reset — alpine does not ship git
     container_name: portfolio-webhook
     restart: unless-stopped
     working_dir: /webhook
-    command: node server.js
+    command: >
+      sh -c "command -v git >/dev/null 2>&1 || (apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*);
+             git config --global --add safe.directory /app;
+             exec node server.js"
     volumes:
       - ./webhook:/webhook
       - .:/app
     environment:
       - WEBHOOK_SECRET=${WEBHOOK_SECRET}
       - APP_DIR=/app
+      - BRANCH=main
     ports:
       - "9000:9000"
 

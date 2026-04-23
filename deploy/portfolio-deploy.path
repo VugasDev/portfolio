@@ -1,0 +1,10 @@
+[Unit]
+Description=Watch for portfolio deploy trigger
+After=docker.service
+
+[Path]
+PathExists=/opt/portfolio/.deploy-trigger
+Unit=portfolio-deploy.service
+
+[Install]
+WantedBy=multi-user.target

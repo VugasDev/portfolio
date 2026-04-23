@@ -1,62 +1,83 @@
 // webhook/server.js
-const http = require('http');
+// GitHub push webhook -> git pull into shared /app mount -> write trigger file.
+// A systemd path-unit on the host watches the trigger and rebuilds the portfolio container.
+const http   = require('http');
 const crypto = require('crypto');
+const fs     = require('fs');
 const { spawnSync } = require('child_process');
 
-const SECRET   = process.env.WEBHOOK_SECRET || '';
-const APP_DIR  = process.env.APP_DIR || '/app';
-const PORT     = parseInt(process.env.PORT || '9000', 10);
+const SECRET  = process.env.WEBHOOK_SECRET || '';
+const APP_DIR = process.env.APP_DIR || '/app';
+const PORT    = parseInt(process.env.PORT || '9000', 10);
+const BRANCH  = process.env.BRANCH || 'main';
+const TRIGGER = `${APP_DIR}/.deploy-trigger`;
 
-function runCmd(cmd, args, cwd) {
-  const result = spawnSync(cmd, args, { cwd, stdio: 'inherit', encoding: 'utf8' });
-  if (result.status !== 0) throw new Error(`${cmd} ${args.join(' ')} exited ${result.status}`);
+function log(...a) { console.log('[webhook]', ...a); }
+
+function run(cmd, args, cwd) {
+  const r = spawnSync(cmd, args, { cwd, stdio: 'inherit', encoding: 'utf8' });
+  if (r.status !== 0) throw new Error(`${cmd} ${args.join(' ')} exited ${r.status}`);
+}
+
+function verifySignature(sig, body) {
+  if (!SECRET) return true;
+  if (!sig) return false;
+  const expected = 'sha256=' + crypto.createHmac('sha256', SECRET).update(body).digest('hex');
+  const a = Buffer.from(sig);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length) return false;
+  return crypto.timingSafeEqual(a, b);
 }
 
 const server = http.createServer((req, res) => {
+  if (req.url === '/health' && req.method === 'GET') {
+    res.writeHead(200); return res.end('ok');
+  }
   if (req.method !== 'POST' || req.url !== '/webhook') {
-    res.writeHead(404);
-    return res.end();
+    res.writeHead(404); return res.end();
   }
 
   const chunks = [];
-  req.on('data', chunk => chunks.push(chunk));
+  req.on('data', c => chunks.push(c));
   req.on('end', () => {
     const body = Buffer.concat(chunks);
+    const sig  = req.headers['x-hub-signature-256'] || '';
 
-    if (SECRET) {
-      const sig      = req.headers['x-hub-signature-256'] || '';
-      const expected = 'sha256=' + crypto.createHmac('sha256', SECRET).update(body).digest('hex');
-      const sigBuf   = Buffer.from(sig.padEnd(expected.length));
-      const expBuf   = Buffer.from(expected);
-      if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
-        res.writeHead(401);
-        return res.end('Unauthorized');
-      }
+    if (!verifySignature(sig, body)) {
+      log('invalid signature');
+      res.writeHead(401); return res.end('unauthorized');
+    }
+
+    const event = req.headers['x-github-event'];
+    if (event === 'ping') {
+      log('ping');
+      res.writeHead(200); return res.end('pong');
+    }
+    if (event !== 'push') {
+      res.writeHead(204); return res.end();
     }
 
     let payload;
     try { payload = JSON.parse(body.toString()); }
-    catch { res.writeHead(400); return res.end('Bad JSON'); }
+    catch { res.writeHead(400); return res.end('bad json'); }
 
-    if (payload.ref !== 'refs/heads/main') {
-      res.writeHead(200);
-      return res.end('Ignored');
+    if (payload.ref !== `refs/heads/${BRANCH}`) {
+      log('ignore ref', payload.ref);
+      res.writeHead(200); return res.end('ignored');
     }
 
-    console.log('[webhook] Rebuild triggered');
+    log('push on', BRANCH, '→', (payload.after || '').slice(0, 7));
     try {
-      runCmd('git', ['pull', '--ff-only'], APP_DIR);
-      runCmd('npm', ['run', 'build'], APP_DIR);
-      runCmd('nginx', ['-s', 'reload'], APP_DIR);
-      console.log('[webhook] Rebuild done');
-      res.writeHead(200);
-      res.end('OK');
-    } catch (err) {
-      console.error('[webhook] Build failed:', err.message);
-      res.writeHead(500);
-      res.end('Build failed');
+      run('git', ['fetch', '--depth=1', 'origin', BRANCH], APP_DIR);
+      run('git', ['reset', '--hard', `origin/${BRANCH}`], APP_DIR);
+      fs.writeFileSync(TRIGGER, `${payload.after || ''}\n${new Date().toISOString()}\n`);
+      log('trigger written');
+      res.writeHead(202); res.end('queued');
+    } catch (e) {
+      log('pull failed:', e.message);
+      res.writeHead(500); res.end('pull failed');
     }
   });
 });
 
-server.listen(PORT, () => console.log(`Webhook server on :${PORT}`));
+server.listen(PORT, () => log(`listening on :${PORT} (branch=${BRANCH})`));

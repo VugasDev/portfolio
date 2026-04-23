@@ -12,7 +12,8 @@ const posts = await getCollection('blog', entry => entry.id === id);
 const post = posts[0];
 if (!post) return Astro.redirect('/blog');
 
-const { Content } = await render(post);
+const { Content, remarkPluginFrontmatter } = await render(post);
+const minutesRead = remarkPluginFrontmatter.minutesRead ?? 1;
 const formattedDate = post.data.date.toLocaleDateString('de-DE', {
   year: 'numeric', month: 'long', day: 'numeric'
 });
@@ -31,7 +32,11 @@ const isoDate = post.data.date.toISOString().slice(0, 10);
   <article class="grid grid-cols-12 gap-8">
 
     <header class="col-span-12 md:col-span-8 md:col-start-3 mb-14 pb-10 border-b border-[--color-border]">
-      <div class="rise rise-1 section-num mb-5">{formattedDate.toUpperCase()}</div>
+      <div class="rise rise-1 section-num mb-5 flex items-center gap-4">
+        <span>{formattedDate.toUpperCase()}</span>
+        <span class="text-[--color-border-strong]">/</span>
+        <span>{minutesRead} MIN READ</span>
+      </div>
       <h1 class="rise rise-2 display-lg text-[--color-text]"
           style="font-size: clamp(2rem, 1.4rem + 2.6vw, 3.4rem);">
         {post.data.title}

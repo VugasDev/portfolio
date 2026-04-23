@@ -12,7 +12,8 @@ const guides = await getCollection('guides');
 const guide = guides.find(g => g.id === id);
 if (!guide) return Astro.redirect('/guides');
 
-const { Content } = await render(guide);
+const { Content, remarkPluginFrontmatter } = await render(guide);
+const minutesRead = remarkPluginFrontmatter.minutesRead ?? 1;
 
 let chapters: typeof guides = [];
 if (guide.data.series) {
@@ -68,6 +69,8 @@ if (guide.data.series) {
             <div class="rise rise-1 flex items-center gap-3 mb-5">
               <span class="tag tag-accent">{guide.data.difficulty}</span>
               <span class="section-num">CHAPTER / {String(guide.data.order ?? 0).padStart(2, '0')}</span>
+              <span class="text-[--color-border-strong]">/</span>
+              <span class="section-num">{minutesRead} MIN</span>
             </div>
             <h1 class="rise rise-2 display-lg text-[--color-text]"
                 style="font-size: clamp(2rem, 1.4rem + 2.4vw, 3.2rem);">
@@ -85,6 +88,8 @@ if (guide.data.series) {
           <div class="rise rise-1 flex items-center gap-3 mb-5">
             <span class="tag tag-accent">{guide.data.difficulty}</span>
             <span class="section-num">&#91; GUIDE &#93;</span>
+            <span class="text-[--color-border-strong]">/</span>
+            <span class="section-num">{minutesRead} MIN</span>
           </div>
           <h1 class="rise rise-2 display-lg text-[--color-text]"
               style="font-size: clamp(2rem, 1.4rem + 2.4vw, 3.2rem);">
