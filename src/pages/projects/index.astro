@@ -6,29 +6,43 @@ import { getCollection } from 'astro:content';
 const all = await getCollection('projects');
 const byStatus = (s: string) => all.filter(p => p.data.status === s);
 const groups = [
-  { key: 'aktiv',      label: 'aktiv',       items: byStatus('aktiv') },
-  { key: 'inarbeit',   label: 'in Arbeit',   items: byStatus('in Arbeit') },
-  { key: 'Planung',    label: 'Planung',     items: byStatus('Planung') },
-  { key: 'archiviert', label: 'archiviert',  items: byStatus('archiviert') },
+  { key: 'aktiv',      label: 'ACTIVE',     items: byStatus('aktiv') },
+  { key: 'inarbeit',   label: 'IN-PROGRESS', items: byStatus('in Arbeit') },
+  { key: 'Planung',    label: 'PLANNED',    items: byStatus('Planung') },
+  { key: 'archiviert', label: 'ARCHIVED',   items: byStatus('archiviert') },
 ];
 ---
 
-<BaseLayout title="Projekte" description="Alle Homelab-Projekte — Proxmox, Docker, AI Agents und mehr.">
-  <header class="grid grid-cols-12 gap-6 pt-8 pb-16">
-    <div class="col-span-12 md:col-span-8">
-      <div class="rise rise-1 section-num mb-4">02 / Projekte</div>
-      <h1 class="rise rise-2 display-xl mb-6">Was ich <span class="text-accent">baue</span>.</h1>
-      <p class="rise rise-3 text-text-soft leading-relaxed max-w-[60ch]">
-        Vom Proxmox-Cluster bis zum eigenen AI-Stack — jedes Projekt liegt öffentlich auf GitHub
-        und wird im Homelab produktiv betrieben.
-      </p>
+<BaseLayout title="PROJECTS" description="Alle Homelab-Projekte — Proxmox, Docker, AI Agents und mehr.">
+
+  <header class="pt-6 md:pt-10 pb-16 border-b border-[--color-border]">
+    <div class="rise rise-1 section-num mb-5">02 // DIRECTORY / PROJECTS</div>
+    <div class="grid grid-cols-12 gap-6">
+      <div class="col-span-12 md:col-span-9">
+        <h1 class="rise rise-2 display-xl">
+          What I <span class="text-[--color-accent]">build</span>.
+        </h1>
+        <p class="rise rise-3 text-[--color-text-soft] text-[0.98rem] leading-[1.65] max-w-[62ch] mt-8"
+           style="font-family: var(--font-sans)">
+          Vom Proxmox-Cluster bis zum eigenen AI-Stack &mdash; jedes Projekt liegt &ouml;ffentlich
+          auf GitHub und wird im Homelab produktiv betrieben.
+        </p>
+      </div>
+      <aside class="col-span-12 md:col-span-3 md:pt-2">
+        <div class="rise rise-4 grid grid-cols-2 md:grid-cols-1 gap-y-5">
+          <dl class="stat"><dt>Total</dt><dd>{all.length.toString().padStart(2, '0')}</dd></dl>
+          <dl class="stat"><dt>Active</dt><dd>{byStatus('aktiv').length.toString().padStart(2, '0')}</dd></dl>
+        </div>
+      </aside>
     </div>
   </header>
 
-  <div class="space-y-16">
+  <div class="space-y-16 pt-14">
     {groups.filter(g => g.items.length > 0).map((g, gi) => (
-      <section class={`rise rise-${Math.min(gi + 2, 6)}`}>
-        <div class="rule mb-6"><span>{g.label} · {g.items.length}</span></div>
+      <section class={`rise rise-${Math.min(gi + 1, 6)}`}>
+        <div class="flex items-baseline justify-between mb-6">
+          <div class="rule flex-1"><span>{g.label} / {String(g.items.length).padStart(2, '0')}</span></div>
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {g.items.map(p => <ProjectCard {...p.data} />)}
         </div>

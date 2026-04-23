@@ -12,25 +12,27 @@ const { name, description, tags, status, github, url } = Astro.props;
 
 <article class="card group flex flex-col gap-3">
   <div class="flex items-start justify-between gap-3">
-    <h3 class="text-[1.02rem] text-text group-hover:text-accent transition-colors" style="font-family: var(--font-display)">
+    <h3 class="text-[1.02rem] uppercase text-[--color-text] group-hover:text-[--color-accent] transition-colors"
+        style="font-family: var(--font-display); letter-spacing: -0.02em; line-height: 1.1;">
       {name}
     </h3>
-    <span class="tag tag-accent whitespace-nowrap">{status}</span>
+    <span class="tag tag-accent whitespace-nowrap shrink-0">{status}</span>
   </div>
 
-  <p class="text-sm text-muted leading-relaxed max-w-[60ch]">{description}</p>
+  <p class="text-[0.85rem] text-[--color-muted] leading-[1.55] max-w-[60ch]"
+     style="font-family: var(--font-sans)">{description}</p>
 
   <div class="flex flex-wrap gap-1.5 mt-1">
     {tags.map(tag => <span class="tag">{tag}</span>)}
   </div>
 
   {(github || url) && (
-    <div class="flex gap-4 mt-auto pt-3 border-t border-border/60">
+    <div class="flex gap-5 mt-auto pt-3 border-t border-[--color-border]">
       {github && (
-        <a href={github} class="arrow"><span class="glyph">↗</span><span>GitHub</span></a>
+        <a href={github} class="arrow"><span>GitHub</span><span class="glyph">&gt;&gt;</span></a>
       )}
       {url && (
-        <a href={url} class="arrow"><span class="glyph">↗</span><span>Live</span></a>
+        <a href={url} class="arrow"><span>Live</span><span class="glyph">&gt;&gt;</span></a>
       )}
     </div>
   )}

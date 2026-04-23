@@ -2,35 +2,52 @@
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-border/60 mt-24">
-  <div class="mx-auto max-w-6xl px-6 md:px-10 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-    <div class="space-y-2">
-      <div class="section-num">/EOF</div>
-      <p style="font-family: var(--font-display)" class="text-sm text-text">Lars Meykel</p>
-      <p class="text-[0.72rem] text-muted" style="font-family: var(--font-mono)">
-        © {year} · selbst gehostet auf eigener Infrastruktur.
+<footer class="border-t border-[--color-border] mt-24">
+  <div class="mx-auto max-w-[1280px] px-5 md:px-8 py-10 grid grid-cols-1 md:grid-cols-[1.2fr_1fr_1fr_auto] gap-10">
+
+    <div class="space-y-3">
+      <div class="rule"><span>/EOF</span></div>
+      <p style="font-family: var(--font-display); letter-spacing: -0.03em;"
+         class="text-[1.4rem] text-[--color-text] uppercase leading-none">
+        Lars Meykel
+      </p>
+      <p class="text-[0.7rem] text-[--color-muted] uppercase tracking-[0.14em]"
+         style="font-family: var(--font-mono)">
+        © {year} / self-hosted on private infra
       </p>
     </div>
 
-    <div class="space-y-2">
-      <div class="section-num">Kontakt</div>
-      <ul class="space-y-1" style="font-family: var(--font-mono); font-size: 0.78rem">
-        <li><a class="arrow" href="https://github.com/VugasDev"><span class="glyph">↗</span>github.com/VugasDev</a></li>
+    <div class="space-y-3">
+      <div class="rule"><span>Contact</span></div>
+      <ul class="space-y-1.5" style="font-family: var(--font-mono); font-size: 0.78rem">
+        <li><a class="arrow" href="https://github.com/VugasDev">
+          <span class="glyph">&gt;&gt;</span>github.com/VugasDev
+        </a></li>
       </ul>
     </div>
 
-    <div class="space-y-2">
-      <div class="section-num">Stack</div>
-      <p class="text-[0.72rem] text-muted leading-relaxed" style="font-family: var(--font-mono)">
-        Astro · Tailwind · Docker · Proxmox · OPNsense · Pangolin/Newt · nginx · GitHub Webhooks
+    <div class="space-y-3">
+      <div class="rule"><span>Stack</span></div>
+      <p class="text-[0.7rem] text-[--color-muted] leading-relaxed uppercase tracking-[0.1em]"
+         style="font-family: var(--font-mono)">
+        Astro / Tailwind / Docker / Proxmox / OPNsense / Pangolin / Newt / nginx
       </p>
+    </div>
+
+    <div class="space-y-3 hidden md:block">
+      <div class="rule"><span>Unit</span></div>
+      <span class="barcode" aria-hidden="true"></span>
+      <p class="text-[0.66rem] text-[--color-muted-deep] uppercase tracking-[0.16em]"
+         style="font-family: var(--font-mono)">SN 0001-VGS / REV 2.6</p>
     </div>
   </div>
 
-  <!-- Terminal-Strip -->
-  <div class="border-t border-border/60">
-    <div class="mx-auto max-w-6xl px-6 md:px-10 h-9 flex items-center justify-between text-[0.68rem] tracking-widest uppercase text-muted-deep" style="font-family: var(--font-mono)">
-      <span>lars@vugas:~$</span>
+  <div class="border-t border-[--color-border]">
+    <div class="mx-auto max-w-[1280px] px-5 md:px-8 h-10 flex items-center justify-between
+                text-[0.66rem] tracking-[0.2em] uppercase text-[--color-muted-deep]"
+         style="font-family: var(--font-mono)">
+      <span>lars@vugas:~$ <span class="cursor"></span></span>
+      <span class="hidden sm:inline text-[--color-muted]">50.7374&deg;N / 7.0982&deg;E</span>
       <span class="live">ONLINE</span>
     </div>
   </div>
