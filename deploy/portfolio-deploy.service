@@ -1,0 +1,12 @@
+[Unit]
+Description=Portfolio deploy (rebuild container after webhook trigger)
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/portfolio
+ExecStart=/usr/bin/env bash /opt/portfolio/deploy/deploy.sh
+
+[Install]
+WantedBy=multi-user.target

@@ -2,11 +2,27 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
+import sitemap from '@astrojs/sitemap';
+import readingTime from 'reading-time';
+import { toString as mdastToString } from 'mdast-util-to-string';
+
+/** Remark plugin: attach reading-time to frontmatter at build time */
+function remarkReadingTime() {
+  return function (tree, { data }) {
+    const text  = mdastToString(tree);
+    const stats = readingTime(text);
+    data.astro.frontmatter.minutesRead = Math.max(1, Math.round(stats.minutes));
+    data.astro.frontmatter.wordCount   = stats.words;
+  };
+}
 
 export default defineConfig({
-  integrations: [mdx()],
-  vite: {
-    plugins: [tailwindcss()]
-  },
   site: 'https://vugas.de',
+  integrations: [mdx(), sitemap()],
+  markdown: {
+    remarkPlugins: [remarkReadingTime],
+  },
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });

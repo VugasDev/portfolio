@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="UNIT NOT FOUND" description="Die angefragte Ressource existiert nicht.">
+
+  <section class="pt-8 md:pt-20 pb-24">
+
+    <div class="rise rise-1 grid grid-cols-[auto_1fr_auto] items-center gap-4 mb-12 pb-3
+                border-b border-[--color-border] text-[0.64rem] uppercase tracking-[0.22em]
+                text-[--color-muted-deep]"
+         style="font-family: var(--font-mono)">
+      <span style="color: var(--color-accent);">ERR / 404</span>
+      <span class="hidden md:block h-[1px] bg-[--color-border]"></span>
+      <span>RESPONSE / NULL</span>
+    </div>
+
+    <div class="grid grid-cols-12 gap-6 md:gap-10">
+
+      <div class="col-span-12 md:col-span-9">
+        <h1 class="rise rise-2 display-xl">
+          Unit<br/>
+          <span style="color: var(--color-accent);">Not Found</span><span class="cursor"></span>
+        </h1>
+
+        <p class="rise rise-3 text-[--color-text-soft] text-[0.98rem] leading-[1.65] max-w-[62ch] mt-8 mb-10"
+           style="font-family: var(--font-sans)">
+          Die Koordinaten, die du angefragt hast, existieren auf diesem System nicht. M&ouml;glicherweise
+          wurde die Ressource verschoben, archiviert oder nie veroffentlicht.
+        </p>
+
+        <div class="rise rise-4 flex flex-wrap items-center gap-3">
+          <a href="/" class="btn btn-primary">
+            <span>&gt;&gt; RETURN TO BASE</span>
+          </a>
+          <a href="/projects" class="btn"><span>PROJECTS</span></a>
+          <a href="/blog" class="btn"><span>LOG</span></a>
+          <a href="/guides" class="btn"><span>GUIDES</span></a>
+        </div>
+      </div>
+
+      <aside class="col-span-12 md:col-span-3 md:pt-2">
+        <div class="rise rise-5 space-y-5">
+          <dl class="stat">
+            <dt>Status</dt>
+            <dd style="color: var(--color-accent);">404</dd>
+          </dl>
+          <dl class="stat">
+            <dt>Path</dt>
+            <dd class="text-[0.95rem] break-all" style="font-family: var(--font-mono); font-weight: 500;">
+              <span id="err-path">—</span>
+            </dd>
+          </dl>
+          <dl class="stat">
+            <dt>Timestamp</dt>
+            <dd class="text-[0.95rem]" style="font-family: var(--font-mono); font-weight: 500;">
+              <span id="err-time">—</span>
+            </dd>
+          </dl>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ASCII diagnostic -->
+    <pre class="mt-20 text-[0.7rem] leading-[1.6] text-[--color-muted-deep] overflow-x-auto"
+         style="font-family: var(--font-mono);">{`
+[ DIAGNOSTIC ]────────────────────────────────────────────────
+  REQ /?                         :: resource identifier missing
+  RES 404                        :: nothing at requested path
+  NEXT                           :: select target from directory above
+──────────────────────────────────────────────────────────────`}</pre>
+  </section>
+
+  <script is:inline>
+    document.getElementById('err-path').textContent = location.pathname || '/';
+    document.getElementById('err-time').textContent = new Date().toISOString().replace('T', ' ').slice(0, 19) + 'Z';
+  </script>
+</BaseLayout>

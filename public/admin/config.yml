@@ -5,6 +5,8 @@ backend:
   base_url: https://vugas.de
   auth_endpoint: api/auth
 
+publish_mode: editorial_workflow
+
 media_folder: public/uploads
 public_folder: /uploads
 
