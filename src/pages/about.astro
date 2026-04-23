@@ -2,91 +2,101 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const facts = [
-  ['Role',     'Homelab Engineer'],
-  ['Standort', 'Deutschland'],
-  ['Stack',    'Proxmox · Docker · OPNsense'],
-  ['Kontakt',  'github.com/VugasDev'],
+  ['Role',       'Homelab Engineer'],
+  ['Location',   'Deutschland / 51&deg;N'],
+  ['Stack',      'Proxmox / Docker / OPNsense'],
+  ['Contact',    'github.com/VugasDev'],
+  ['Timezone',   'UTC+1 / CET'],
+  ['Status',     'Open for collaboration'],
 ];
 
 const nowItems = [
-  'Cortex — modulares AI-Agenten-System mit LiteLLM und Plane',
+  'Cortex &mdash; modulares AI-Agenten-System mit LiteLLM und Plane',
   'Mediastack ausbauen: NVIDIA-Transcoding, Jellyseerr-Flow polieren',
-  'Zero-Trust-Firewall über OPNsense sauber dokumentieren',
+  'Zero-Trust-Firewall &uuml;ber OPNsense sauber dokumentieren',
   'Mehr Guides. Weniger halbfertige Drafts.',
+];
+
+const builds = [
+  ['INFRA',  'Proxmox-Hypervisor, VLANs, Zero-Trust-Firewall via OPNsense, WireGuard Site-to-Site.'],
+  ['MEDIA',  'Jellyfin mit vollst&auml;ndiger *arr-Suite &mdash; Sonarr, Radarr, Prowlarr, Bazarr, Recyclarr.'],
+  ['AUTO',   'n8n-Workflows, lokale AI-Agenten via Ollama, Claude API f&uuml;r komplexere Tasks.'],
+  ['TOOLS',  'Eigene MCP-Server f&uuml;r Claude Code, CLI-Tools, kleine Dashboards.'],
 ];
 ---
 
-<BaseLayout title="Über mich" description="Wer ich bin und was mich antreibt.">
+<BaseLayout title="OPERATOR" description="Wer ich bin und was mich antreibt.">
 
-  <header class="grid grid-cols-12 gap-6 pt-8 pb-16">
-    <div class="col-span-12 md:col-span-8">
-      <div class="rise rise-1 section-num mb-4">05 / Über mich</div>
-      <h1 class="rise rise-2 display-xl mb-6">
-        Lars <span class="text-accent">Meykel</span>.
-      </h1>
-      <p class="rise rise-3 text-text-soft text-[1.02rem] leading-relaxed max-w-[62ch]">
-        Ich bin Homelab-Enthusiast und Self-Hosting-Fan. Seit Jahren baue und betreibe ich eine
-        eigene Infrastruktur — von VLAN-Segmentierung bis zum AI-Agenten-System — und schreibe
-        dabei alles auf, damit andere es nachbauen können.
-      </p>
+  <header class="pt-6 md:pt-10 pb-16 border-b border-[--color-border]">
+    <div class="rise rise-1 section-num mb-5">05 // OPERATOR / PROFILE</div>
+    <div class="grid grid-cols-12 gap-6 md:gap-10">
+      <div class="col-span-12 md:col-span-8">
+        <h1 class="rise rise-2 display-xl">
+          Lars<br/><span class="text-[--color-accent]">Meykel</span>.
+        </h1>
+        <p class="rise rise-3 text-[--color-text-soft] text-[0.98rem] leading-[1.65] max-w-[62ch] mt-8"
+           style="font-family: var(--font-sans)">
+          Ich bin Homelab-Enthusiast und Self-Hosting-Fan. Seit Jahren baue und betreibe ich eine
+          eigene Infrastruktur &mdash; von VLAN-Segmentierung bis zum AI-Agenten-System &mdash; und
+          schreibe dabei alles auf, damit andere es nachbauen k&ouml;nnen.
+        </p>
+      </div>
+
+      <aside class="col-span-12 md:col-span-4 md:pt-3">
+        <div class="rise rise-4 rule mb-5"><span>File</span></div>
+        <dl class="rise rise-5 grid grid-cols-[auto_1fr] gap-x-5 gap-y-3.5"
+            style="font-family: var(--font-mono)">
+          {facts.map(([k, v]) => (
+            <>
+              <dt class="text-[--color-muted-deep] text-[0.64rem] tracking-[0.18em] uppercase pt-0.5">{k}</dt>
+              <dd class="text-[--color-text-soft] text-[0.82rem] leading-snug" set:html={v}></dd>
+            </>
+          ))}
+        </dl>
+      </aside>
     </div>
-
-    <aside class="col-span-12 md:col-span-4 md:pt-3">
-      <div class="rise rise-3 rule mb-4"><span>Fakten</span></div>
-      <dl class="rise rise-4 grid grid-cols-2 gap-x-5 gap-y-4" style="font-family: var(--font-mono)">
-        {facts.map(([k, v]) => (
-          <>
-            <dt class="text-muted-deep text-[0.68rem] tracking-widest uppercase">{k}</dt>
-            <dd class="text-text-soft text-[0.82rem]">{v}</dd>
-          </>
-        ))}
-      </dl>
-    </aside>
   </header>
 
-  <section class="grid grid-cols-12 gap-10 mb-20">
+  <section class="grid grid-cols-12 gap-10 py-16 border-b border-[--color-border]">
     <div class="col-span-12 md:col-span-7">
-      <div class="rule mb-5"><span>Was ich baue</span></div>
-      <ul class="space-y-4" style="font-family: var(--font-sans)">
-        <li class="grid grid-cols-[6.5rem_1fr] gap-4">
-          <span class="text-accent text-[0.72rem] tracking-widest uppercase pt-1" style="font-family: var(--font-mono)">Infra</span>
-          <p class="text-text-soft leading-relaxed">Proxmox-Hypervisor, VLANs, Zero-Trust-Firewall via OPNsense, WireGuard Site-to-Site.</p>
-        </li>
-        <li class="grid grid-cols-[6.5rem_1fr] gap-4">
-          <span class="text-accent text-[0.72rem] tracking-widest uppercase pt-1" style="font-family: var(--font-mono)">Medien</span>
-          <p class="text-text-soft leading-relaxed">Jellyfin mit vollständiger *arr Suite — Sonarr, Radarr, Prowlarr, Bazarr, Recyclarr.</p>
-        </li>
-        <li class="grid grid-cols-[6.5rem_1fr] gap-4">
-          <span class="text-accent text-[0.72rem] tracking-widest uppercase pt-1" style="font-family: var(--font-mono)">Autom.</span>
-          <p class="text-text-soft leading-relaxed">n8n-Workflows, lokale AI-Agenten via Ollama, Claude API für komplexere Tasks.</p>
-        </li>
-        <li class="grid grid-cols-[6.5rem_1fr] gap-4">
-          <span class="text-accent text-[0.72rem] tracking-widest uppercase pt-1" style="font-family: var(--font-mono)">Tools</span>
-          <p class="text-text-soft leading-relaxed">Eigene MCP-Server für Claude Code, CLI-Tools, kleine Dashboards.</p>
-        </li>
-      </ul>
-    </div>
-
-    <div class="col-span-12 md:col-span-5">
-      <div class="rule mb-5"><span>/now</span></div>
-      <ul class="space-y-3">
-        {nowItems.map((n, i) => (
-          <li class="flex items-baseline gap-3">
-            <span class="text-muted-deep text-[0.68rem] tabular-nums" style="font-family: var(--font-mono)">
-              {String(i + 1).padStart(2, '0')}
-            </span>
-            <span class="text-text-soft text-sm leading-relaxed">{n}</span>
+      <div class="rule mb-6"><span>What I Build</span></div>
+      <ul>
+        {builds.map(([k, v]) => (
+          <li class="grid grid-cols-[6rem_1fr] gap-5 py-4 border-t border-[--color-border]">
+            <span class="text-[--color-accent] text-[0.68rem] tracking-[0.22em] uppercase pt-1"
+                  style="font-family: var(--font-mono)">{k}</span>
+            <p class="text-[--color-text-soft] leading-[1.6] text-[0.9rem]"
+               style="font-family: var(--font-sans)" set:html={v}></p>
           </li>
         ))}
       </ul>
+      <div class="border-b border-[--color-border]"></div>
+    </div>
+
+    <div class="col-span-12 md:col-span-5">
+      <div class="rule rule-accent mb-6"><span>/NOW</span></div>
+      <ul>
+        {nowItems.map((n, i) => (
+          <li class="flex items-baseline gap-4 py-3 border-t border-[--color-border]">
+            <span class="text-[--color-muted-deep] text-[0.66rem] tabular-nums tracking-[0.1em] shrink-0"
+                  style="font-family: var(--font-mono)">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <span class="text-[--color-text-soft] text-[0.9rem] leading-[1.55]"
+                  style="font-family: var(--font-sans)" set:html={n}></span>
+          </li>
+        ))}
+      </ul>
+      <div class="border-b border-[--color-border]"></div>
     </div>
   </section>
 
-  <section class="mb-8">
-    <div class="rule mb-5"><span>Philosophie</span></div>
-    <blockquote class="border-l-0 pl-0">
-      <p class="display-lg max-w-[22ch] text-text leading-[1.1]">
-        Man lernt durch Bauen. Und dann durch <span class="text-accent">Aufschreiben</span>.
+  <section class="pt-16 pb-10">
+    <div class="rule mb-8"><span>Philosophy</span></div>
+    <blockquote class="pl-0">
+      <p class="display-lg text-[--color-text]"
+         style="font-size: clamp(2.4rem, 1.6rem + 4.5vw, 5rem); line-height: 0.95; max-width: 22ch;">
+        Man lernt durch Bauen.<br/>Und dann durch <span class="text-[--color-accent]">Aufschreiben</span>.
       </p>
     </blockquote>
   </section>

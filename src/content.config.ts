@@ -19,8 +19,8 @@ const guides = defineCollection({
     description: z.string(),
     difficulty: z.enum(['Einsteiger', 'Fortgeschritten', 'Experte']),
     tags: z.array(z.string()).default([]),
-    order: z.number().optional(),    // Für Serien: Kapitel-Reihenfolge
-    series: z.string().optional(),   // Für Serien: Serie-Name
+    order: z.number().nullish(),     // Für Serien: Kapitel-Reihenfolge (Decap schreibt null statt undefined)
+    series: z.string().nullish().transform(v => v || undefined),   // Für Serien: Serie-Name (Decap schreibt '' statt undefined)
     draft: z.boolean().default(false),
   }),
 });

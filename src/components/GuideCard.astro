@@ -10,16 +10,18 @@ const { title, description, difficulty, id, tags } = Astro.props;
 ---
 
 <a href={`/guides/${id}`} class="card group block">
-  <div class="flex items-center justify-between mb-3">
-    <span class="section-num">GUIDE</span>
+  <div class="flex items-center justify-between mb-4">
+    <span class="section-num">&#91; GUIDE &#93;</span>
     <span class="tag tag-accent">{difficulty}</span>
   </div>
 
-  <h3 class="text-[1rem] text-text group-hover:text-accent transition-colors mb-2" style="font-family: var(--font-display)">
+  <h3 class="text-[1.02rem] uppercase text-[--color-text] group-hover:text-[--color-accent] transition-colors mb-3"
+      style="font-family: var(--font-display); letter-spacing: -0.02em; line-height: 1.15;">
     {title}
   </h3>
 
-  <p class="text-sm text-muted leading-relaxed mb-4 max-w-[60ch]">{description}</p>
+  <p class="text-[0.85rem] text-[--color-muted] leading-[1.55] mb-4 max-w-[60ch]"
+     style="font-family: var(--font-sans)">{description}</p>
 
   <div class="flex flex-wrap gap-1.5">
     {tags.map(tag => <span class="tag">{tag}</span>)}

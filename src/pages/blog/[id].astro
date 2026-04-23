@@ -16,28 +16,34 @@ const { Content } = await render(post);
 const formattedDate = post.data.date.toLocaleDateString('de-DE', {
   year: 'numeric', month: 'long', day: 'numeric'
 });
+const isoDate = post.data.date.toISOString().slice(0, 10);
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description}>
-  <nav class="pt-4 mb-10 text-[0.72rem] tracking-widest uppercase" style="font-family: var(--font-mono)">
-    <a href="/blog" class="text-muted hover:text-accent transition-colors">← Blog</a>
+
+  <nav class="pt-4 mb-10 flex items-center gap-3 text-[0.68rem] tracking-[0.2em] uppercase"
+       style="font-family: var(--font-mono)">
+    <a href="/blog" class="text-[--color-muted] hover:text-[--color-accent] transition-colors">&lt;&lt; LOG</a>
+    <span class="text-[--color-border-strong]">/</span>
+    <span class="text-[--color-muted-deep]">{isoDate}</span>
   </nav>
 
   <article class="grid grid-cols-12 gap-8">
-    <header class="col-span-12 md:col-span-8 md:col-start-3 mb-10">
-      <div class="rise rise-1 section-num mb-4">{formattedDate}</div>
-      <h1 class="rise rise-2 display-lg mb-4 text-text" style="font-size: clamp(2rem, 1.4rem + 2.2vw, 3rem); line-height: 1.05">
+
+    <header class="col-span-12 md:col-span-8 md:col-start-3 mb-14 pb-10 border-b border-[--color-border]">
+      <div class="rise rise-1 section-num mb-5">{formattedDate.toUpperCase()}</div>
+      <h1 class="rise rise-2 display-lg text-[--color-text]"
+          style="font-size: clamp(2rem, 1.4rem + 2.6vw, 3.4rem);">
         {post.data.title}
       </h1>
-      <p class="rise rise-3 text-text-soft leading-relaxed max-w-[60ch]">{post.data.description}</p>
-      <div class="rise rise-4 flex flex-wrap gap-1.5 mt-5">
+      <p class="rise rise-3 text-[--color-text-soft] text-[0.98rem] leading-[1.65] max-w-[60ch] mt-6"
+         style="font-family: var(--font-sans)">{post.data.description}</p>
+      <div class="rise rise-4 flex flex-wrap gap-1.5 mt-6">
         {post.data.tags.map(tag => <span class="tag">{tag}</span>)}
       </div>
     </header>
 
-    <div class="col-span-12 md:col-span-8 md:col-start-3 prose prose-invert max-w-none
-                prose-headings:font-normal prose-a:text-accent prose-a:no-underline hover:prose-a:underline
-                prose-code:text-accent-soft">
+    <div class="col-span-12 md:col-span-8 md:col-start-3 prose max-w-none">
       <Content />
     </div>
   </article>
