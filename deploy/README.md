@@ -70,8 +70,8 @@ touch /opt/portfolio/.deploy-trigger
 
 Die `.env` wird auf der VM aus dem self-hosted Bitwarden (`vault.vugas.de`, Account
 `ai-worker@vugas.de`) generiert. Secrets liegen im Ordner `portfolio-deploy` als je ein
-Item `portfolio-<VAR>` (Wert im Passwort-Feld) für: `WEBHOOK_SECRET`, `NEWT_ID`,
-`NEWT_SECRET`, `OAUTH_CLIENT_ID`, `OAUTH_CLIENT_SECRET`, `ORIGINS`, `REDIRECT_URL`.
+Item `portfolio-<VAR>` (Wert im Passwort-Feld) für: `WEBHOOK_SECRET`,
+`OAUTH_CLIENT_ID`, `OAUTH_CLIENT_SECRET`, `ORIGINS`, `REDIRECT_URL`.
 
 ### Einmaliger Bootstrap (auf LXC 115)
 
