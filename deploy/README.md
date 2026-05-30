@@ -10,15 +10,17 @@
        │
        ▼
   nginx → portfolio-webhook:9000
-       │      (HMAC verify, git pull, write .deploy-trigger)
+       │      (HMAC verify, write .deploy-trigger)
        ▼
   systemd-path watches /opt/portfolio/.deploy-trigger
        │
        ▼
-  portfolio-deploy.service  →  docker compose up -d --build portfolio
+  portfolio-deploy.service  →  deploy.sh: git fetch/reset (Host, SSH-Key) + docker compose up -d --build portfolio
 ```
 
-Only the host runs `docker compose`; the webhook container never touches the docker socket.
+Only the host runs `docker compose` **and** the git update — the repo is private, and the host
+has the SSH key. The webhook container only writes the trigger file; it never touches git, ssh,
+or the docker socket.
 
 ## One-time install (on LXC 115)
 
