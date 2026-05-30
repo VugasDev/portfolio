@@ -18,7 +18,7 @@ function remarkReadingTime() {
 
 export default defineConfig({
   site: 'https://vugas.de',
-  integrations: [mdx(), sitemap()],
+  integrations: [mdx(), sitemap({ filter: (page) => !page.includes('/og/') })],
   markdown: {
     remarkPlugins: [remarkReadingTime],
   },
