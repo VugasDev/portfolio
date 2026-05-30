@@ -20,7 +20,13 @@ const formattedDate = post.data.date.toLocaleDateString('de-DE', {
 const isoDate = post.data.date.toISOString().slice(0, 10);
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogType="article"
+  publishedDate={post.data.date}
+  tags={post.data.tags}
+>
 
   <nav class="pt-4 mb-10 flex items-center gap-3 text-[0.68rem] tracking-[0.2em] uppercase"
        style="font-family: var(--font-mono)">

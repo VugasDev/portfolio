@@ -1,14 +1,24 @@
 ---
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import Seo from '../components/Seo.astro';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   description?: string;
+  ogType?: 'website' | 'article';
+  publishedDate?: Date;
+  tags?: string[];
 }
 
-const { title, description = 'Homelab, Self-Hosting und AI Agents — Lars Meykel' } = Astro.props;
+const {
+  title,
+  description = 'Homelab, Self-Hosting und AI Agents — Lars Meykel',
+  ogType = 'website',
+  publishedDate,
+  tags = [],
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -17,6 +27,7 @@ const { title, description = 'Homelab, Self-Hosting und AI Agents — Lars Meyke
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <Seo title={title} description={description} type={ogType} publishedDate={publishedDate} tags={tags} />
     <title>{title} · VUGAS.DE / UNIT-01</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title="VUGAS.DE / LOG" href="/rss.xml" />
