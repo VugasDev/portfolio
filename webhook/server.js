@@ -4,7 +4,6 @@
 const http   = require('http');
 const crypto = require('crypto');
 const fs     = require('fs');
-const { spawnSync } = require('child_process');
 
 const SECRET  = process.env.WEBHOOK_SECRET || '';
 const APP_DIR = process.env.APP_DIR || '/app';
@@ -20,11 +19,6 @@ if (!SECRET) {
 }
 
 function log(...a) { console.log('[webhook]', ...a); }
-
-function run(cmd, args, cwd) {
-  const r = spawnSync(cmd, args, { cwd, stdio: 'inherit', encoding: 'utf8' });
-  if (r.status !== 0) throw new Error(`${cmd} ${args.join(' ')} exited ${r.status}`);
-}
 
 function verifySignature(sig, body) {
   if (!SECRET) return false; // defense-in-depth; Start ist oben bereits abgebrochen
@@ -74,15 +68,15 @@ const server = http.createServer((req, res) => {
     }
 
     log('push on', BRANCH, '→', (payload.after || '').slice(0, 7));
+    // Kein git im Container (privates Repo -> keine Credentials hier). Nur Trigger
+    // schreiben; der Host-Deploy (deploy/deploy.sh, hat SSH-Key) macht fetch/reset + build.
     try {
-      run('git', ['fetch', '--depth=1', 'origin', BRANCH], APP_DIR);
-      run('git', ['reset', '--hard', `origin/${BRANCH}`], APP_DIR);
       fs.writeFileSync(TRIGGER, `${payload.after || ''}\n${new Date().toISOString()}\n`);
       log('trigger written');
       res.writeHead(202); res.end('queued');
     } catch (e) {
-      log('pull failed:', e.message);
-      res.writeHead(500); res.end('pull failed');
+      log('trigger write failed:', e.message);
+      res.writeHead(500); res.end('trigger failed');
     }
   });
 });

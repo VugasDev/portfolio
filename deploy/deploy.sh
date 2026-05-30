@@ -18,7 +18,11 @@ fi
 
 log "deploy begin — $(cat "$TRIGGER" | head -1)"
 
-# The webhook already pulled. Build + restart just the portfolio service.
+# Git-Update läuft hier auf dem Host (hat SSH-Key; Repo ist privat), nicht im Container.
+git fetch origin main >>"$LOGFILE" 2>&1
+git reset --hard origin/main >>"$LOGFILE" 2>&1
+
+# Build + restart just the portfolio service.
 if docker compose up -d --build portfolio >>"$LOGFILE" 2>&1; then
   rm -f "$TRIGGER"
   log "deploy OK"

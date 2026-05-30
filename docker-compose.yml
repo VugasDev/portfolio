@@ -7,14 +7,11 @@ services:
       - "3010:80"
 
   webhook:
-    image: node:22-slim       # needs git for fetch/reset — alpine does not ship git
+    image: node:22-alpine     # nur Trigger schreiben; git macht der Host -> kein git/ssh nötig
     container_name: portfolio-webhook
     restart: unless-stopped
     working_dir: /webhook
-    command: >
-      sh -c "command -v git >/dev/null 2>&1 || (apt-get update && apt-get install -y --no-install-recommends git ca-certificates && rm -rf /var/lib/apt/lists/*);
-             git config --global --add safe.directory /app;
-             exec node server.js"
+    command: node server.js
     volumes:
       - ./webhook:/webhook
       - .:/app
