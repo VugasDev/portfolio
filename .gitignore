@@ -22,3 +22,12 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
+# Interne Planungs-/Arbeitsdokumente (nicht im Repo)
+/docs/
+/punchlist.md

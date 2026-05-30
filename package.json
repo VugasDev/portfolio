@@ -9,19 +9,24 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test:smoke": "playwright test"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.3",
-    "@astrojs/rss": "^5.0.0",
-    "@astrojs/sitemap": "^4.0.0",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.3",
+    "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/vite": "^4.2.2",
     "astro": "^6.1.6",
     "mdast-util-to-string": "^4.0.0",
     "reading-time": "^1.5.0",
+    "satori": "^0.26.0",
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.0",
+    "@playwright/test": "^1.50.0",
     "@tailwindcss/typography": "^0.5.19"
   }
 }
