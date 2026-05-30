@@ -25,50 +25,51 @@ const stack = [
   <!-- ─── HERO ─── -->
   <section class="pt-6 md:pt-10 pb-16 border-b border-[--color-border]">
 
-    <!-- Top meta strip -->
-    <div class="rise rise-1 grid grid-cols-[auto_1fr_auto] items-center gap-4 mb-10 pb-3
-                border-b border-[--color-border] text-[0.64rem] uppercase tracking-[0.22em]
-                text-[--color-muted-deep]"
-         style="font-family: var(--font-mono)">
-      <span>CLASSIFIED / OPEN-SOURCE</span>
-      <span class="hidden md:block h-[1px] bg-[--color-border]"></span>
-      <span class="live">SYSTEM / READY</span>
-    </div>
+    <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-8 md:gap-10 items-center">
+      <!-- Left: Kicker + H1 + Lead + Buttons -->
+      <div>
+        <div class="rise rise-1 section-num mb-4">Homelab &middot; Self-Hosting &middot; AI</div>
 
-    <div class="grid grid-cols-12 gap-6 md:gap-10">
-      <div class="col-span-12 md:col-span-9">
-        <h1 class="rise rise-2 display-xl">
-          Homelab.<br/>
-          <span class="text-[--color-accent]">Documented.</span><span class="cursor"></span>
+        <h1 class="rise rise-2 display-xl text-[--color-text] mb-6">
+          Homelab,<br/>
+          <span style="color: var(--color-accent)">documented.</span>
         </h1>
 
-        <p class="rise rise-3 text-[--color-text-soft] text-[0.98rem] leading-[1.65] max-w-[62ch] mt-8 mb-10"
-           style="font-family: var(--font-sans)">
+        <p class="rise rise-3 text-[--color-text-soft] leading-[1.65] max-w-[52ch] mb-8"
+           style="font-family: var(--font-sans); font-size: 1rem;">
           Ich bin Lars. Ich baue Infrastruktur &mdash; Proxmox, Docker, AI-Agents &mdash;
-          und schreibe auf, was funktioniert und was nicht.<br/>
-          Damit du es nachbauen kannst, ohne die Nacht zu verlieren.
+          und schreibe auf, was funktioniert und was nicht.
         </p>
 
         <div class="rise rise-4 flex flex-wrap items-center gap-3">
-          <a href="/projects" class="btn btn-primary">
-            <span>&gt;&gt; PROJECTS</span>
-          </a>
-          <a href="/guides" class="btn">
-            <span>READ GUIDES</span>
-          </a>
+          <a href="/projects" class="btn btn-primary">Projekte</a>
+          <a href="/guides" class="btn">Guides</a>
           <a href="/about" class="arrow ml-2">
-            <span>OPERATOR</span>
-            <span class="glyph">&gt;&gt;</span>
+            <span>About</span>
+            <span class="glyph">&rarr;</span>
           </a>
         </div>
       </div>
 
-      <aside class="col-span-12 md:col-span-3 md:pt-2">
-        <div class="rise rise-5 grid grid-cols-2 md:grid-cols-1 gap-x-5 gap-y-5">
-          <dl class="stat"><dt>Location</dt>    <dd>51&deg;N / DE</dd></dl>
-          <dl class="stat"><dt>LXC / Nodes</dt> <dd>07</dd></dl>
-          <dl class="stat"><dt>VLANs</dt>       <dd>06</dd></dl>
-          <dl class="stat"><dt>Storage</dt>     <dd>18 TB</dd></dl>
+      <!-- Right: Glass Status Panel -->
+      <aside class="rise rise-5">
+        <div style="background: var(--color-glass); border: 1px solid var(--color-border-strong); border-radius: var(--radius-card); padding: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-display); font-size: 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid var(--color-border);">
+            <span style="font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.55; color: var(--color-text-soft);">System</span>
+            <span class="live" style="font-size: 0.75rem;">ready</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-display); font-size: 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid var(--color-border);">
+            <span style="font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.55; color: var(--color-text-soft);">Nodes</span>
+            <span style="font-weight: 700; color: var(--color-text);">07</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-display); font-size: 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid var(--color-border);">
+            <span style="font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.55; color: var(--color-text-soft);">VLANs</span>
+            <span style="font-weight: 700; color: var(--color-text);">06</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-display); font-size: 0.8rem; padding: 0.5rem 0;">
+            <span style="font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.55; color: var(--color-text-soft);">Storage</span>
+            <span style="font-weight: 700; color: var(--color-text);">18 TB</span>
+          </div>
         </div>
       </aside>
     </div>
@@ -76,17 +77,10 @@ const stack = [
 
   <!-- ─── STACK STRIP ─── -->
   <section class="rise rise-6 py-8 border-b border-[--color-border]">
-    <div class="grid grid-cols-[auto_1fr] items-center gap-6">
-      <span class="section-num">&#91; STACK &#93;</span>
-      <ul class="flex flex-wrap gap-x-6 gap-y-2"
-          style="font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;">
-        {stack.map((s, i) => (
-          <li class="flex items-baseline gap-1.5">
-            <span class="text-[--color-muted-deep] text-[0.6rem]">{String(i + 1).padStart(2, '0')}</span>
-            <span class="text-[--color-text-soft]">{s}</span>
-          </li>
-        ))}
-      </ul>
+    <div class="flex flex-wrap gap-2">
+      {stack.map(s => (
+        <span class="chip">{s}</span>
+      ))}
     </div>
   </section>
 
@@ -97,24 +91,24 @@ const stack = [
         <span class="section-num">01 //</span>
         <h2 class="display-lg">Active Projects</h2>
       </div>
-      <a href="/projects" class="arrow"><span>All Projects</span><span class="glyph">&gt;&gt;</span></a>
+      <a href="/projects" class="arrow"><span>All Projects</span><span class="glyph">&rarr;</span></a>
     </header>
 
     {recentProjects.length > 0 ? (
-      <ul class="grid grid-cols-1 md:grid-cols-2 gap-[1px] bg-[--color-border]">
+      <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
         {recentProjects.map(p => (
-          <li class="bg-[--color-bg] transition-colors duration-200 hover:bg-[--color-surface]">
-            <a href={p.data.github ?? p.data.url ?? '/projects'} class="block p-6 h-full group">
+          <li>
+            <a href={p.data.github ?? p.data.url ?? '/projects'} class="card block group h-full">
               <div class="flex items-start justify-between gap-4 mb-3">
-                <h3 class="text-[1.05rem] uppercase text-[--color-text] group-hover:text-[--color-accent] transition-colors"
-                    style="font-family: var(--font-display); letter-spacing: -0.02em;">
+                <h3 class="text-[1.05rem] text-[--color-text] group-hover:text-[--color-accent] transition-colors"
+                    style="font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em;">
                   {p.data.name}
                 </h3>
-                <span class="tag tag-accent whitespace-nowrap">{p.data.status}</span>
+                <span class="tag tag-accent whitespace-nowrap shrink-0">{p.data.status}</span>
               </div>
-              <p class="text-[0.85rem] text-[--color-muted] leading-[1.55] max-w-[56ch]"
+              <p class="text-[0.85rem] text-[--color-muted] leading-[1.55] max-w-[56ch] mb-4"
                  style="font-family: var(--font-sans)">{p.data.description}</p>
-              <div class="mt-5 flex flex-wrap gap-1.5">
+              <div class="flex flex-wrap gap-1.5">
                 {p.data.tags.slice(0, 5).map(t => <span class="tag">{t}</span>)}
               </div>
             </a>
@@ -135,7 +129,7 @@ const stack = [
           <span class="section-num">02 //</span>
           <h2 class="display-lg">Log</h2>
         </div>
-        <a href="/blog" class="arrow"><span>All Entries</span><span class="glyph">&gt;&gt;</span></a>
+        <a href="/blog" class="arrow"><span>All Entries</span><span class="glyph">&rarr;</span></a>
       </header>
 
       {recentPosts.length > 0 ? (
@@ -143,12 +137,12 @@ const stack = [
           {recentPosts.map((p, i) => (
             <li>
               <a href={`/blog/${p.id}`} class="row group">
-                <time class="row-idx shrink-0 w-24 tabular-nums">
+                <time class="row-idx shrink-0 tabular-nums">
                   {String(i + 1).padStart(2, '0')} / {p.data.date.toLocaleDateString('de-DE', { year: '2-digit', month: '2-digit', day: '2-digit' })}
                 </time>
                 <span class="text-[--color-text-soft] group-hover:text-[--color-accent] transition-colors"
                       style="font-family: var(--font-sans)">{p.data.title}</span>
-                <span class="row-idx" aria-hidden="true">&gt;&gt;</span>
+                <span class="row-idx" aria-hidden="true">&rarr;</span>
               </a>
             </li>
           ))}
@@ -164,7 +158,7 @@ const stack = [
           <span class="section-num">03 //</span>
           <h2 class="display-lg">Guides</h2>
         </div>
-        <a href="/guides" class="arrow"><span>All</span><span class="glyph">&gt;&gt;</span></a>
+        <a href="/guides" class="arrow"><span>All</span><span class="glyph">&rarr;</span></a>
       </header>
 
       {featuredGuides.length > 0 ? (
@@ -174,10 +168,10 @@ const stack = [
               <a href={`/guides/${g.id}`} class="card block group">
                 <div class="flex items-center justify-between mb-3">
                   <span class="tag">{g.data.difficulty}</span>
-                  <span class="row-idx group-hover:text-[--color-accent] transition-colors" aria-hidden="true">&gt;&gt;</span>
+                  <span class="row-idx group-hover:text-[--color-accent] transition-colors" aria-hidden="true">&rarr;</span>
                 </div>
-                <h3 class="text-[0.92rem] uppercase text-[--color-text] group-hover:text-[--color-accent] transition-colors"
-                    style="font-family: var(--font-display); letter-spacing: -0.02em; line-height: 1.1;">
+                <h3 class="text-[0.92rem] text-[--color-text] group-hover:text-[--color-accent] transition-colors"
+                    style="font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">
                   {g.data.title}
                 </h3>
               </a>
