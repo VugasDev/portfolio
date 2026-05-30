@@ -1,0 +1,33 @@
+---
+interface Props { headings: { depth: number; slug: string; text: string }[] }
+const { headings } = Astro.props;
+const items = headings.filter(h => h.depth === 2 || h.depth === 3);
+---
+{items.length >= 2 && (
+  <nav class="toc" aria-label="Inhalt">
+    <div class="section-num mb-3">Auf dieser Seite</div>
+    <ul>
+      {items.map(h => (
+        <li>
+          <a href={`#${h.slug}`} data-toc={h.slug}
+             class:list={["toc-link", h.depth === 3 && "toc-sub"]}>{h.text}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+<script>
+  const links = [...document.querySelectorAll('.toc-link')];
+  if (links.length) {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('on'));
+          const active = document.querySelector(`.toc-link[data-toc="${e.target.id}"]`);
+          active?.classList.add('on');
+        }
+      });
+    }, { rootMargin: '0px 0px -70% 0px' });
+    document.querySelectorAll('article h2[id], article h3[id]').forEach(h => obs.observe(h));
+  }
+</script>

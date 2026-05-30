@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Toc from '../../components/Toc.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -12,7 +13,7 @@ const guides = await getCollection('guides');
 const guide = guides.find(g => g.id === id);
 if (!guide) return Astro.redirect('/guides');
 
-const { Content, remarkPluginFrontmatter } = await render(guide);
+const { Content, headings, remarkPluginFrontmatter } = await render(guide);
 const minutesRead = remarkPluginFrontmatter.minutesRead ?? 1;
 
 let chapters: typeof guides = [];
@@ -25,9 +26,9 @@ if (guide.data.series) {
 
 <BaseLayout title={guide.data.title} description={guide.data.description}>
 
-  <nav class="pt-4 mb-10 flex items-center gap-3 text-[0.68rem] tracking-[0.2em] uppercase"
-       style="font-family: var(--font-mono)">
-    <a href="/guides" class="text-[--color-muted] hover:text-[--color-accent] transition-colors">&lt;&lt; GUIDES</a>
+  <nav class="pt-4 mb-10 flex items-center gap-3 text-[0.68rem] tracking-[0.14em] uppercase"
+       style="font-family: var(--font-display)">
+    <a href="/guides" class="text-[--color-muted] hover:text-[--color-accent] transition-colors">&larr; Guides</a>
     {guide.data.series && (
       <>
         <span class="text-[--color-border-strong]">/</span>
@@ -36,70 +37,59 @@ if (guide.data.series) {
     )}
   </nav>
 
-  <div class="grid grid-cols-12 gap-10">
+  <div class="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-10">
 
-    {chapters.length > 0 ? (
-      <>
-        <aside class="hidden md:block col-span-3 sticky top-20 self-start">
-          <div class="rule mb-4"><span>Chapters</span></div>
+    <!-- Sidebar: chapters or TOC -->
+    <aside class="hidden md:block">
+      {chapters.length > 0 ? (
+        <nav style="position: sticky; top: 5rem;" aria-label="Kapitel">
+          <div class="section-num mb-3">Kapitel</div>
           <ol class="border-t border-[--color-border]">
             {chapters.map((ch, i) => (
               <li class="border-b border-[--color-border]">
                 <a
                   href={`/guides/${ch.id}`}
                   class:list={[
-                    'group flex items-baseline gap-3 px-2 py-2.5 text-[0.78rem] uppercase',
-                    'transition-[transform,color] duration-200 hover:translate-x-1.5',
+                    'flex items-baseline gap-3 px-2 py-2.5 text-[0.78rem]',
+                    'transition-[transform,color] duration-200 hover:translate-x-1',
                     ch.id === id
-                      ? 'text-[--color-accent] bg-[--color-surface]'
+                      ? 'text-[--color-accent]'
                       : 'text-[--color-muted] hover:text-[--color-text]',
                   ]}
-                  style="font-family: var(--font-mono); letter-spacing: 0.08em; transition-timing-function: var(--ease-out);"
+                  style="font-family: var(--font-display); letter-spacing: 0.06em;"
                 >
-                  <span class="text-[--color-muted-deep] tabular-nums w-6 shrink-0">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="text-[--color-muted-deep] tabular-nums w-5 shrink-0">{String(i + 1).padStart(2, '0')}</span>
                   <span class="truncate">{ch.data.title}</span>
                 </a>
               </li>
             ))}
           </ol>
-        </aside>
+        </nav>
+      ) : (
+        <Toc headings={headings} />
+      )}
+    </aside>
 
-        <article class="col-span-12 md:col-span-9 prose max-w-none">
-          <header class="not-prose mb-12 pb-8 border-b border-[--color-border]">
-            <div class="rise rise-1 flex items-center gap-3 mb-5">
-              <span class="tag tag-accent">{guide.data.difficulty}</span>
-              <span class="section-num">CHAPTER / {String(guide.data.order ?? 0).padStart(2, '0')}</span>
-              <span class="text-[--color-border-strong]">/</span>
-              <span class="section-num">{minutesRead} MIN</span>
-            </div>
-            <h1 class="rise rise-2 display-lg text-[--color-text]"
-                style="font-size: clamp(2rem, 1.4rem + 2.4vw, 3.2rem);">
-              {guide.data.title}
-            </h1>
-            <p class="rise rise-3 text-[--color-text-soft] text-[0.98rem] leading-[1.65] max-w-[60ch] mt-6"
-               style="font-family: var(--font-sans)">{guide.data.description}</p>
-          </header>
-          <Content />
-        </article>
-      </>
-    ) : (
-      <article class="col-span-12 md:col-span-8 md:col-start-3 prose max-w-none">
-        <header class="not-prose mb-12 pb-8 border-b border-[--color-border]">
-          <div class="rise rise-1 flex items-center gap-3 mb-5">
-            <span class="tag tag-accent">{guide.data.difficulty}</span>
-            <span class="section-num">&#91; GUIDE &#93;</span>
-            <span class="text-[--color-border-strong]">/</span>
-            <span class="section-num">{minutesRead} MIN</span>
-          </div>
-          <h1 class="rise rise-2 display-lg text-[--color-text]"
-              style="font-size: clamp(2rem, 1.4rem + 2.4vw, 3.2rem);">
-            {guide.data.title}
-          </h1>
-          <p class="rise rise-3 text-[--color-text-soft] text-[0.98rem] leading-[1.65] max-w-[60ch] mt-6"
-             style="font-family: var(--font-sans)">{guide.data.description}</p>
-        </header>
-        <Content />
-      </article>
-    )}
+    <!-- Main content -->
+    <article class="prose max-w-none">
+      <header class="not-prose mb-12 pb-8 border-b border-[--color-border]">
+        <div class="rise rise-1 flex items-center gap-3 mb-5">
+          <span class="tag tag-accent">{guide.data.difficulty}</span>
+          {chapters.length > 0 && (
+            <span class="section-num">Kapitel / {String(guide.data.order ?? 0).padStart(2, '0')}</span>
+          )}
+          <span class="text-[--color-border-strong]">/</span>
+          <span class="section-num">{minutesRead} min</span>
+        </div>
+        <h1 class="rise rise-2 display-lg text-[--color-text]"
+            style="font-size: clamp(2rem, 1.4rem + 2.4vw, 3.2rem);">
+          {guide.data.title}
+        </h1>
+        <p class="rise rise-3 text-[--color-text-soft] text-[0.98rem] leading-[1.65] max-w-[60ch] mt-6"
+           style="font-family: var(--font-sans)">{guide.data.description}</p>
+      </header>
+      <Content />
+    </article>
+
   </div>
 </BaseLayout>
