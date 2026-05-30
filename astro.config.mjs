@@ -23,6 +23,7 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [remarkReadingTime],
     rehypePlugins: [[rehypeMermaid, { strategy: 'inline-svg' }]],
+    syntaxHighlight: { type: 'shiki', excludeLangs: ['mermaid'] },
   },
   vite: {
     plugins: [tailwindcss()],
