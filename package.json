@@ -9,7 +9,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test:smoke": "playwright test"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.3",
@@ -24,6 +25,8 @@
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.0",
+    "@playwright/test": "^1.50.0",
     "@tailwindcss/typography": "^0.5.19"
   }
 }
