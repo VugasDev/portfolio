@@ -4,6 +4,8 @@ import ProjectCard from '../../components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
 
 const all = await getCollection('projects');
+const studies = await getCollection('caseStudies', ({ data }) => !data.draft);
+const studySlugs = new Set(studies.map(s => s.id));
 const byStatus = (s: string) => all.filter(p => p.data.status === s);
 const groups = [
   { key: 'aktiv',      label: 'ACTIVE',     items: byStatus('aktiv') },
@@ -44,7 +46,9 @@ const groups = [
           <div class="rule flex-1"><span>{g.label} / {String(g.items.length).padStart(2, '0')}</span></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {g.items.map(p => <ProjectCard {...p.data} />)}
+          {g.items.map(p => (
+            <ProjectCard {...p.data} caseStudyHref={studySlugs.has(p.id) ? `/projects/${p.id}` : undefined} />
+          ))}
         </div>
       </section>
     ))}

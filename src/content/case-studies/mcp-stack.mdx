@@ -1,0 +1,52 @@
+---
+title: "MCP-Stack"
+description: "Zwei Gateway-Instanzen, die Claude Code in WSL per SSE mit einem ganzen Stack an MCP-Servern verbinden."
+status: "aktiv"
+tags: ["mcp", "docker", "wsl"]
+stack: ["Docker MCP Gateway", "Supergateway", "Python", "systemd", "WSL", "SSE"]
+github: "https://github.com/VugasDev/mcp-stack"
+screenshots: []
+draft: false
+---
+
+## Problem
+
+Claude Code soll in WSL auf viele Werkzeuge zugreifen — GitHub, n8n, Obsidian, Prometheus,
+ffmpeg, Proxmox — ohne für jeden Server eine eigene fragile Einzelkonfiguration. Gebraucht
+wurde ein stabiler, neustartfester Verbund, der mehrere MCP-Server hinter wenigen Endpunkten
+bündelt.
+
+## Architektur
+
+Zwei Gateways laufen als systemd-managed Docker-Dienste in WSL und exponieren je einen
+SSE-Endpoint. Das Docker-MCP-Gateway bündelt die Catalog-Server (per `registry.yaml`),
+ein zweites Gateway (Supergateway + Python) stellt 40+ Proxmox-VE-Tools bereit.
+
+```mermaid
+flowchart TD
+  CC["Claude Code (WSL)"]
+  CC -->|"localhost:3000/sse"| GW["mcp-gateway (Docker MCP Gateway)"]
+  CC -->|"localhost:3001/sse"| PX["mcp-proxmox (Supergateway + Python)"]
+  GW --> S1["github-official"]
+  GW --> S2["n8n"]
+  GW --> S3["obsidian"]
+  GW --> S4["prometheus"]
+  GW --> S5["ffmpeg / youtube / docker-docs"]
+  PX --> P1["40+ Proxmox VE Tools"]
+```
+
+## Stack
+
+Docker MCP Gateway (Catalog-Server via `registry.yaml`/`config.yaml`), Supergateway + Python
+für den Proxmox-Server, systemd für Lifecycle/Neustart, Secrets via `.env` (GitHub-Token,
+Obsidian/n8n-Keys, Proxmox-Token).
+
+## Learnings
+
+- **Zwei spezialisierte Gateways** statt eines Monolithen: Catalog-Server und der dicke
+  Proxmox-Server bleiben unabhängig.
+- **systemd-managed Docker in WSL** macht den Stack neustartfest — kein manuelles
+  Hochfahren nach jedem WSL-Restart.
+- **SSE-Endpunkte** sind die saubere Brücke zwischen Claude Code und den containerisierten
+  MCP-Servern.
+- Server lassen sich über `registry.yaml` deklarativ ein-/ausschalten, ohne Code-Änderung.

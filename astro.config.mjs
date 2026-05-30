@@ -5,6 +5,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import readingTime from 'reading-time';
 import { toString as mdastToString } from 'mdast-util-to-string';
+import rehypeMermaid from 'rehype-mermaid';
 
 /** Remark plugin: attach reading-time to frontmatter at build time */
 function remarkReadingTime() {
@@ -21,6 +22,8 @@ export default defineConfig({
   integrations: [mdx(), sitemap({ filter: (page) => !page.includes('/og/') })],
   markdown: {
     remarkPlugins: [remarkReadingTime],
+    rehypePlugins: [[rehypeMermaid, { strategy: 'inline-svg' }]],
+    syntaxHighlight: { type: 'shiki', excludeLangs: ['mermaid'] },
   },
   vite: {
     plugins: [tailwindcss()],

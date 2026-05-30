@@ -6,8 +6,9 @@ interface Props {
   status: string;
   github?: string;
   url?: string;
+  caseStudyHref?: string;
 }
-const { name, description, tags, status, github, url } = Astro.props;
+const { name, description, tags, status, github, url, caseStudyHref } = Astro.props;
 ---
 
 <article class="card group flex flex-col gap-3">
@@ -26,8 +27,11 @@ const { name, description, tags, status, github, url } = Astro.props;
     {tags.map(tag => <span class="tag">{tag}</span>)}
   </div>
 
-  {(github || url) && (
+  {(github || url || caseStudyHref) && (
     <div class="flex gap-5 mt-auto pt-3 border-t border-[--color-border]">
+      {caseStudyHref && (
+        <a href={caseStudyHref} class="arrow"><span>Case Study</span><span class="glyph">&gt;&gt;</span></a>
+      )}
       {github && (
         <a href={github} class="arrow"><span>GitHub</span><span class="glyph">&gt;&gt;</span></a>
       )}

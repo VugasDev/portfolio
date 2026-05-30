@@ -37,4 +37,18 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { blog, guides, projects };
+const caseStudies = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/case-studies' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    status: z.enum(['aktiv', 'in Arbeit', 'Planung', 'archiviert']),
+    tags: z.array(z.string()).default([]),
+    stack: z.array(z.string()).default([]),
+    github: z.string().url().optional(),
+    screenshots: z.array(z.object({ src: z.string(), alt: z.string() })).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { blog, guides, projects, caseStudies };

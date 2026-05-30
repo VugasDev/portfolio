@@ -21,6 +21,7 @@
     "astro": "^6.1.6",
     "mdast-util-to-string": "^4.0.0",
     "reading-time": "^1.5.0",
+    "rehype-mermaid": "^3.0.0",
     "satori": "^0.26.0",
     "tailwindcss": "^4.2.2"
   },
