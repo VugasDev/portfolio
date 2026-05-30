@@ -1,6 +1,6 @@
 ---
 title: "Mediastack"
-description: "Self-hosted Media-Automation: Jellyfin + *arr-Suite + SABnzbd + Bazarr + Recyclarr auf einem unprivilegierten LXC."
+description: "Self-hosted Media-Automation mit Jellyfin + *arr-Suite: zentrale Verwaltung, Metadaten, Untertitel und Transcoding der eigenen Sammlung auf einem unprivilegierten LXC."
 status: "Planung"
 tags: ["jellyfin", "servarr", "docker"]
 stack: ["Jellyfin", "Sonarr", "Radarr", "Prowlarr", "SABnzbd", "Bazarr", "Recyclarr", "Docker", "Proxmox LXC", "ZFS"]
@@ -10,35 +10,36 @@ draft: false
 
 ## Problem
 
-Streaming-Abos sind teuer, fragmentiert und nehmen einem die Kontrolle über die eigene
-Mediathek. Ziel war ein vollautomatischer, self-hosted Media-Stack: anfragen, beschaffen,
-qualitätsnormalisieren, untertiteln und abspielen — ohne manuelle Handgriffe und sauber in
-ein VLAN-segmentiertes Homelab integriert.
+Eine über Jahre gewachsene, rechtmäßig erworbene Mediensammlung — Blu-ray- und DVD-Rips der
+eigenen Discs, Eigenaufnahmen, gekaufte Inhalte — verstreut über mehrere Platten ist praktisch
+unbrauchbar. Ziel war eine einheitliche, automatisierte Bibliothek: saubere Metadaten,
+mehrsprachige Untertitel, normalisierte Qualität und Streaming auf alle Geräte — vollständig
+self-hosted, ohne Cloud, sauber in ein VLAN-segmentiertes Homelab integriert.
 
 ## Architektur
 
 Alles läuft in einem unprivilegierten Proxmox-LXC (114, `10.17.10.14`, VLAN 10 SRV) auf
-linuxserver.io-Images. Jellyseerr nimmt Requests entgegen, die *arr-Suite orchestriert
-Suche und Download über Prowlarr-Indexer und SABnzbd (Usenet), Recyclarr erzwingt
-TRaSH-Guide-Qualitätsprofile, Bazarr zieht Untertitel, Jellyfin streamt.
+linuxserver.io-Images. Jellyseerr nimmt Wünsche aus dem Haushalt entgegen, die *arr-Suite
+automatisiert Organisation, Umbenennung, Metadaten und Bibliotheks-Monitoring, Recyclarr
+erzwingt reproduzierbare TRaSH-Guide-Qualitätsprofile, Bazarr ergänzt Untertitel, Jellyfin
+streamt auf alle Geräte.
 
 ```mermaid
 flowchart LR
-  U["User / Jellyseerr"] -->|Request| ARR["arr-Suite (Sonarr/Radarr)"]
-  ARR -->|Suche| IDX["Prowlarr Indexer"]
-  ARR -->|Download| SAB["SABnzbd (Usenet)"]
-  SAB -->|Import| ARR
-  REC["Recyclarr (TRaSH)"] -->|"Quality Profiles"| ARR
+  U["Haushalt / Jellyseerr"] -->|Wunsch| ARR["*arr-Suite (Automatisierung)"]
+  ARR -->|"Organisation & Metadaten"| LIB["Bibliothek"]
+  REC["Recyclarr (TRaSH)"] -->|Qualitätsprofile| ARR
   ARR -->|Untertitel| BAZ["Bazarr"]
-  ARR -->|Library| JF["Jellyfin"]
+  LIB --> JF["Jellyfin"]
   JF -->|Stream| U
 ```
 
 ## Stack
 
-Jellyfin als Player, Sonarr/Radarr/Prowlarr für Automation, SABnzbd als Usenet-Downloader,
-Recyclarr für reproduzierbare Quality-Profile, Bazarr für mehrsprachige Untertitel — als
-Container im LXC 114 (Debian 12, 4 vCPU / 8 GB), Storage auf ZFS (`tank-storage`).
+Jellyfin als Medienserver, Sonarr/Radarr/Prowlarr für Bibliotheks-Automatisierung und
+Metadaten, SABnzbd als Download-Client, Recyclarr für reproduzierbare Qualitätsprofile,
+Bazarr für mehrsprachige Untertitel — als Container im LXC 114 (Debian 12, 4 vCPU / 8 GB),
+Storage auf ZFS (`tank-storage`).
 
 ## Learnings
 
