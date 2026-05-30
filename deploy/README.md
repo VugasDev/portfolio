@@ -63,3 +63,40 @@ touch /opt/portfolio/.deploy-trigger
 - **Trigger file stays:** deploy failed. Inspect `/opt/portfolio/deploy.log`.
 - **Webhook returns 401:** secret mismatch between GitHub + `.env`.
 - **nginx 502 on /webhook:** portfolio-webhook container is down → `docker compose up -d webhook`.
+
+## Secrets aus Bitwarden (bw serve)
+
+Die `.env` wird auf der VM aus dem self-hosted Bitwarden (`vault.vugas.de`, Account
+`ai-worker@vugas.de`) generiert. Secrets liegen im Ordner `portfolio-deploy` als je ein
+Item `portfolio-<VAR>` (Wert im Passwort-Feld) für: `WEBHOOK_SECRET`, `NEWT_ID`,
+`NEWT_SECRET`, `OAUTH_CLIENT_ID`, `OAUTH_CLIENT_SECRET`, `ORIGINS`, `REDIRECT_URL`.
+
+### Einmaliger Bootstrap (auf LXC 115)
+
+```bash
+# 1. bw CLI installieren (z.B. via npm) und Server setzen
+bw config server https://vault.vugas.de
+bw login ai-worker@vugas.de            # einmalig interaktiv
+
+# 2. Master-Passwort hinterlegen (nur für root lesbar)
+sudo install -d -m 700 /etc/portfolio
+printf '%s' '<MASTER-PASSWORT>' | sudo tee /etc/portfolio/bw-master >/dev/null
+sudo chmod 600 /etc/portfolio/bw-master
+
+# 3. bw-serve als System-Service
+sudo cp /opt/portfolio/deploy/bw-serve.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now bw-serve
+curl -s http://127.0.0.1:8087/status | jq .data.template.status   # -> "unlocked"
+```
+
+### .env erzeugen / aktualisieren
+
+```bash
+/opt/portfolio/deploy/bw-sync-env.sh            # nur .env schreiben
+/opt/portfolio/deploy/bw-sync-env.sh --dry-run  # nur prüfen
+/opt/portfolio/deploy/refresh-secrets.sh        # .env + docker compose up -d
+```
+
+Sicherheit: `bw serve` lauscht nur auf `127.0.0.1` (keine API-Auth). Das Master-Passwort
+existiert ausschließlich in `/etc/portfolio/bw-master`; die Deploy-Scripts halten keine Secrets.
