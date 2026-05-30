@@ -20,20 +20,9 @@ else
   git -C "$DEPLOY_DIR" pull --ff-only
 fi
 
-# 2. .env anlegen falls noch nicht vorhanden
-if [ ! -f "$DEPLOY_DIR/.env" ]; then
-  echo "--> Erstelle .env"
-  WEBHOOK_SECRET=$(openssl rand -hex 32)
-  # NEWT_ID / NEWT_SECRET kommen aus der Umgebung (z. B. via Secret-Manager).
-  # Ohne gesetzte Werte landet CHANGE_ME in der .env und muss manuell ersetzt werden.
-  cat > "$DEPLOY_DIR/.env" << EOF
-WEBHOOK_SECRET=$WEBHOOK_SECRET
-NEWT_ID=${NEWT_ID:-CHANGE_ME}
-NEWT_SECRET=${NEWT_SECRET:-CHANGE_ME}
-EOF
-  echo "    WEBHOOK_SECRET: $WEBHOOK_SECRET"
-  echo "    --> Diesen Wert als GitHub Webhook Secret eintragen!"
-fi
+# 2. .env aus Bitwarden generieren (bw serve muss laufen & entsperrt sein)
+echo "--> Generiere .env aus Bitwarden (bw serve)"
+bash "$DEPLOY_DIR/deploy/bw-sync-env.sh"
 
 # 3. Docker Compose starten
 echo "--> Starte Docker Stack"
@@ -47,5 +36,5 @@ echo "Nächste Schritte:"
 echo "  1. Pangolin Dashboard: Tunnel für Port 3010 (Site) und 9000 (Webhook) anlegen"
 echo "  2. GitHub Webhook: https://github.com/VugasDev/portfolio/settings/webhooks"
 echo "     Payload URL: https://<deine-domain>/webhook"
-echo "     Secret: $(grep WEBHOOK_SECRET $DEPLOY_DIR/.env | cut -d= -f2)"
+echo "     Secret: in Bitwarden (Item portfolio-WEBHOOK_SECRET) — muss mit dem GitHub-Webhook-Secret übereinstimmen"
 echo "  3. GitHub OAuth App für Decap CMS /admin erstellen"
