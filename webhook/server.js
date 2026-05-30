@@ -12,6 +12,13 @@ const PORT    = parseInt(process.env.PORT || '9000', 10);
 const BRANCH  = process.env.BRANCH || 'main';
 const TRIGGER = `${APP_DIR}/.deploy-trigger`;
 
+// Fail closed: ohne Secret keine Signaturprüfung möglich -> nicht starten,
+// statt jeden unsignierten Request zu akzeptieren.
+if (!SECRET) {
+  console.error('[webhook] FATAL: WEBHOOK_SECRET nicht gesetzt — Start abgebrochen.');
+  process.exit(1);
+}
+
 function log(...a) { console.log('[webhook]', ...a); }
 
 function run(cmd, args, cwd) {
@@ -20,7 +27,7 @@ function run(cmd, args, cwd) {
 }
 
 function verifySignature(sig, body) {
-  if (!SECRET) return true;
+  if (!SECRET) return false; // defense-in-depth; Start ist oben bereits abgebrochen
   if (!sig) return false;
   const expected = 'sha256=' + crypto.createHmac('sha256', SECRET).update(body).digest('hex');
   const a = Buffer.from(sig);

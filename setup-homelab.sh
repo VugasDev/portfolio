@@ -24,10 +24,12 @@ fi
 if [ ! -f "$DEPLOY_DIR/.env" ]; then
   echo "--> Erstelle .env"
   WEBHOOK_SECRET=$(openssl rand -hex 32)
+  # NEWT_ID / NEWT_SECRET kommen aus der Umgebung (z. B. via Secret-Manager).
+  # Ohne gesetzte Werte landet CHANGE_ME in der .env und muss manuell ersetzt werden.
   cat > "$DEPLOY_DIR/.env" << EOF
 WEBHOOK_SECRET=$WEBHOOK_SECRET
-NEWT_ID=REDACTED
-NEWT_SECRET=REDACTED
+NEWT_ID=${NEWT_ID:-CHANGE_ME}
+NEWT_SECRET=${NEWT_SECRET:-CHANGE_ME}
 EOF
   echo "    WEBHOOK_SECRET: $WEBHOOK_SECRET"
   echo "    --> Diesen Wert als GitHub Webhook Secret eintragen!"
