@@ -27,3 +27,7 @@ pnpm-debug.log*
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+# Interne Planungs-/Arbeitsdokumente (nicht im Repo)
+/docs/
+/punchlist.md
