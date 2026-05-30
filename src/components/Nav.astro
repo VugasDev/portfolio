@@ -1,10 +1,10 @@
 ---
 const navItems = [
-  { href: '/',         label: 'INDEX',    num: '01' },
-  { href: '/projects', label: 'PROJECTS', num: '02' },
-  { href: '/blog',     label: 'LOG',      num: '03' },
-  { href: '/guides',   label: 'GUIDES',   num: '04' },
-  { href: '/about',    label: 'OPERATOR', num: '05' },
+  { href: '/',         label: 'Index',    num: '01' },
+  { href: '/projects', label: 'Projects', num: '02' },
+  { href: '/blog',     label: 'Log',      num: '03' },
+  { href: '/guides',   label: 'Guides',   num: '04' },
+  { href: '/about',    label: 'About',    num: '05' },
 ];
 const currentPath = Astro.url.pathname;
 const isActive = (href: string) =>
@@ -12,35 +12,30 @@ const isActive = (href: string) =>
 ---
 
 <nav class="w-full border-b border-[--color-border] sticky top-0 z-40"
-     style="background: rgba(10,10,10,0.85); backdrop-filter: blur(6px);">
+     style="background: var(--color-glass); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
   <div class="mx-auto max-w-[1280px] px-5 md:px-8 h-12 flex items-center justify-between">
 
-    <a href="/" class="flex items-center gap-3 group">
-      <span class="inline-block w-2.5 h-2.5 bg-[--color-accent] shrink-0" aria-hidden="true"></span>
-      <span style="font-family: var(--font-display); letter-spacing: -0.02em;"
-            class="text-[0.95rem] uppercase text-[--color-text] group-hover:text-[--color-accent] transition-colors duration-200">
-        VUGAS<span class="text-[--color-accent]">®</span>
+    <a href="/" class="flex items-center gap-2 group">
+      <span style="font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; font-size: 0.95rem;"
+            class="text-[--color-text] group-hover:text-[--color-text] transition-colors duration-200">
+        vugas<span style="color: var(--color-accent)">.</span>de
       </span>
-      <span class="hidden sm:inline text-[0.62rem] tracking-[0.22em] text-[--color-muted-deep]"
-            style="font-family: var(--font-mono)">UNIT-01 / REV 2.6</span>
     </a>
 
-    <ul class="hidden md:flex items-center">
+    <ul class="hidden md:flex items-center gap-1">
       {navItems.map(({ href, label, num }) => (
         <li>
           <a
             href={href}
             class:list={[
-              'group inline-flex items-baseline gap-2 px-3 py-1.5 text-[0.7rem] uppercase',
-              'border-l border-[--color-border]',
+              'inline-flex items-baseline gap-1.5 px-3 py-1.5 text-[0.68rem] uppercase transition-colors duration-200 rounded-full',
             ]}
-            style="font-family: var(--font-mono); letter-spacing: 0.14em;"
+            style="font-family: var(--font-display); letter-spacing: 0.08em;"
           >
-            <span class="text-[--color-muted-deep] text-[0.6rem]">{num}</span>
             <span
               class:list={[
                 'transition-colors duration-200',
-                isActive(href) ? 'text-[--color-accent]' : 'text-[--color-text-soft] group-hover:text-[--color-accent]',
+                isActive(href) ? 'text-[--color-accent]' : 'text-[--color-text-soft] hover:text-[--color-accent]',
               ]}
             >
               {label}
@@ -50,7 +45,7 @@ const isActive = (href: string) =>
       ))}
     </ul>
 
-    <ul class="flex md:hidden items-center gap-4" style="font-family: var(--font-mono); letter-spacing: 0.12em;">
+    <ul class="flex md:hidden items-center gap-4" style="font-family: var(--font-display); letter-spacing: 0.08em;">
       {navItems.slice(1).map(({ href, label }) => (
         <li>
           <a href={href} class:list={[

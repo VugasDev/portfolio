@@ -6,52 +6,52 @@ const year = new Date().getFullYear();
   <div class="mx-auto max-w-[1280px] px-5 md:px-8 py-10 grid grid-cols-1 md:grid-cols-[1.2fr_1fr_1fr_auto] gap-10">
 
     <div class="space-y-3">
-      <div class="rule"><span>/EOF</span></div>
-      <p style="font-family: var(--font-display); letter-spacing: -0.03em;"
-         class="text-[1.4rem] text-[--color-text] uppercase leading-none">
-        Lars Meykel
+      <div class="section-num mb-2">Lars Meykel</div>
+      <p style="font-family: var(--font-display); font-weight: 700; letter-spacing: -0.03em;"
+         class="text-[1.4rem] text-[--color-text] leading-none">
+        vugas<span style="color: var(--color-accent)">.</span>de
       </p>
-      <p class="text-[0.7rem] text-[--color-muted] uppercase tracking-[0.14em]"
-         style="font-family: var(--font-mono)">
-        © {year} / self-hosted on private infra
+      <p class="text-[0.7rem] text-[--color-muted]"
+         style="font-family: var(--font-display); letter-spacing: 0.08em; text-transform: uppercase;">
+        &copy; {year} &mdash; self-hosted
       </p>
     </div>
 
     <div class="space-y-3">
-      <div class="rule"><span>Contact</span></div>
-      <ul class="space-y-1.5" style="font-family: var(--font-mono); font-size: 0.78rem">
+      <div class="section-num mb-2">Contact</div>
+      <ul class="space-y-1.5" style="font-family: var(--font-display); font-size: 0.78rem">
         <li><a class="arrow" href="https://github.com/VugasDev">
-          <span>github.com/VugasDev</span><span class="glyph">&gt;&gt;</span>
+          <span>github.com/VugasDev</span><span class="glyph">&rarr;</span>
         </a></li>
         <li><a class="arrow" href="/rss.xml">
-          <span>RSS / LOG</span><span class="glyph">&gt;&gt;</span>
+          <span>RSS / Log</span><span class="glyph">&rarr;</span>
         </a></li>
       </ul>
     </div>
 
     <div class="space-y-3">
-      <div class="rule"><span>Stack</span></div>
-      <p class="text-[0.7rem] text-[--color-muted] leading-relaxed uppercase tracking-[0.1em]"
-         style="font-family: var(--font-mono)">
-        Astro / Tailwind / Docker / Proxmox / OPNsense / IPsec / nginx
+      <div class="section-num mb-2">Stack</div>
+      <p class="text-[0.7rem] text-[--color-muted] leading-relaxed"
+         style="font-family: var(--font-display); letter-spacing: 0.06em; text-transform: uppercase;">
+        Astro · Tailwind · Docker · Proxmox · OPNsense · nginx
       </p>
     </div>
 
     <div class="space-y-3 hidden md:block">
-      <div class="rule"><span>Unit</span></div>
-      <span class="barcode" aria-hidden="true"></span>
-      <p class="text-[0.66rem] text-[--color-muted-deep] uppercase tracking-[0.16em]"
-         style="font-family: var(--font-mono)">SN 0001-VGS / REV 2.6</p>
+      <div class="section-num mb-2">Location</div>
+      <p class="text-[0.66rem] text-[--color-muted-deep]"
+         style="font-family: var(--font-mono); letter-spacing: 0.14em;">50.7374&deg;N / 7.0982&deg;E</p>
+      <span class="live" style="font-size: 0.62rem;">ONLINE</span>
     </div>
   </div>
 
   <div class="border-t border-[--color-border]">
     <div class="mx-auto max-w-[1280px] px-5 md:px-8 h-10 flex items-center justify-between
-                text-[0.66rem] tracking-[0.2em] uppercase text-[--color-muted-deep]"
-         style="font-family: var(--font-mono)">
-      <span>lars@vugas:~$ <span class="cursor"></span></span>
-      <span class="hidden sm:inline text-[--color-muted]">50.7374&deg;N / 7.0982&deg;E</span>
-      <span class="live">ONLINE</span>
+                text-[0.66rem] tracking-[0.14em] uppercase text-[--color-muted-deep]"
+         style="font-family: var(--font-display)">
+      <span class="text-[--color-muted]">vugas.de &mdash; {year}</span>
+      <span class="hidden sm:inline text-[--color-muted-deep]">Homelab &middot; Self-Hosting &middot; AI</span>
+      <span class="live" style="font-size: 0.62rem;">SYSTEM</span>
     </div>
   </div>
 </footer>
