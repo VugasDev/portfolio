@@ -28,11 +28,11 @@ if (guide.data.series) {
 
   <nav class="pt-4 mb-10 flex items-center gap-3 text-[0.68rem] tracking-[0.14em] uppercase"
        style="font-family: var(--font-display)">
-    <a href="/guides" class="text-[--color-muted] hover:text-[--color-accent] transition-colors">&larr; Guides</a>
+    <a href="/guides" class="text-(--color-muted) hover:text-(--color-accent) transition-colors">&larr; Guides</a>
     {guide.data.series && (
       <>
-        <span class="text-[--color-border-strong]">/</span>
-        <span class="text-[--color-muted-deep]">{guide.data.series}</span>
+        <span class="text-(--color-border-strong)">/</span>
+        <span class="text-(--color-muted-deep)">{guide.data.series}</span>
       </>
     )}
   </nav>
@@ -44,21 +44,21 @@ if (guide.data.series) {
       {chapters.length > 0 ? (
         <nav style="position: sticky; top: 5rem;" aria-label="Kapitel">
           <div class="section-num mb-3">Kapitel</div>
-          <ol class="border-t border-[--color-border]">
+          <ol class="border-t border-(--color-border)">
             {chapters.map((ch, i) => (
-              <li class="border-b border-[--color-border]">
+              <li class="border-b border-(--color-border)">
                 <a
                   href={`/guides/${ch.id}`}
                   class:list={[
                     'flex items-baseline gap-3 px-2 py-2.5 text-[0.78rem]',
                     'transition-[transform,color] duration-200 hover:translate-x-1',
                     ch.id === id
-                      ? 'text-[--color-accent]'
-                      : 'text-[--color-muted] hover:text-[--color-text]',
+                      ? 'text-(--color-accent)'
+                      : 'text-(--color-muted) hover:text-(--color-text)',
                   ]}
                   style="font-family: var(--font-display); letter-spacing: 0.06em;"
                 >
-                  <span class="text-[--color-muted-deep] tabular-nums w-5 shrink-0">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="text-(--color-muted-deep) tabular-nums w-5 shrink-0">{String(i + 1).padStart(2, '0')}</span>
                   <span class="truncate">{ch.data.title}</span>
                 </a>
               </li>
@@ -72,20 +72,20 @@ if (guide.data.series) {
 
     <!-- Main content -->
     <article class="prose max-w-none">
-      <header class="not-prose mb-12 pb-8 border-b border-[--color-border]">
+      <header class="not-prose mb-12 pb-8 border-b border-(--color-border)">
         <div class="rise rise-1 flex items-center gap-3 mb-5">
           <span class="tag tag-accent">{guide.data.difficulty}</span>
           {chapters.length > 0 && (
             <span class="section-num">Kapitel / {String(guide.data.order ?? 0).padStart(2, '0')}</span>
           )}
-          <span class="text-[--color-border-strong]">/</span>
+          <span class="text-(--color-border-strong)">/</span>
           <span class="section-num">{minutesRead} min</span>
         </div>
-        <h1 class="rise rise-2 display-lg text-[--color-text]"
+        <h1 class="rise rise-2 display-lg text-(--color-text)"
             style="font-size: clamp(2rem, 1.4rem + 2.4vw, 3.2rem);">
           {guide.data.title}
         </h1>
-        <p class="rise rise-3 text-[--color-text-soft] text-[0.98rem] leading-[1.65] max-w-[60ch] mt-6"
+        <p class="rise rise-3 text-(--color-text-soft) text-[0.98rem] leading-[1.65] max-w-[60ch] mt-6"
            style="font-family: var(--font-sans)">{guide.data.description}</p>
       </header>
       <Content />

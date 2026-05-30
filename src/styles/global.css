@@ -11,14 +11,14 @@
 @theme {
   /* Substrate — 65° Vollseiten-Verlauf + Abdunklung wird am body gesetzt (Base) */
   --color-base:        #15101F;
-  --color-surface:     #271E3C;   /* elevated cards */
-  --color-surface-2:   #221A34;   /* log rows */
+  --color-surface:     #2E2448;   /* elevated cards */
+  --color-surface-2:   #261D40;   /* log rows */
 
   /* Phosphor → Dusk text */
   --color-text:        #ECE6F4;
-  --color-text-soft:   #C9B8E0;
-  --color-muted:       #A99CC0;
-  --color-muted-deep:  #8A7CA0;
+  --color-text-soft:   #DDD4EE;
+  --color-muted:       #DDD4EE;
+  --color-muted-deep:  #D4C8E8;
 
   /* Rules / glass */
   --color-border:        rgba(255,255,255,0.10);
@@ -38,7 +38,7 @@
   --radius-sm:   10px;
   --radius-pill: 999px;
 
-  --shadow-card: 0 8px 24px rgba(0,0,0,0.35);
+  --shadow-card: none;
 
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-sans:    "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -71,7 +71,7 @@
   }
 
   h1, h2, h3, h4, h5 {
-    color: var(var(--color-text));
+    color: var(--color-text);
     font-family: var(--font-display);
     font-weight: 700;
     letter-spacing: -0.03em;
@@ -150,12 +150,12 @@
     text-transform: uppercase;
     padding: 3px 9px;
     border-radius: var(--radius-pill);
-    background: rgba(231,168,240,0.12);
-    color: var(--color-accent-soft);
+    background: rgba(231,168,240,0.18);
+    color: #F5DDF9;
   }
   .tag-accent {
-    background: var(--color-accent);
-    color: var(--color-accent-ink);
+    background: #F5E4FB;
+    color: #210F2E;
   }
   .chip {
     font-family: var(--font-display);
@@ -175,8 +175,7 @@
     font-size: 0.62rem;
     letter-spacing: .18em;
     text-transform: uppercase;
-    color: var(--color-text-soft);
-    opacity: .75;
+    color: #DDD4EE;
   }
 
   /* ── Live status ──────────────────────────────────────────────── */
@@ -220,10 +219,9 @@
     gap: 0.8rem;
     font-family: var(--font-display);
     font-size: 0.62rem;
-    color: var(--color-muted);
+    color: var(--color-text-soft);
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    opacity: 0.75;
   }
   .rule > span::before { content: "[ "; color: var(--color-border-strong); }
   .rule > span::after  { content: " ]"; color: var(--color-border-strong); }
@@ -282,8 +280,8 @@
   /* ── Elevated Card ────────────────────────────────────────────── */
   .card {
     position: relative;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border-soft);
+    background: #2E2448;
+    border: 1px solid rgba(255,255,255,0.09);
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-card);
     padding: 1.25rem;
@@ -358,7 +356,7 @@
     gap: 1.5rem;
     align-items: baseline;
     padding: 0.85rem 1rem;
-    background: var(--color-surface-2);
+    background: #261D40;
     border-radius: var(--radius-sm);
     margin-bottom: 0.4rem;
     font-family: var(--font-sans);

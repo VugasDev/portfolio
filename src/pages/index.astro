@@ -23,19 +23,19 @@ const stack = [
 <BaseLayout title="INDEX" description="Homelab, Self-Hosting und AI Agents — Lars Meykel">
 
   <!-- ─── HERO ─── -->
-  <section class="pt-6 md:pt-10 pb-16 border-b border-[--color-border]">
+  <section class="pt-6 md:pt-10 pb-16 border-b border-(--color-border)">
 
     <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-8 md:gap-10 items-center">
       <!-- Left: Kicker + H1 + Lead + Buttons -->
       <div>
         <div class="rise rise-1 section-num mb-4">Homelab &middot; Self-Hosting &middot; AI</div>
 
-        <h1 class="rise rise-2 display-xl text-[--color-text] mb-6">
+        <h1 class="rise rise-2 display-xl text-(--color-text) mb-6">
           Homelab,<br/>
           <span style="color: var(--color-accent)">documented.</span>
         </h1>
 
-        <p class="rise rise-3 text-[--color-text-soft] leading-[1.65] max-w-[52ch] mb-8"
+        <p class="rise rise-3 text-(--color-text-soft) leading-[1.65] max-w-[52ch] mb-8"
            style="font-family: var(--font-sans); font-size: 1rem;">
           Ich bin Lars. Ich baue Infrastruktur &mdash; Proxmox, Docker, AI-Agents &mdash;
           und schreibe auf, was funktioniert und was nicht.
@@ -76,7 +76,7 @@ const stack = [
   </section>
 
   <!-- ─── STACK STRIP ─── -->
-  <section class="rise rise-6 py-8 border-b border-[--color-border]">
+  <section class="rise rise-6 py-8 border-b border-(--color-border)">
     <div class="flex flex-wrap gap-2">
       {stack.map(s => (
         <span class="chip">{s}</span>
@@ -85,7 +85,7 @@ const stack = [
   </section>
 
   <!-- ─── PROJECTS ─── -->
-  <section class="py-16 border-b border-[--color-border]">
+  <section class="py-16 border-b border-(--color-border)">
     <header class="flex items-end justify-between mb-10">
       <div class="flex items-baseline gap-4">
         <span class="section-num">01 //</span>
@@ -100,13 +100,13 @@ const stack = [
           <li>
             <a href={p.data.github ?? p.data.url ?? '/projects'} class="card block group h-full">
               <div class="flex items-start justify-between gap-4 mb-3">
-                <h3 class="text-[1.05rem] text-[--color-text] group-hover:text-[--color-accent] transition-colors"
+                <h3 class="text-[1.05rem] text-(--color-text) group-hover:text-(--color-accent) transition-colors"
                     style="font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em;">
                   {p.data.name}
                 </h3>
                 <span class="tag tag-accent whitespace-nowrap shrink-0">{p.data.status}</span>
               </div>
-              <p class="text-[0.85rem] text-[--color-muted] leading-[1.55] max-w-[56ch] mb-4"
+              <p class="text-[0.85rem] text-(--color-muted) leading-[1.55] max-w-[56ch] mb-4"
                  style="font-family: var(--font-sans)">{p.data.description}</p>
               <div class="flex flex-wrap gap-1.5">
                 {p.data.tags.slice(0, 5).map(t => <span class="tag">{t}</span>)}
@@ -116,7 +116,7 @@ const stack = [
         ))}
       </ul>
     ) : (
-      <p class="text-[--color-muted]" style="font-family: var(--font-mono)">// no active projects</p>
+      <p class="text-(--color-muted)" style="font-family: var(--font-mono)">// no active projects</p>
     )}
   </section>
 
@@ -140,7 +140,7 @@ const stack = [
                 <time class="row-idx shrink-0 tabular-nums">
                   {String(i + 1).padStart(2, '0')} / {p.data.date.toLocaleDateString('de-DE', { year: '2-digit', month: '2-digit', day: '2-digit' })}
                 </time>
-                <span class="text-[--color-text-soft] group-hover:text-[--color-accent] transition-colors"
+                <span class="text-(--color-text-soft) group-hover:text-(--color-accent) transition-colors"
                       style="font-family: var(--font-sans)">{p.data.title}</span>
                 <span class="row-idx" aria-hidden="true">&rarr;</span>
               </a>
@@ -148,7 +148,7 @@ const stack = [
           ))}
         </ul>
       ) : (
-        <p class="text-[--color-muted]" style="font-family: var(--font-mono)">// no entries yet</p>
+        <p class="text-(--color-muted)" style="font-family: var(--font-mono)">// no entries yet</p>
       )}
     </div>
 
@@ -168,9 +168,9 @@ const stack = [
               <a href={`/guides/${g.id}`} class="card block group">
                 <div class="flex items-center justify-between mb-3">
                   <span class="tag">{g.data.difficulty}</span>
-                  <span class="row-idx group-hover:text-[--color-accent] transition-colors" aria-hidden="true">&rarr;</span>
+                  <span class="row-idx group-hover:text-(--color-accent) transition-colors" aria-hidden="true">&rarr;</span>
                 </div>
-                <h3 class="text-[0.92rem] text-[--color-text] group-hover:text-[--color-accent] transition-colors"
+                <h3 class="text-[0.92rem] text-(--color-text) group-hover:text-(--color-accent) transition-colors"
                     style="font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">
                   {g.data.title}
                 </h3>
@@ -179,7 +179,7 @@ const stack = [
           ))}
         </ul>
       ) : (
-        <p class="text-[--color-muted]" style="font-family: var(--font-mono)">// no guides yet</p>
+        <p class="text-(--color-muted)" style="font-family: var(--font-mono)">// no guides yet</p>
       )}
     </div>
   </section>

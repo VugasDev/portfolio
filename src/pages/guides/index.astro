@@ -21,14 +21,14 @@ const seriesEntries = [...seriesMap.values()];
 
 <BaseLayout title="GUIDES" description="Anleitungen für Self-Hosting, Homelab und AI.">
 
-  <header class="pt-6 md:pt-10 pb-16 border-b border-[--color-border]">
+  <header class="pt-6 md:pt-10 pb-16 border-b border-(--color-border)">
     <div class="rise rise-1 section-num mb-5">04 // MANUALS / GUIDES</div>
     <div class="grid grid-cols-12 gap-6">
       <div class="col-span-12 md:col-span-9">
         <h1 class="rise rise-2 display-xl">
-          Step by <span class="text-[--color-accent]">Step</span>.
+          Step by <span class="text-(--color-accent)">Step</span>.
         </h1>
-        <p class="rise rise-3 text-[--color-text-soft] text-[0.98rem] leading-[1.65] max-w-[62ch] mt-8"
+        <p class="rise rise-3 text-(--color-text-soft) text-[0.98rem] leading-[1.65] max-w-[62ch] mt-8"
            style="font-family: var(--font-sans)">
           Anleitungen zu Setups, die ich selbst betreibe &mdash; getestet, dokumentiert, reproduzierbar.
         </p>
@@ -68,7 +68,7 @@ const seriesEntries = [...seriesMap.values()];
     )}
 
     {guides.length === 0 && (
-      <p class="text-[--color-muted]" style="font-family: var(--font-mono)">// guides in progress</p>
+      <p class="text-(--color-muted)" style="font-family: var(--font-mono)">// guides in progress</p>
     )}
   </div>
 </BaseLayout>

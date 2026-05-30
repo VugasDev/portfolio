@@ -11,13 +11,13 @@ const isActive = (href: string) =>
   currentPath === href || (href !== '/' && currentPath.startsWith(href));
 ---
 
-<nav class="w-full border-b border-[--color-border] sticky top-0 z-40"
+<nav class="w-full border-b border-(--color-border) sticky top-0 z-40"
      style="background: var(--color-glass); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
   <div class="mx-auto max-w-[1280px] px-5 md:px-8 h-12 flex items-center justify-between">
 
     <a href="/" class="flex items-center gap-2 group">
       <span style="font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; font-size: 0.95rem;"
-            class="text-[--color-text] group-hover:text-[--color-text] transition-colors duration-200">
+            class="text-(--color-text) group-hover:text-(--color-text) transition-colors duration-200">
         vugas<span style="color: var(--color-accent)">.</span>de
       </span>
     </a>
@@ -35,7 +35,7 @@ const isActive = (href: string) =>
             <span
               class:list={[
                 'transition-colors duration-200',
-                isActive(href) ? 'text-[--color-accent]' : 'text-[--color-text-soft] hover:text-[--color-accent]',
+                isActive(href) ? 'text-(--color-accent)' : 'text-(--color-text-soft) hover:text-(--color-accent)',
               ]}
             >
               {label}
@@ -50,7 +50,7 @@ const isActive = (href: string) =>
         <li>
           <a href={href} class:list={[
             'text-[0.66rem] uppercase transition-colors duration-200',
-            isActive(href) ? 'text-[--color-accent]' : 'text-[--color-text-soft]',
+            isActive(href) ? 'text-(--color-accent)' : 'text-(--color-text-soft)',
           ]}>{label}</a>
         </li>
       ))}

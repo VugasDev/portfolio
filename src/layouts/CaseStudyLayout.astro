@@ -18,9 +18,9 @@ const { title, description, status, tags, stack, github, screenshots, headings =
 
   <nav class="pt-4 mb-10 flex items-center gap-3 text-[0.68rem] tracking-[0.14em] uppercase"
        style="font-family: var(--font-display)">
-    <a href="/projects" class="text-[--color-muted] hover:text-[--color-accent] transition-colors">&larr; Projects</a>
-    <span class="text-[--color-border-strong]">/</span>
-    <span class="text-[--color-muted-deep]">Case Study</span>
+    <a href="/projects" class="text-(--color-muted) hover:text-(--color-accent) transition-colors">&larr; Projects</a>
+    <span class="text-(--color-border-strong)">/</span>
+    <span class="text-(--color-muted-deep)">Case Study</span>
   </nav>
 
   <div class="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-10">
@@ -32,13 +32,13 @@ const { title, description, status, tags, stack, github, screenshots, headings =
 
     <!-- Main content -->
     <div>
-      <header class="pb-12 mb-12 border-b border-[--color-border]">
+      <header class="pb-12 mb-12 border-b border-(--color-border)">
         <div class="rise rise-1 section-num mb-5">Case Study</div>
         <div class="flex items-start justify-between gap-4">
           <h1 class="rise rise-2 display-lg" style="font-size: clamp(2rem, 1.4rem + 2.6vw, 3.4rem);">{title}</h1>
           <span class="tag tag-accent whitespace-nowrap shrink-0 mt-2">{status}</span>
         </div>
-        <p class="rise rise-3 text-[--color-text-soft] text-[0.98rem] leading-[1.65] max-w-[62ch] mt-6"
+        <p class="rise rise-3 text-(--color-text-soft) text-[0.98rem] leading-[1.65] max-w-[62ch] mt-6"
            style="font-family: var(--font-sans)">{description}</p>
         {stack.length > 0 && (
           <div class="rise rise-4 flex flex-wrap gap-1.5 mt-6">
@@ -56,19 +56,19 @@ const { title, description, status, tags, stack, github, screenshots, headings =
         <slot />
       </article>
 
-      <section class="mt-16 pt-10 border-t border-[--color-border]">
+      <section class="mt-16 pt-10 border-t border-(--color-border)">
         <div class="section-num mb-6">Screenshots</div>
         {screenshots.length > 0 ? (
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             {screenshots.map(s => (
               <figure class="card p-0 overflow-hidden">
                 <img src={s.src} alt={s.alt} loading="lazy" class="w-full h-auto block" />
-                <figcaption class="text-[0.72rem] text-[--color-muted] p-3" style="font-family: var(--font-mono)">{s.alt}</figcaption>
+                <figcaption class="text-[0.72rem] text-(--color-muted) p-3" style="font-family: var(--font-mono)">{s.alt}</figcaption>
               </figure>
             ))}
           </div>
         ) : (
-          <p class="text-[--color-muted] text-[0.85rem]" style="font-family: var(--font-mono)">// noch keine Screenshots</p>
+          <p class="text-(--color-muted) text-[0.85rem]" style="font-family: var(--font-mono)">// noch keine Screenshots</p>
         )}
       </section>
     </div>

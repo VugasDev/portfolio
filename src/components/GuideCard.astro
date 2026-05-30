@@ -15,12 +15,12 @@ const { title, description, difficulty, id, tags } = Astro.props;
     <span class="tag tag-accent">{difficulty}</span>
   </div>
 
-  <h3 class="text-[1.02rem] text-[--color-text] group-hover:text-[--color-accent] transition-colors mb-3"
+  <h3 class="text-[1.02rem] text-(--color-text) group-hover:text-(--color-accent) transition-colors mb-3"
       style="font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15;">
     {title}
   </h3>
 
-  <p class="text-[0.85rem] text-[--color-muted] leading-[1.55] mb-4 max-w-[60ch]"
+  <p class="text-[0.85rem] text-(--color-muted) leading-[1.55] mb-4 max-w-[60ch]"
      style="font-family: var(--font-sans)">{description}</p>
 
   <div class="flex flex-wrap gap-1.5">

@@ -31,3 +31,6 @@ pnpm-debug.log*
 # Interne Planungs-/Arbeitsdokumente (nicht im Repo)
 /docs/
 /punchlist.md
+
+# Visual-Companion / Brainstorm-Artefakte
+.superpowers/

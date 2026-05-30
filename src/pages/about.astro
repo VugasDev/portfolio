@@ -27,14 +27,14 @@ const builds = [
 
 <BaseLayout title="OPERATOR" description="Wer ich bin und was mich antreibt.">
 
-  <header class="pt-6 md:pt-10 pb-16 border-b border-[--color-border]">
+  <header class="pt-6 md:pt-10 pb-16 border-b border-(--color-border)">
     <div class="rise rise-1 section-num mb-5">05 // OPERATOR / PROFILE</div>
     <div class="grid grid-cols-12 gap-6 md:gap-10">
       <div class="col-span-12 md:col-span-8">
         <h1 class="rise rise-2 display-xl">
           Lars<br/><span style="color: var(--color-accent);">Meykel</span>.
         </h1>
-        <p class="rise rise-3 text-[--color-text-soft] text-[0.98rem] leading-[1.65] max-w-[62ch] mt-8"
+        <p class="rise rise-3 text-(--color-text-soft) text-[0.98rem] leading-[1.65] max-w-[62ch] mt-8"
            style="font-family: var(--font-sans)">
           Ich bin Homelab-Enthusiast und Self-Hosting-Fan. Seit Jahren baue und betreibe ich eine
           eigene Infrastruktur &mdash; von VLAN-Segmentierung bis zum AI-Agenten-System &mdash; und
@@ -48,8 +48,8 @@ const builds = [
             style="font-family: var(--font-mono)">
           {facts.map(([k, v]) => (
             <>
-              <dt class="text-[--color-muted-deep] text-[0.64rem] tracking-[0.18em] uppercase pt-0.5">{k}</dt>
-              <dd class="text-[--color-text-soft] text-[0.82rem] leading-snug" set:html={v}></dd>
+              <dt class="text-(--color-muted-deep) text-[0.64rem] tracking-[0.18em] uppercase pt-0.5">{k}</dt>
+              <dd class="text-(--color-text-soft) text-[0.82rem] leading-snug" set:html={v}></dd>
             </>
           ))}
         </dl>
@@ -57,37 +57,37 @@ const builds = [
     </div>
   </header>
 
-  <section class="grid grid-cols-12 gap-10 py-16 border-b border-[--color-border]">
+  <section class="grid grid-cols-12 gap-10 py-16 border-b border-(--color-border)">
     <div class="col-span-12 md:col-span-7">
       <div class="rule mb-6"><span>What I Build</span></div>
       <ul>
         {builds.map(([k, v]) => (
-          <li class="grid grid-cols-[6rem_1fr] gap-5 py-4 border-t border-[--color-border]">
-            <span class="text-[--color-accent] text-[0.68rem] tracking-[0.22em] uppercase pt-1"
+          <li class="grid grid-cols-[6rem_1fr] gap-5 py-4 border-t border-(--color-border)">
+            <span class="text-(--color-accent) text-[0.68rem] tracking-[0.22em] uppercase pt-1"
                   style="font-family: var(--font-mono)">{k}</span>
-            <p class="text-[--color-text-soft] leading-[1.6] text-[0.9rem]"
+            <p class="text-(--color-text-soft) leading-[1.6] text-[0.9rem]"
                style="font-family: var(--font-sans)" set:html={v}></p>
           </li>
         ))}
       </ul>
-      <div class="border-b border-[--color-border]"></div>
+      <div class="border-b border-(--color-border)"></div>
     </div>
 
     <div class="col-span-12 md:col-span-5">
       <div class="rule rule-accent mb-6"><span>/NOW</span></div>
       <ul>
         {nowItems.map((n, i) => (
-          <li class="flex items-baseline gap-4 py-3 border-t border-[--color-border]">
-            <span class="text-[--color-muted-deep] text-[0.66rem] tabular-nums tracking-[0.1em] shrink-0"
+          <li class="flex items-baseline gap-4 py-3 border-t border-(--color-border)">
+            <span class="text-(--color-muted-deep) text-[0.66rem] tabular-nums tracking-[0.1em] shrink-0"
                   style="font-family: var(--font-mono)">
               {String(i + 1).padStart(2, '0')}
             </span>
-            <span class="text-[--color-text-soft] text-[0.9rem] leading-[1.55]"
+            <span class="text-(--color-text-soft) text-[0.9rem] leading-[1.55]"
                   style="font-family: var(--font-sans)" set:html={n}></span>
           </li>
         ))}
       </ul>
-      <div class="border-b border-[--color-border]"></div>
+      <div class="border-b border-(--color-border)"></div>
     </div>
   </section>
 

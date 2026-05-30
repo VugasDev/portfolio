@@ -11,6 +11,7 @@ const BLOCKING_IMPACTS = ['critical', 'serious'];
 for (const path of PAGES) {
   test(`a11y: ${path} keine neuen critical/serious Violations`, async ({ page }) => {
     await page.goto(path);
+    await page.waitForLoadState('networkidle');
     const results = await new AxeBuilder({ page }).analyze();
 
     const blocking = results.violations.filter(
