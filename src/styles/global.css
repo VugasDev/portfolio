@@ -38,7 +38,7 @@
   --radius-sm:   10px;
   --radius-pill: 999px;
 
-  --shadow-card: none;
+  --shadow-card: 0 10px 30px rgba(8,5,16,0.45);
 
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-sans:    "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -433,6 +433,13 @@
   }
   .prose a { border-bottom: 1px solid rgba(231,168,240,0.35); }
   .prose a:hover { border-bottom-color: var(--color-accent); }
+
+  /* Explizite Element-Selektoren (Spezifität 0,2,0) schlagen die :where()-Defaults
+     des Typography-Plugins (0,1,0) — sonst gewinnt dessen dunkler Light-Mode-Body. */
+  .prose p, .prose li, .prose blockquote, .prose td, .prose dd {
+    color: var(--color-text-soft);
+  }
+  .prose strong, .prose h4, .prose h5, .prose h6 { color: var(--color-text); }
 }
 
 /* ------------------------------------------------------------------

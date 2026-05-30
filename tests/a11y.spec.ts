@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { a11yBaseline } from './a11y-baseline';
 
-// Hauptseiten — statische/Index-Routen.
-const PAGES = ['/', '/about', '/projects', '/blog', '/guides'];
+// Hauptseiten + je eine prosa-lastige Detailseite (deckt .prose-Kontrast ab).
+const PAGES = ['/', '/about', '/projects', '/blog', '/guides', '/blog/servarr-setup', '/guides/servarr-suite'];
 
 // Gate-Schwelle: nur echte Blocker zählen.
 const BLOCKING_IMPACTS = ['critical', 'serious'];

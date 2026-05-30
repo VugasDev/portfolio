@@ -6,4 +6,6 @@ export const a11yBaseline: Record<string, string[]> = {
   '/projects': [],
   '/blog':     [],
   '/guides':   [],
+  '/blog/servarr-setup':   [],
+  '/guides/servarr-suite': [],
 };
