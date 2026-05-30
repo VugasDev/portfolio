@@ -1,1 +1,1 @@
-{"name":"Mediastack","description":"Jellyfin + *arr Suite + SABnzbd + Bazarr + Recyclarr auf command-center VM.","tags":["jellyfin","servarr","docker"],"status":"Planung"}
+{"name":"Mediastack","description":"Self-hosted Medienserver: Jellyfin + *arr-Automatisierung für Metadaten, Untertitel und Transcoding der eigenen Sammlung — auf einem unprivilegierten LXC.","tags":["jellyfin","servarr","docker"],"status":"Planung"}
