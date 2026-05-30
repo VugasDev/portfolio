@@ -22,13 +22,15 @@ const STATIC_PAGES: OgEntry[] = [
 ];
 
 export async function getAllOgEntries(): Promise<OgEntry[]> {
-  const [blog, guides] = await Promise.all([
+  const [blog, guides, caseStudies] = await Promise.all([
     getCollection('blog', ({ data }) => !data.draft),
     getCollection('guides', ({ data }) => !data.draft),
+    getCollection('caseStudies', ({ data }) => !data.draft),
   ]);
   return [
     ...STATIC_PAGES,
     ...blog.map(p => ({ slug: `blog-${p.id}`, title: p.data.title, kicker: 'LOG' })),
     ...guides.map(g => ({ slug: `guides-${g.id}`, title: g.data.title, kicker: 'GUIDES' })),
+    ...caseStudies.map(c => ({ slug: `projects-${c.id}`, title: c.data.title, kicker: 'CASE STUDY' })),
   ];
 }
