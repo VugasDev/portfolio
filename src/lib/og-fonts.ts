@@ -7,7 +7,7 @@ const CACHE_DIR = path.resolve('node_modules/.cache/og-fonts');
 export interface OgFont {
   name: string;
   data: Buffer;
-  weight: 400 | 500;
+  weight: 400 | 500 | 700;
   style: 'normal';
 }
 
@@ -38,11 +38,11 @@ async function fetchTTF(cssUrl: string, cacheKey: string): Promise<Buffer> {
 
 export async function loadOgFonts(): Promise<OgFont[]> {
   const [display, mono] = await Promise.all([
-    fetchTTF('https://fonts.googleapis.com/css2?family=Archivo+Black', 'archivo-black-400'),
+    fetchTTF('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700', 'space-grotesk-700'),
     fetchTTF('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500', 'jetbrains-mono-500'),
   ]);
   return [
-    { name: 'Archivo Black', data: display, weight: 400, style: 'normal' },
+    { name: 'Space Grotesk', data: display, weight: 700, style: 'normal' },
     { name: 'JetBrains Mono', data: mono, weight: 500, style: 'normal' },
   ];
 }

@@ -3,7 +3,7 @@ export interface OgTemplateProps {
   kicker: string;
 }
 
-// satori-VNode (manuelles Element-Objekt, kein JSX). Tactical-Look, 1200x630.
+// satori-VNode (manuelles Element-Objekt, kein JSX). Soft-Dusk-Look, 1200x630.
 export function ogTemplate({ title, kicker }: OgTemplateProps) {
   return {
     type: 'div',
@@ -14,9 +14,9 @@ export function ogTemplate({ title, kicker }: OgTemplateProps) {
         justifyContent: 'space-between',
         width: '100%',
         height: '100%',
-        backgroundColor: '#0A0A0A',
+        background: 'linear-gradient(65deg,#241C38,#34264A,#5E3C68)',
         padding: '72px 80px',
-        color: '#EAEAEA',
+        color: '#ECE6F4',
         fontFamily: 'JetBrains Mono',
       },
       children: [
@@ -27,13 +27,13 @@ export function ogTemplate({ title, kicker }: OgTemplateProps) {
               display: 'flex',
               alignItems: 'center',
               gap: '20px',
-              fontSize: '26px',
+              fontSize: '24px',
               letterSpacing: '6px',
-              color: '#5A5A5A',
+              color: '#E7A8F0',
               textTransform: 'uppercase',
             },
             children: [
-              { type: 'div', props: { style: { width: '22px', height: '22px', backgroundColor: '#E61919' }, children: '' } },
+              { type: 'div', props: { style: { width: '18px', height: '18px', backgroundColor: '#E7A8F0', borderRadius: '50%' }, children: '' } },
               { type: 'div', props: { children: kicker } },
             ],
           },
@@ -43,11 +43,12 @@ export function ogTemplate({ title, kicker }: OgTemplateProps) {
           props: {
             style: {
               display: 'flex',
-              fontFamily: 'Archivo Black',
-              fontSize: '96px',
+              fontFamily: 'Space Grotesk',
+              fontSize: '88px',
+              fontWeight: '700',
               lineHeight: '1.02',
               letterSpacing: '-2px',
-              color: '#EAEAEA',
+              color: '#ECE6F4',
               maxWidth: '1040px',
             },
             children: title,
@@ -60,16 +61,16 @@ export function ogTemplate({ title, kicker }: OgTemplateProps) {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              fontSize: '24px',
+              fontSize: '22px',
               letterSpacing: '4px',
-              color: '#8A8A8A',
-              borderTop: '2px solid #2A2A2A',
+              color: '#C9B8E0',
+              borderTop: '1px solid rgba(255,255,255,0.15)',
               paddingTop: '28px',
               textTransform: 'uppercase',
             },
             children: [
-              { type: 'div', props: { children: 'VUGAS.DE' } },
-              { type: 'div', props: { style: { color: '#E61919' }, children: 'UNIT-01' } },
+              { type: 'div', props: { children: 'vugas.de' } },
+              { type: 'div', props: { style: { color: '#E7A8F0' }, children: 'Homelab · AI · Self-Hosting' } },
             ],
           },
         },
