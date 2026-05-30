@@ -1,0 +1,16 @@
+[Unit]
+Description=Bitwarden CLI REST API (Portfolio-Deploy, vault.vugas.de)
+Documentation=https://bitwarden.com/help/vault-management-api/
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/opt/portfolio/deploy/bw-serve-wrapper.sh
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
