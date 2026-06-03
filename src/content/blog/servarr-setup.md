@@ -58,12 +58,17 @@ zusammengeklickt sind sie nirgends dokumentiert und nach einem Neuaufsetzen weg.
 kuratierte Profile per Cron in Sonarr/Radarr — die ganze Konfiguration liegt in einer
 versionierbaren `recyclarr.yml`. Reproduzierbar statt zusammengeklickt.
 
-## Transcoding: die GPU ranlassen
+## Transcoding: aktuell CPU, NVENC in Vorbereitung
 
-Mein erster Schmerzpunkt im Betrieb war ein ruckelnder Stream auf dem TV, während der Server unter
-CPU-Last ächzte. Ursache: Software-Transcoding. Sobald ich die iGPU per `/dev/dri` in den
-Jellyfin-Container durchgereicht und VAAPI/QuickSync aktiviert hatte, fiel die CPU-Last drastisch —
-und mehrere parallele Streams wurden überhaupt erst möglich.
+Mein offener Schmerzpunkt im Betrieb: Transcoding läuft noch in **Software** über die CPU. Solange
+ein Client das Originalformat direkt abspielt (Direct Play), ist alles ruhig — sobald aber live
+transkodiert werden muss, geht die CPU-Last hoch und parallele Streams werden eng.
+
+Der Plan dagegen liegt schon bereit: In der Kiste steckt eine **NVIDIA GTX 1050**, deren **NVENC**-
+Encoder genau dafür gemacht ist. Was noch fehlt, ist der NVIDIA-Treiber auf dem Proxmox-Host plus
+die NVIDIA-Container-Runtime, um die GPU sauber in den Jellyfin-Container durchzureichen. Das ist
+der nächste Schritt — und ein gutes Beispiel dafür, dass „Hardware vorhanden" und „Hardware nutzbar"
+im Homelab zwei verschiedene Tickets sind.
 
 ## Learnings
 
