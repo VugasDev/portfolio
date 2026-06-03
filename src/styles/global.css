@@ -397,7 +397,14 @@
   .toc-link:hover { color: var(--color-text-soft); border-left-color: var(--color-border-strong); }
   .toc-link.on { color: var(--color-accent); border-left-color: var(--color-accent); }
   .toc-sub { padding-left: 24px; font-size: 0.72rem; opacity: 0.8; }
+}
 
+/* Prose-Overrides MÜSSEN in @layer utilities liegen — das Typography-Plugin
+   emittiert seine .prose-Regeln ebenfalls in @layer utilities. Lagen unsere
+   in @layer components (niedriger), gewann das Plugin trotz höherer
+   Spezifität (Cascade-Layer schlägt Spezifität) → dunkler Code/Headings auf
+   dunklem Grund. In utilities + spätere Quell-Reihenfolge gewinnen unsere Tokens. */
+@layer utilities {
   /* ── Prose overrides for blog / guides ────────────────────────── */
   .prose {
     --tw-prose-body:     var(--color-text-soft);
@@ -414,6 +421,7 @@
     line-height: 1.65;
   }
   .prose h1, .prose h2, .prose h3 {
+    color: var(--color-text);
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }
@@ -434,8 +442,6 @@
   .prose a { border-bottom: 1px solid rgba(231,168,240,0.35); }
   .prose a:hover { border-bottom-color: var(--color-accent); }
 
-  /* Explizite Element-Selektoren (Spezifität 0,2,0) schlagen die :where()-Defaults
-     des Typography-Plugins (0,1,0) — sonst gewinnt dessen dunkler Light-Mode-Body. */
   .prose p, .prose li, .prose blockquote, .prose td, .prose dd {
     color: var(--color-text-soft);
   }
