@@ -2,13 +2,14 @@
 interface Props {
   name: string;
   description: string;
+  details?: string;
   tags: string[];
   status: string;
   github?: string;
   url?: string;
   caseStudyHref?: string;
 }
-const { name, description, tags, status, github, url, caseStudyHref } = Astro.props;
+const { name, description, details, tags, status, github, url, caseStudyHref } = Astro.props;
 ---
 
 <article class="card group flex flex-col gap-3">
@@ -38,6 +39,13 @@ const { name, description, tags, status, github, url, caseStudyHref } = Astro.pr
       {url && (
         <a href={url} class="arrow"><span>Live</span><span class="glyph">&rarr;</span></a>
       )}
+    </div>
+  )}
+
+  {details && (
+    <div class="card-readme">
+      <span class="card-readme-kicker">{name}</span>
+      <p>{details}</p>
     </div>
   )}
 </article>
