@@ -1,0 +1,6 @@
+{
+  "name": "Zero-Trust Firewall",
+  "description": "Default-Deny-Segmentierung über OPNsense: VLAN-isolierte Zonen, explizite Allow-Regeln und dokumentierte Inter-VLAN-Flows.",
+  "tags": ["opnsense", "firewall", "vlan", "security"],
+  "status": "aktiv"
+}

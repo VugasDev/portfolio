@@ -1,0 +1,6 @@
+{
+  "name": "AdGuard Home",
+  "description": "Netzweiter DNS-Filter mit Split-DNS — blockt Werbung und Tracker und löst interne .lab-Domains auf einem unprivilegierten LXC auf.",
+  "tags": ["dns", "adguard", "lxc", "network"],
+  "status": "aktiv"
+}

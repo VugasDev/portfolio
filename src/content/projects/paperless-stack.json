@@ -1,0 +1,6 @@
+{
+  "name": "Paperless Stack",
+  "description": "Papierloses Dokumenten-Management mit Paperless-ngx (OCR via Tesseract), Qdrant-RAG-Chatbot und KI-gestützter Metadaten-Vergabe.",
+  "tags": ["paperless", "ocr", "rag", "docker"],
+  "status": "aktiv"
+}
