@@ -1,0 +1,6 @@
+{
+  "name": "Vault",
+  "description": "Self-hosted Passwort-Manager (Vaultwarden) mit Reverse-Proxy, fail2ban-Härtung und verschlüsseltem restic-Backup.",
+  "tags": ["vaultwarden", "security", "docker", "backup"],
+  "status": "aktiv"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Netzwerk-Upgrade",
+  "description": "Migration vom flachen Netz zur VLAN-Segmentierung: Sophos/OPNsense, Site-to-Site-VPN und Server-Umzug auf neue Proxmox-Hardware.",
+  "tags": ["opnsense", "vlan", "vpn", "proxmox"],
+  "status": "in Arbeit"
+}

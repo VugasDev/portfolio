@@ -1,7 +1,0 @@
-{
-  "name": "Cortex",
-  "description": "Modulares Homelab-Dashboard und KI-Agenten-System mit CEO-Agent, LiteLLM und Monitoring.",
-  "tags": ["dashboard", "ai", "docker", "python"],
-  "status": "Planung",
-  "github": "https://github.com/VugasDev/cortex"
-}
