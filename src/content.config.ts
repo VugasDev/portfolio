@@ -30,6 +30,7 @@ const projects = defineCollection({
   schema: z.object({
     name: z.string(),
     description: z.string(),
+    details: z.string().optional(),   // README-Kurzfassung fürs Hover-Overlay
     tags: z.array(z.string()),
     status: z.enum(['aktiv', 'in Arbeit', 'Planung', 'archiviert']),
     github: z.string().url().optional(),

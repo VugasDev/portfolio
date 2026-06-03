@@ -1,6 +1,7 @@
 {
   "name": "Netzwerk-Upgrade",
   "description": "Migration vom flachen Netz zur VLAN-Segmentierung: Sophos/OPNsense, Site-to-Site-VPN und Server-Umzug auf neue Proxmox-Hardware.",
+  "details": "Migration vom flachen Provider-Netz zu einer segmentierten VLAN-Topologie auf OPNsense — Router-on-a-stick, getaggte VLANs für Server, Clients, IoT und Gäste sowie ein IPsec-Site-to-Site-Tunnel. Das Fundament, auf dem später das Zero-Trust-Setup aufgesetzt hat.",
   "tags": ["opnsense", "vlan", "vpn", "proxmox"],
   "status": "in Arbeit"
 }
