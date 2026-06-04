@@ -25,7 +25,7 @@ Die OPNsense lässt sich komplett über eine REST-API steuern. Credentials liege
 curl -sk -u "$KEY:$SEC" https://10.17.1.1/api/firewall/filter/searchRule | jq
 ```
 
-So konnte der Assistent alle ~70 Filter-Regeln, die DNAT-Redirects und die NAT-Konfiguration
+So konnte der Assistent alle \~70 Filter-Regeln, die DNAT-Redirects und die NAT-Konfiguration
 auslesen und gegen meine Dokumentation abgleichen. Erste Erkenntnis: Die Doku war an mehreren
 Stellen veraltet — eine Regel verwies noch auf einen alten Domain-Namen, eine WireGuard-Regel
 hing tot auf einem längst deaktivierten Interface herum.
@@ -40,7 +40,7 @@ umgeleitet wird. Wenn die kaputt sind, läuft mein halbes Sicherheitskonzept ins
 Erst die Gegenprüfung über einen anderen API-Endpoint (`getRule` statt `searchRule`) und ein
 Blick ins rohe Config-XML brachten Entwarnung: Die Regeln sind **aktiv und korrekt**. Die
 Such-API gibt schlicht bestimmte Felder nicht aus — Negationen (`!`) und Ports tauchen dort
-nicht auf. Mein „🔴 kritisch"-Flag war ein **Darstellungsartefakt der API**, kein echter Bug.
+nicht auf.
 
 **Lektion 1:** Einer einzelnen API-Sicht nie blind vertrauen. Verschiedene Endpoints zeigen
 verschiedene Teilwahrheiten.
@@ -51,7 +51,7 @@ Um endgültig sicherzugehen, brauchte ich den Blick in den laufenden Paketfilter
 hier wurde es interessant: Der SSH-Zugang zur OPNsense landet normalerweise im interaktiven
 Menü (das berühmte „Punkt 8 für Shell"). Für Automatisierung unbrauchbar — dachte ich.
 
-Stellt sich heraus: Das Menü erscheint **nur bei interaktivem Login**. Ein SSH-Aufruf *mit*
+Stellt sich heraus: Das Menü erscheint **nur bei interaktivem Login**. Ein SSH-Aufruf _mit_
 Kommando läuft direkt durch:
 
 ```bash
@@ -70,7 +70,7 @@ vermuten ließen.
 
 Im Live-Ruleset sah ich für das IOT-VLAN:
 
-```
+```plain
 @141 block drop in quick on vlan04 inet from 10.17.30.0/24 to 10.0.0.0/8   [Packets: 122]
 @163 pass  in       quick on vlan04 inet ... to 10.17.1.254 port = domain  [Packets: 0]
 ```
@@ -99,7 +99,7 @@ Nach der ganzen Detektivarbeit blieben echte, saubere Änderungen übrig:
 
 - **Vier tote/redundante Regeln entfernt** — darunter zwei, die DNS auf `any:53` erlaubten und
   damit (in der Eval-Reihenfolge vor dem Hijack-Block) den eigentlichen Schutz aushebelten.
-  Jetzt ist der DNS-Hijack-Block ein *echter* Enforcer, nicht nur dekorativ.
+  Jetzt ist der DNS-Hijack-Block ein _echter_ Enforcer, nicht nur dekorativ.
 - **DMZ-Isolation nachgezogen:** Das (noch leere) DMZ-VLAN hatte keine RFC1918-Blocks. Proaktiv
   ergänzt, damit ein künftiger Host dort von Anfang an isoliert ist.
 - **Alles dokumentiert** — inklusive des Gateway-DNS-Pfades, damit ich beim nächsten Audit nicht
