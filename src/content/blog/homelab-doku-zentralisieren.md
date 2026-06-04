@@ -8,7 +8,7 @@ tags:
   - claude-code
   - automation
   - security
-draft: true
+draft: false
 ---
 
 Mein Homelab lebte lange in einem einzigen großen Repo: Code, Dashboard, Doku, Agenten-Definitionen
@@ -21,7 +21,7 @@ zerlegt — aber die gemeinsame Dokumentation hing in der Luft.
 - Die Infra-Doku (Firewall-Regeln, Netzplan, DNS, Services) lag noch im alten Monorepo
 - Die frischen Projekt-`CLAUDE.md`-Dateien waren leere Templates — und zeigten auf tote Pfade
   (`~/homelab-ai/...`)
-- Es gab keinen gemeinsamen Ort, an dem ein einzelnes Projekt nachschlagen konnte, *wie* man z.B.
+- Es gab keinen gemeinsamen Ort, an dem ein einzelnes Projekt nachschlagen konnte, _wie_ man z.B.
   per SSH oder API an die Firewall kommt
 
 Das Ziel: ein zentrales, separat versioniertes Doku-Repo als Single Source of Truth, und Projekte,
@@ -39,10 +39,6 @@ Jede Projekt-`CLAUDE.md` verweist jetzt nur noch per Pointer auf die relevanten 
 automatisch — das hält das Kontextfenster klein und vermeidet, dass jede Session die komplette
 Homelab-Doku mitschleppt.
 
-Dazu kam ein kleiner Helfer: ein `/blogpost`-Befehl, der eine Arbeits-Session zusammenfasst und
-daraus einen Blog-Entwurf fürs Portfolio erzeugt — als `draft`, ohne Auto-Push. Dieser Text hier
-ist der erste Testlauf.
-
 ## Was schiefging — fast
 
 Beim Migrieren der alten Doku ins neue Repo hat mir der KI-Assistent etwas gemeldet, das ich beim
@@ -56,8 +52,8 @@ force-pushen. Danach noch ein zweiter Fundort in einer migrierten Spec — gleic
 Die Lektion danach war fast die wichtigere: Bevor ich panisch die Historie des **alten** Repos
 zerlegt habe, lohnte sich ein harter Blick auf die Fakten. Der Commit mit den Passwörtern lag dort
 nämlich nur auf einem lokalen, nie gepushten Branch — auf GitHub war er nie gelandet. Ein
-voreiliges History-Rewrite hätte unbestätigte Arbeit zerstört und nichts gewonnen. **Erst messen,
-dann schreddern.**
+voreiliges History-Rewrite hätte unbestätigte Arbeit zerstört und nichts gewonnen. **Erst messen,**
+**dann schreddern.**
 
 ## Was es gebracht hat
 
