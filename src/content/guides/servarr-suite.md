@@ -1,6 +1,7 @@
 ---
 title: Servarr Suite einrichten
 description: Medienserver aufsetzen — Jellyfin + *arr-Automatisierung, Untertitel und Qualitätsprofile für die eigene Bibliothek.
+date: 2026-04-15
 difficulty: Fortgeschritten
 tags:
   - jellyfin

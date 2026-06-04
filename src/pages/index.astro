@@ -16,6 +16,7 @@ const studySlugs = new Set(studies.map(s => s.id));
 const projectHref = (id: string) => studySlugs.has(id) ? `/projects/${id}` : '/projects';
 
 const featuredGuides = (await getCollection('guides', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
 
 const stack = [

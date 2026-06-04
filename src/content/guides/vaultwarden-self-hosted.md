@@ -1,6 +1,7 @@
 ---
 title: Vaultwarden self-hosted absichern
 description: Eigenen Passwort-Manager betreiben — Vaultwarden hinter Reverse-Proxy, mit fail2ban gegen Brute-Force und verschlüsseltem restic-Backup.
+date: 2026-06-03
 difficulty: Fortgeschritten
 tags:
   - vaultwarden

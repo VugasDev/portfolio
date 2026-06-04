@@ -1,6 +1,7 @@
 ---
 title: VLAN-Segmentierung & Zero-Trust mit OPNsense
 description: Vom flachen Netz zu segmentierten VLANs mit Default-Deny-Firewall — Interfaces, Regeln, DNS-Zwang und Reverse-Proxy-Routing auf OPNsense.
+date: 2026-06-03
 difficulty: Fortgeschritten
 tags:
   - opnsense

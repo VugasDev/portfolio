@@ -1,6 +1,7 @@
 ---
 title: Paperless-ngx mit RAG-Chatbot
 description: Papierloses Dokumenten-Management aufsetzen — OCR mit Paperless-ngx, KI-gestützte Metadaten und ein lokaler RAG-Chatbot über Qdrant, der deine Dokumente beantwortet.
+date: 2026-06-03
 difficulty: Fortgeschritten
 tags:
   - paperless

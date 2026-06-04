@@ -17,6 +17,7 @@ const guides = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
+    date: z.coerce.date(),           // Veröffentlichungsdatum: steuert Featuring/Sortierung
     difficulty: z.enum(['Einsteiger', 'Fortgeschritten', 'Experte']),
     tags: z.array(z.string()).default([]),
     order: z.number().nullish(),     // Für Serien: Kapitel-Reihenfolge (Decap schreibt null statt undefined)

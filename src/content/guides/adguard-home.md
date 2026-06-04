@@ -1,6 +1,7 @@
 ---
 title: AdGuard Home als netzweiter DNS-Filter
 description: Werbung und Tracker netzweit blocken, interne Domains auflösen und DNS-Umgehung verhindern — AdGuard Home als zentraler Resolver im Homelab.
+date: 2026-06-03
 difficulty: Einsteiger
 tags:
   - dns

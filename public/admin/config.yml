@@ -19,6 +19,9 @@ collections:
     create: true
     slug: "{{slug}}"
     extension: md
+    sortable_fields:
+      fields: [commit_date, title, date]
+      default: { field: commit_date, direction: descending }
     fields:
       - { name: title,       label: Titel,          widget: string }
       - { name: description, label: Beschreibung,   widget: string }
@@ -33,9 +36,13 @@ collections:
     create: true
     slug: "{{slug}}"
     extension: md
+    sortable_fields:
+      fields: [commit_date, title, date]
+      default: { field: commit_date, direction: descending }
     fields:
       - { name: title,       label: Titel,           widget: string }
       - { name: description, label: Beschreibung,    widget: string }
+      - { name: date,        label: Datum,            widget: datetime, format: "YYYY-MM-DD" }
       - name: difficulty
         label: Schwierigkeitsgrad
         widget: select
@@ -51,6 +58,9 @@ collections:
     folder: src/content/projects
     create: true
     extension: json
+    sortable_fields:
+      fields: [commit_date, name]
+      default: { field: commit_date, direction: descending }
     fields:
       - { name: name,        label: Name,            widget: string }
       - { name: description, label: Beschreibung,    widget: string }
