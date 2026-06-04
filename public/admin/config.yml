@@ -5,7 +5,9 @@ backend:
   base_url: https://vugas.de
   auth_endpoint: api/auth
 
-publish_mode: editorial_workflow
+# Kein editorial_workflow: CMS-Speicherungen committen direkt nach main.
+# Sichtbarkeit steuert allein das Frontmatter-Feld `draft` (Astro-Filter).
+# Der Review-Schritt ist durch den blogpost-Skill-Push mit draft:true abgebildet.
 
 media_folder: public/uploads
 public_folder: /uploads

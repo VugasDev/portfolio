@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-const SLUGS = ['mediastack', 'cortex', 'mcp-stack'];
+// Nur nicht-draft Case-Studies. cortex/mcp-stack sind draft:true (Projekte entfernt).
+const SLUGS = ['mediastack'];
 const BASE = 'https://vugas.de';
 
 for (const slug of SLUGS) {
@@ -29,6 +30,6 @@ test('Projekt-Cards verlinken auf die Case-Studies', async ({ page }) => {
     els.map(e => e.getAttribute('href')),
   );
   expect(hrefs).toEqual(
-    expect.arrayContaining(['/projects/mediastack', '/projects/cortex', '/projects/mcp-stack']),
+    expect.arrayContaining(['/projects/mediastack']),
   );
 });
