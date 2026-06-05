@@ -27,7 +27,7 @@ Der Stack ist ein schlankes Docker-Compose:
 - **Data Importer** für CSV- und Bank-Importe
 
 Nach außen via Pangolin-Tunnel mit vorgeschalteter SSO-Auth, intern über den Caddy-Wildcard-
-Reverse-Proxy als `finance.vugas.de`. Backup über den wöchentlichen Proxmox-vzdump. So weit,
+Reverse-Proxy. Backup über den wöchentlichen Proxmox-vzdump. So weit,
 so Routine. Dann kam der Import.
 
 ## Akt 1: Null importiert
@@ -63,26 +63,26 @@ Web-Timeout mehr — aber jetzt wurde es richtig interessant.
 ## Akt 3: Warum dauert ein einzelner Insert 11 Sekunden?
 
 Der CLI-Import lief, aber quälend langsam: drei, vier Buchungen alle 30 Sekunden. Hochgerechnet
-**Stunden**. Die POST-Timestamps in den Logs zeigten ~10 Sekunden Abstand pro Buchung. Zehn
+**Stunden**. Die POST-Timestamps in den Logs zeigten \~10 Sekunden Abstand pro Buchung. Zehn
 Sekunden ist eine verdächtig „timeout-förmige" Zahl, also habe ich der Reihe nach ausgeschlossen:
 
 - **Webhooks?** Deaktiviert (404). Raus.
 - **Regeln?** Null Stück. Raus.
 - **Externer Netzwerk-Call?** Outbound aus dem Container war schnell (GitHub 0,08 s). Raus.
 - **`apply_rules`/`fire_webhooks`-Flags?** Messmatrix mit allen vier Kombinationen: überall
-  ~11 s. Raus.
+  \~11 s. Raus.
 
 Ein einzelner direkter API-POST brauchte ebenfalls 11 Sekunden — also lag es an Firefly selbst,
 nicht am Importer. Der entscheidende Test war dann simpel: dieselbe Buchung auf ein **leeres**
 Konto posten statt auf mein volles Hauptkonto.
 
 | Ziel-Konto | Buchungen im Konto | Dauer eines Inserts |
-|------------|--------------------|---------------------|
+| --- | --- | --- |
 | Cash wallet | 0 | **0,41 s** |
 | Hauptkonto | 869 | **11 s** |
 
-Damit war die Ursache bewiesen: Firefly berechnet bei jedem Insert die **Running Balance des
-Kontos neu — O(n)** über alle Buchungen. Weil fast jeder Umsatz mein Hauptkonto berührt, wurde
+Damit war die Ursache bewiesen: Firefly berechnet bei jedem Insert die **Running Balance des**
+**Kontos neu — O(n)** über alle Buchungen. Weil fast jeder Umsatz mein Hauptkonto berührt, wurde
 jeder weitere Insert teurer. Ein klassisches Skalierungsproblem, das bei kleinen Datenmengen nie
 auffällt.
 
@@ -96,7 +96,7 @@ Buchung getestet, bevor der große Import lief:
 > POST aufs Hauptkonto: **11 s → 0,54 s**.
 
 Bestätigt. Voll-Import gestartet — und dank „classic"-Duplikaterkennung übersprang er die bereits
-importierten Buchungen sauber, statt Dubletten zu erzeugen. Am Ende lagen alle ~4.100 Umsätze
+importierten Buchungen sauber, statt Dubletten zu erzeugen. Am Ende lagen alle \~4.100 Umsätze
 drin: Ausgaben, Einnahmen und — korrekt erkannt — die vielen Mini-Transfers meines
 Aufrund-Sparens zwischen Giro- und Sparkonto. Danach einmal `refresh-running-balance`, und
 zurück auf den synchronen Default. Denn für den Alltag braucht es die Queue gar nicht: ein
@@ -106,8 +106,8 @@ zurück auf den synchronen Default. Denn für den Alltag braucht es die Queue ga
 ## Akt 4: Die Salden stimmen trotzdem nicht
 
 Geschafft? Fast. Die Endsalden lagen daneben — mein Hauptkonto zeigte 699 € statt 42 €. Der
-Grund war hausgemacht: Ich hatte bei der Kontoerstellung den *aktuellen* Stand als Opening
-Balance eingetragen und dann die *komplette Historie* obendrauf importiert. Das doppelt sich.
+Grund war hausgemacht: Ich hatte bei der Kontoerstellung den _aktuellen_ Stand als Opening
+Balance eingetragen und dann die _komplette Historie_ obendrauf importiert. Das doppelt sich.
 
 Dazu kam mein eigener Altlasten-Effekt: früher hatte ich mehrere Unterkonten, deren Transfers in
 der Historie stecken, aber nicht mehr als Konten existieren. Statt hunderte Altbuchungen zu
