@@ -1,6 +1,6 @@
 ---
-title: Eine zentrale Doku für viele Projekte — und wie KI dabei ein Leck fand
-description: Wie ich mein Homelab-Monorepo in getrennte Projekte zerlegt, die Dokumentation in ein eigenes Repo gebündelt und jedem Projekt echten Kontext gegeben habe — inklusive eines Klartext-Passworts, das fast auf GitHub landete.
+title: Eine zentrale Doku für viele Projekte — und das Leck, das fast mitwanderte
+description: Wie ich mein Homelab-Monorepo in getrennte Projekte zerlegt, die Dokumentation in ein eigenes Repo gebündelt und jedem Projekt echten Kontext gegeben habe — inklusive eines Klartext-Passworts, das mir beim Migrieren fast durchgerutscht wäre.
 date: 2026-06-04
 tags:
   - homelab
@@ -41,9 +41,10 @@ Homelab-Doku mitschleppt.
 
 ## Was schiefging — fast
 
-Beim Migrieren der alten Doku ins neue Repo hat mir der KI-Assistent etwas gemeldet, das ich beim
-manuellen Kopieren glatt übersehen hätte: In zwei Dateien standen die **WLAN-PPSKs im Klartext** —
-und die waren beim ersten Commit schon ins (private) GitHub-Repo gepusht.
+Beim Migrieren der alten Doku ins neue Repo habe ich die Diffs mit einer KI gegengeprüft — und
+sie hat mir eine Zeile vor die Nase gehalten, die beim reinen Copy-Paste leicht durchrutscht: In
+zwei Dateien standen die **WLAN-PPSKs im Klartext** — und die waren beim ersten Commit schon ins
+(private) GitHub-Repo gepusht.
 
 Die Reaktion war zum Glück schnell: Werte redigieren, durch `<PSK …>`-Platzhalter plus
 Vaultwarden-Verweis ersetzen, und weil das Repo brandneu war, die Historie sauber neu schreiben und
@@ -61,8 +62,9 @@ voreiliges History-Rewrite hätte unbestätigte Arbeit zerstört und nichts gewo
 - Projekte, die ihren eigenen Kontext kennen — die Firewall weiß jetzt, wo SSH und API stehen,
   ohne dass ein Secret im Repo liegt
 - Ein wiederholbares Template, das auf die richtigen Pfade zeigt
-- Und nebenbei die Erkenntnis, dass ein zweites Augenpaar — auch ein künstliches — genau die
-  Klartext-Zeile findet, die man beim Copy-Paste übersieht
+- Und nebenbei die Erinnerung, dass Migrationen genau die Momente sind, in denen Secrets
+  unbemerkt mitwandern — ein bewusster Review-Durchgang gehört zwingend dazu, und ein zweites
+  Augenpaar (hier eine KI über die Diffs) fängt genau die Zeile, die man selbst überliest
 
 Die nächste offene Baustelle: die belichteten PPSKs trotzdem rotieren. Exponiert waren sie real nur
 kurz — aber „kurz exponiert" ist bei einem Passwort eben nicht dasselbe wie „nie".

@@ -1,6 +1,6 @@
 ---
 title: Firewall-Audit per API — wenn die GUI lügt und pfctl die Wahrheit sagt
-description: Ein KI-gestütztes Audit meiner OPNsense-Zero-Trust-Regeln. Wie ein vermeintlich kritischer DNS-Bug sich als Darstellungsartefakt entpuppte — und warum man Firewall-Regeln immer im Live-Kernel gegenprüfen muss.
+description: Ein vollständiges Audit meiner OPNsense-Zero-Trust-Regeln über die API. Wie ein vermeintlich kritischer DNS-Bug sich als Darstellungsartefakt entpuppte — und warum man Firewall-Regeln immer im Live-Kernel gegenprüfen muss.
 date: 2026-06-04
 tags:
   - opnsense
@@ -12,9 +12,9 @@ tags:
 
 Im Post zum [Netzwerk-Upgrade](/blog/netzwerk-upgrade) hatte ich es angeteasert: Aus der
 VLAN-Segmentierung wurde eine echte Zero-Trust-Firewall mit Default-Deny und DNS-Hijack-Block.
-Ein paar Wochen später wollte ich wissen, ob das alles noch so läuft wie gedacht — und habe
-meinen KI-Assistenten ein vollständiges Audit der OPNsense fahren lassen. Über die API, nicht
-über die GUI. Das Ergebnis war lehrreicher als erwartet.
+Ein paar Wochen später wollte ich wissen, ob das alles noch so läuft wie gedacht — und habe ein
+vollständiges Audit meiner OPNsense gefahren, mit einer KI als Zuarbeiterin am Terminal. Über die
+API, nicht über die GUI. Das Ergebnis war lehrreicher als erwartet.
 
 ## Der Aufbau: API statt Klickstrecke
 
@@ -22,11 +22,11 @@ Die OPNsense lässt sich komplett über eine REST-API steuern. Credentials liege
 `.env`, der Rest ist `curl`:
 
 ```bash
-curl -sk -u "$KEY:$SEC" https://10.17.1.1/api/firewall/filter/searchRule | jq
+curl -sk -u "$KEY:$SEC" https://<opnsense>/api/firewall/filter/searchRule | jq
 ```
 
-So konnte der Assistent alle \~70 Filter-Regeln, die DNAT-Redirects und die NAT-Konfiguration
-auslesen und gegen meine Dokumentation abgleichen. Erste Erkenntnis: Die Doku war an mehreren
+So konnte ich alle \~70 Filter-Regeln, die DNAT-Redirects und die NAT-Konfiguration auslesen und
+gegen meine Dokumentation abgleichen. Erste Erkenntnis: Die Doku war an mehreren
 Stellen veraltet — eine Regel verwies noch auf einen alten Domain-Namen, eine WireGuard-Regel
 hing tot auf einem längst deaktivierten Interface herum.
 
@@ -55,7 +55,7 @@ Stellt sich heraus: Das Menü erscheint **nur bei interaktivem Login**. Ein SSH-
 Kommando läuft direkt durch:
 
 ```bash
-ssh root@10.17.1.1 '/bin/sh -c "pfctl -sr | grep vlan04"'
+ssh root@<opnsense> '/bin/sh -c "pfctl -sr | grep vlan04"'
 ```
 
 Eine kleine Stolperfalle: Die root-Shell ist `csh`, die bash-typische Umleitungen wie
@@ -71,18 +71,18 @@ vermuten ließen.
 Im Live-Ruleset sah ich für das IOT-VLAN:
 
 ```plain
-@141 block drop in quick on vlan04 inet from 10.17.30.0/24 to 10.0.0.0/8   [Packets: 122]
-@163 pass  in       quick on vlan04 inet ... to 10.17.1.254 port = domain  [Packets: 0]
+@141 block drop in quick on vlan04 inet from <iot-subnet> to 10.0.0.0/8       [Packets: 122]
+@163 pass  in       quick on vlan04 inet ... to <adguard-ip> port = domain    [Packets: 0]
 ```
 
-Mein AdGuard-Resolver liegt auf `10.17.1.254` — also **innerhalb** von `10.0.0.0/8`. Die
+Mein AdGuard-Resolver liegt **innerhalb** des RFC1918-Bereichs `10.0.0.0/8`. Die
 RFC1918-Isolationsregel (`block … to 10/8`) ist `quick` und steht **vor** der DNS-Erlaubnis.
 Nach pf-Logik („first match wins") müsste sie jede DNS-Anfrage ans AdGuard verschlucken. Der
 Zähler bestätigte: Die DNS-Erlaubnis-Regel ließ **null Pakete** durch.
 
 Panik? Kurz. Denn mein Netz funktionierte ja nachweislich. Die Auflösung lag im DHCP: Kea
 verteilt als DNS-Server nicht direkt den AdGuard, sondern die **Gateway-IP des jeweiligen VLANs**
-(z.B. `10.17.20.1` für Clients). Die Geräte fragen ihr Gateway — also die Firewall selbst —
+(also die VLAN-eigene Firewall-Adresse). Die Geräte fragen ihr Gateway — also die Firewall selbst —
 und der DNAT-Redirect lenkt das `:53`-Paket transparent auf den AdGuard um. Deshalb laufen die
 expliziten Erlaubnis-Regeln faktisch leer, und das System funktioniert trotzdem.
 
@@ -112,7 +112,7 @@ gegenverifiziert. Backup vorher, versteht sich.
 
 Drei Dinge nehme ich mit. Erstens: Management-APIs sind bequem, aber sie zeigen eine kuratierte
 Sicht — der Paketfilter-Kernel ist die einzige Quelle der Wahrheit. Zweitens: Regelnamen sind
-Absichtserklärungen, kein Beweis für Verhalten; Trefferzähler lügen nicht. Und drittens: Ein
-KI-Assistent mit API- und Shell-Zugang ist für so ein Audit erstaunlich stark — vorausgesetzt,
-er prüft seine eigenen Schlüsse empirisch nach, statt dem ersten Befund zu glauben. Genau das
-„🔴 kritisch → doch nur ein Darstellungsartefakt" war der wertvollste Moment der Session.
+Absichtserklärungen, kein Beweis für Verhalten; Trefferzähler lügen nicht. Und drittens: Eine KI
+am Terminal beschleunigt so ein Audit enorm — solange ich jeden ihrer Befunde selbst empirisch
+gegenprüfe, statt dem ersten Eindruck zu glauben. Genau dieser Moment „🔴 kritisch → doch nur ein
+Darstellungsartefakt" hat mir mehr über mein eigenes Netz beigebracht als jede grüne Statusseite.

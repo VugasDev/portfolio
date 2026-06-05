@@ -19,17 +19,17 @@ rückblickend die beste Lehrstunde in systematischem Debugging seit Langem.
 
 ## Das Setup
 
-Firefly läuft als eigener unprivilegierter LXC (ID 119) auf meinem Proxmox-Host im SRV-VLAN.
-Der Stack ist ein schlankes Docker-Compose:
+Firefly läuft als eigener unprivilegierter LXC auf meinem Proxmox-Host in einem getrennten
+Server-Segment. Der Stack ist ein schlankes Docker-Compose:
 
 - **Firefly III Core** (die App)
 - **PostgreSQL** als Datenbank
 - **Cron** für wiederkehrende Buchungen
 - **Data Importer** für CSV- und Bank-Importe
 
-Nach außen via Pangolin-Tunnel mit vorgeschalteter SSO-Auth, intern über den Caddy-Wildcard-
-Reverse-Proxy. Backup über den wöchentlichen Proxmox-vzdump. So weit,
-so Routine. Dann kam der Import.
+Nach außen über einen Tunnel mit vorgeschalteter SSO-Auth, intern über meinen Wildcard-
+Reverse-Proxy. Backup über den wöchentlichen Proxmox-vzdump. So weit, so Routine. Dann kam
+der Import.
 
 ## Akt 1: Null importiert
 
@@ -37,7 +37,7 @@ Erster Versuch: CSV hochladen, Spalten mappen, „Run" — und es passiert **nic
 einziger Umsatz landet in Firefly. Statt zu raten, habe ich in die Logs geschaut. Die Antwort
 stand dort glasklar als HTTP 422:
 
-> Could not find a valid source account when searching for ID "0" or name "L.M. Stuhlmacher".
+> Could not find a valid source account when searching for ID "0" or name "Max Mustermann".
 
 Firefly konnte mein eigenes Konto nicht auflösen. Der Grund: Asset-Konten legt Firefly
 **niemals automatisch** an, und meine Konten hatten keine IBAN hinterlegt. Die CSV liefert auf
@@ -74,8 +74,8 @@ Konto posten statt auf mein volles Hauptkonto.
 
 | Ziel-Konto | Buchungen im Konto | Dauer eines Inserts |
 | --- | --- | --- |
-| Cash wallet | 0 | **0,41 s** |
-| Hauptkonto | 869 | **11 s** |
+| Leeres Test-Konto | 0 | **0,41 s** |
+| Hauptkonto | mehrere hundert | **11 s** |
 
 Damit war die Ursache bewiesen: Firefly berechnet bei jedem Insert die **Running Balance des**
 **Kontos neu — O(n)** über alle Buchungen. Weil fast jeder Umsatz mein Hauptkonto berührt, wurde
@@ -101,7 +101,10 @@ zurück auf den synchronen Default. Denn für den Alltag braucht es die Queue ga
 
 ## Akt 4: Die Salden stimmen trotzdem nicht
 
-Geschafft? Fast. Die Endsalden lagen daneben. Der Grund war hausgemacht: Ich hatte bei der Kontoerstellung den _aktuellen_ Stand als Opening Balance eingetragen und dann die _komplette Historie_ obendrauf importiert. Das doppelt sich.
+Geschafft? Fast. Die Endsalden lagen daneben — das Hauptkonto zeigte einen deutlich zu hohen
+Stand. Der Grund war hausgemacht: Ich hatte bei der Kontoerstellung den _aktuellen_ Stand als
+Opening Balance eingetragen und dann die _komplette Historie_ obendrauf importiert. Das doppelt
+sich — die Eröffnungsbuchung und die Summe der Einzelbuchungen zählen beide.
 
 Dazu kam mein eigener Altlasten-Effekt: früher hatte ich mehrere Unterkonten, deren Transfers in
 der Historie stecken, aber nicht mehr als Konten existieren. Statt hunderte Altbuchungen zu
