@@ -9,6 +9,7 @@ tags:
   - docker
   - debugging
   - homelab
+draft: true
 ---
 
 Ich wollte endlich Überblick über meine Finanzen. Die Wahl fiel auf **Firefly III** —
