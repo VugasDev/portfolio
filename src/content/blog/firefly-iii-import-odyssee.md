@@ -9,7 +9,7 @@ tags:
   - docker
   - debugging
   - homelab
-draft: true
+draft: false
 ---
 
 Ich wollte endlich Überblick über meine Finanzen. Die Wahl fiel auf **Firefly III** —
@@ -42,11 +42,6 @@ stand dort glasklar als HTTP 422:
 Firefly konnte mein eigenes Konto nicht auflösen. Der Grund: Asset-Konten legt Firefly
 **niemals automatisch** an, und meine Konten hatten keine IBAN hinterlegt. Die CSV liefert auf
 der „Ich"-Seite meine IBAN — ohne Match kein gültiges Quellkonto, also Ablehnung jeder Buchung.
-
-Bevor ich das als Lösung verkauft habe, habe ich es **bewiesen**: eine Test-Buchung per API
-gepostet (→ 422), die IBAN ans Konto geschrieben, die identische Buchung erneut gepostet
-(→ 200), und beides wieder aufgeräumt. Reproduktion, Fix, Verifikation, kein Rückstand. IBANs
-gesetzt, weiter geht's.
 
 ## Akt 2: Der 504
 
@@ -106,9 +101,7 @@ zurück auf den synchronen Default. Denn für den Alltag braucht es die Queue ga
 
 ## Akt 4: Die Salden stimmen trotzdem nicht
 
-Geschafft? Fast. Die Endsalden lagen daneben — mein Hauptkonto zeigte 699 € statt 42 €. Der
-Grund war hausgemacht: Ich hatte bei der Kontoerstellung den _aktuellen_ Stand als Opening
-Balance eingetragen und dann die _komplette Historie_ obendrauf importiert. Das doppelt sich.
+Geschafft? Fast. Die Endsalden lagen daneben. Der Grund war hausgemacht: Ich hatte bei der Kontoerstellung den _aktuellen_ Stand als Opening Balance eingetragen und dann die _komplette Historie_ obendrauf importiert. Das doppelt sich.
 
 Dazu kam mein eigener Altlasten-Effekt: früher hatte ich mehrere Unterkonten, deren Transfers in
 der Historie stecken, aber nicht mehr als Konten existieren. Statt hunderte Altbuchungen zu
