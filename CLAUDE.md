@@ -22,6 +22,7 @@ Bei Bedarf laden (NICHT auto-importieren):
 
 ## Entwicklungs-Regeln
 - Vor komplexen Aufgaben: `~/projects/docs/common-mistakes.md` (Sektionen [ALLE] + [@code])
+- Backlog/Ideen (projektübergreifend) → `~/projects/docs/BACKLOG.md` (Format-Regeln dort); keine projektlokalen Backlog-Dateien anlegen
 - Neue Fehler dort dokumentieren (Format in der Datei vorgegeben)
 - Nur ändern was explizit angefragt wurde; Inputs validieren
 - Secrets (Webhook-Token, Deploy-Keys) ausschließlich über Vaultwarden — nie im Code/Repo
