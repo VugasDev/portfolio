@@ -295,14 +295,17 @@
   .card:active { transform: translateY(0) scale(0.995); }
 
   /* ── Hover-README-Overlay (BL-009) ────────────────────────────── */
+  /* Anker ist der Inhalts-Wrapper in der Card (nicht die Card selbst),
+     damit die Link-Zeile (Case Study) beim Hover sichtbar bleibt.
+     inset kompensiert das Card-Padding (1.25rem) nach oben/außen. */
   .card-readme {
     position: absolute;
-    inset: 0;
+    inset: -1.25rem -1.25rem 0 -1.25rem;
     display: flex;
     flex-direction: column;
     gap: 0.55rem;
     padding: 1.25rem;
-    border-radius: var(--radius-card);
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
     border: 1px solid var(--color-accent);
     background: linear-gradient(158deg, #38294F 0%, #281F3E 100%);
     box-shadow: var(--shadow-card);
@@ -324,6 +327,11 @@
     line-height: 1.55;
     color: var(--color-text-soft);
     margin: 0;
+  }
+  /* Card ohne Link-Zeile: Overlay deckt die volle Card ab. */
+  .card-readme-full {
+    inset: -1.25rem;
+    border-radius: var(--radius-card);
   }
   @media (hover: hover) {
     .card:hover .card-readme,

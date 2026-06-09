@@ -17,7 +17,7 @@ const ogImage = new URL(`/og/${pathToOgSlug(Astro.url.pathname)}.png`, site);
 const person = {
   '@context': 'https://schema.org',
   '@type': 'Person',
-  name: 'Lars Meykel',
+  name: 'Lars Meykel Stuhlmacher',
   jobTitle: 'Fachinformatiker Systemintegration (Auszubildender)',
   url: site.href,
   sameAs: ['https://github.com/VugasDev'],
@@ -32,7 +32,7 @@ const article =
         description,
         ...(publishedDate ? { datePublished: publishedDate.toISOString() } : {}),
         ...(tags.length ? { keywords: tags.join(', ') } : {}),
-        author: { '@type': 'Person', name: 'Lars Meykel', url: site.href },
+        author: { '@type': 'Person', name: 'Lars Meykel Stuhlmacher', url: site.href },
         mainEntityOfPage: canonical.href,
       }
     : null;
