@@ -3,6 +3,14 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Seo from '../components/Seo.astro';
 import '../styles/global.css';
+// Fonts self-hosted (DSGVO): kein Request an fonts.googleapis.com/gstatic.com
+import '@fontsource/space-grotesk/500.css';
+import '@fontsource/space-grotesk/700.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/500.css';
 
 interface Props {
   title: string;
@@ -28,17 +36,10 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <Seo title={title} description={description} type={ogType} publishedDate={publishedDate} tags={tags} />
-    <title>{title} · VUGAS.DE / UNIT-01</title>
+    <title>{title} · vugas.de</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title="VUGAS.DE / LOG" href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=block"
-    />
   </head>
   <body class="min-h-screen">
     <Nav />

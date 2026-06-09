@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Datenschutz" description="Datenschutzerklärung von vugas.de — keine Cookies, kein Tracking, self-hosted in Deutschland.">
+
+  <header class="pt-6 md:pt-10 pb-12 border-b border-(--color-border)">
+    <div class="section-num mb-5">LEGAL / DATENSCHUTZ</div>
+    <h1 class="display-xl">Datenschutz<span style="color: var(--color-accent);">.</span></h1>
+    <p class="text-(--color-text-soft) text-[0.95rem] leading-[1.65] max-w-[62ch] mt-6"
+       style="font-family: var(--font-sans)">
+      Kurzfassung: Diese Seite ist statisch, self-hosted in Deutschland, setzt keine Cookies,
+      nutzt kein Tracking und l&auml;dt keine externen Ressourcen. Es f&auml;llt nur das an,
+      was ein Webserver technisch braucht.
+    </p>
+  </header>
+
+  <div class="pt-12 max-w-[68ch] space-y-10 text-(--color-text-soft) text-[0.93rem] leading-[1.7]"
+       style="font-family: var(--font-sans)">
+
+    <section>
+      <div class="rule mb-5"><span>1. Verantwortlicher</span></div>
+      <p>
+        Lars Meykel<br/>
+        Hohe Str. 23<br/>
+        47051 Duisburg<br/>
+        E-Mail: <a href="mailto:contact@vugas.de" class="text-(--color-accent)">contact@vugas.de</a>
+      </p>
+    </section>
+
+    <section>
+      <div class="rule mb-5"><span>2. Hosting &amp; Server-Logs</span></div>
+      <p>
+        Diese Website wird auf eigener Infrastruktur in Deutschland betrieben (Self-Hosting,
+        kein externer Hosting-Dienstleister). Beim Aufruf der Seite verarbeitet der Webserver
+        (nginx) technisch notwendige Daten: IP-Adresse, Datum und Uhrzeit des Zugriffs,
+        aufgerufene URL, HTTP-Statuscode, &uuml;bertragene Datenmenge, Referrer und User-Agent.
+      </p>
+      <p class="mt-3">
+        Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am sicheren und
+        stabilen Betrieb der Website, z.&nbsp;B. Abwehr von Angriffen). Die Logs werden
+        ausschlie&szlig;lich zu diesem Zweck verwendet, nicht mit anderen Datenquellen
+        zusammengef&uuml;hrt und nach kurzer Zeit automatisch gel&ouml;scht.
+      </p>
+    </section>
+
+    <section>
+      <div class="rule mb-5"><span>3. Keine Cookies, kein Tracking</span></div>
+      <p>
+        Diese Website setzt keine Cookies, verwendet keine Analyse- oder Tracking-Dienste und
+        bindet keine Inhalte von Drittservern ein. Schriftarten werden lokal vom eigenen Server
+        ausgeliefert &mdash; es findet keine Verbindung zu Google Fonts oder anderen
+        CDN-Diensten statt.
+      </p>
+    </section>
+
+    <section>
+      <div class="rule mb-5"><span>4. Kontaktaufnahme per E-Mail</span></div>
+      <p>
+        Wenn Sie mir per E-Mail schreiben, werden Ihre Angaben (E-Mail-Adresse, Inhalt der
+        Nachricht) zur Bearbeitung der Anfrage verarbeitet und gespeichert
+        (Art. 6 Abs. 1 lit. b bzw. lit. f DSGVO). Diese Daten gebe ich nicht weiter und
+        l&ouml;sche sie, sobald sie f&uuml;r den Zweck nicht mehr erforderlich sind.
+      </p>
+    </section>
+
+    <section>
+      <div class="rule mb-5"><span>5. Verschl&uuml;sselung</span></div>
+      <p>
+        Die &Uuml;bertragung dieser Website erfolgt ausschlie&szlig;lich verschl&uuml;sselt
+        &uuml;ber HTTPS (TLS).
+      </p>
+    </section>
+
+    <section>
+      <div class="rule mb-5"><span>6. Ihre Rechte</span></div>
+      <p>
+        Sie haben gegen&uuml;ber dem Verantwortlichen das Recht auf Auskunft (Art. 15 DSGVO),
+        Berichtigung (Art. 16), L&ouml;schung (Art. 17), Einschr&auml;nkung der Verarbeitung
+        (Art. 18), Daten&uuml;bertragbarkeit (Art. 20) sowie Widerspruch gegen die Verarbeitung
+        (Art. 21). Au&szlig;erdem besteht ein Beschwerderecht bei einer
+        Datenschutz-Aufsichtsbeh&ouml;rde &mdash; zust&auml;ndig ist die Landesbeauftragte
+        f&uuml;r Datenschutz und Informationsfreiheit Nordrhein-Westfalen (LDI NRW).
+      </p>
+    </section>
+
+  </div>
+</BaseLayout>

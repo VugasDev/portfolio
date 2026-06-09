@@ -51,7 +51,11 @@ const year = new Date().getFullYear();
          style="font-family: var(--font-display)">
       <span class="text-(--color-muted)">vugas.de &mdash; {year}</span>
       <span class="hidden sm:inline text-(--color-muted-deep)">Homelab &middot; Self-Hosting &middot; AI</span>
-      <span class="live" style="font-size: 0.62rem;">SYSTEM</span>
+      <span class="flex items-center gap-4">
+        <a href="/impressum" class="hover:text-(--color-text-soft) transition-colors">Impressum</a>
+        <a href="/datenschutz" class="hover:text-(--color-text-soft) transition-colors">Datenschutz</a>
+        <span class="live" style="font-size: 0.62rem;">SYSTEM</span>
+      </span>
     </div>
   </div>
 </footer>

@@ -19,6 +19,8 @@ const STATIC_PAGES: OgEntry[] = [
   { slug: 'projects', title: 'What I build',       kicker: 'PROJECTS' },
   { slug: 'blog',     title: 'Notes from the Lab', kicker: 'LOG' },
   { slug: 'guides',   title: 'Guides',             kicker: 'GUIDES' },
+  { slug: 'impressum',   title: 'Impressum',   kicker: 'LEGAL' },
+  { slug: 'datenschutz', title: 'Datenschutz', kicker: 'LEGAL' },
 ];
 
 export async function getAllOgEntries(): Promise<OgEntry[]> {
