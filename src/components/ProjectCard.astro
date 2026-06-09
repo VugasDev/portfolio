@@ -13,13 +13,16 @@ const { name, description, details, tags, status, github, url, caseStudyHref } =
 ---
 
 <article class="card group flex flex-col gap-3">
-  {/* Hover-Overlay deckt nur diesen Wrapper ab — die Link-Zeile
-      (Case Study/GitHub/Live) darunter bleibt sichtbar und klickbar. */}
+  {/* Hover-Overlay deckt nur diesen Wrapper ab — eine evtl. Link-Zeile
+      (GitHub/Live) darunter bleibt sichtbar und klickbar. */}
   <div class="relative flex-1 flex flex-col gap-3">
     <div class="flex items-start justify-between gap-3">
       <h3 class="text-[1.02rem] text-(--color-text) group-hover:text-(--color-accent) transition-colors"
           style="font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">
         {name}
+        {caseStudyHref && (
+          <span class="case-mark" title="Case Study verfügbar" aria-hidden="true">&#10022;</span>
+        )}
       </h3>
       <span class="tag tag-accent whitespace-nowrap shrink-0">{status}</span>
     </div>
@@ -32,18 +35,18 @@ const { name, description, details, tags, status, github, url, caseStudyHref } =
     </div>
 
     {details && (
-      <div class:list={['card-readme', !(github || url || caseStudyHref) && 'card-readme-full']}>
+      <div class:list={['card-readme', !(github || url) && 'card-readme-full']}>
         <span class="card-readme-kicker">{name}</span>
         <p>{details}</p>
+        {caseStudyHref && (
+          <span class="card-readme-more">Case Study lesen <span class="glyph">&rarr;</span></span>
+        )}
       </div>
     )}
   </div>
 
-  {(github || url || caseStudyHref) && (
+  {(github || url) && (
     <div class="flex gap-5 mt-auto pt-3 border-t border-(--color-border)">
-      {caseStudyHref && (
-        <a href={caseStudyHref} class="arrow"><span>Case Study</span><span class="glyph">&rarr;</span></a>
-      )}
       {github && (
         <a href={github} class="arrow"><span>GitHub</span><span class="glyph">&rarr;</span></a>
       )}
@@ -51,5 +54,11 @@ const { name, description, details, tags, status, github, url, caseStudyHref } =
         <a href={url} class="arrow"><span>Live</span><span class="glyph">&rarr;</span></a>
       )}
     </div>
+  )}
+
+  {/* Ganze Card klickbar, wenn eine Case Study existiert (stretched link) */}
+  {caseStudyHref && (
+    <a href={caseStudyHref} class="absolute inset-0 z-10 rounded-[var(--radius-card)]"
+       aria-label={`Case Study lesen: ${name}`}></a>
   )}
 </article>

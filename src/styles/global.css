@@ -311,7 +311,9 @@
     box-shadow: var(--shadow-card);
     opacity: 0;
     pointer-events: none;
-    overflow-y: auto;
+    /* hidden statt auto: scrollen darf nur der Text (p), damit der
+       "Case Study lesen"-Hinweis immer sichtbar am unteren Rand bleibt */
+    overflow: hidden;
     transition: opacity .2s var(--ease-out);
   }
   .card-readme-kicker {
@@ -327,12 +329,38 @@
     line-height: 1.55;
     color: var(--color-text-soft);
     margin: 0;
+    min-height: 0;
+    overflow-y: auto;
   }
   /* Card ohne Link-Zeile: Overlay deckt die volle Card ab. */
   .card-readme-full {
     inset: -1.25rem;
     border-radius: var(--radius-card);
   }
+  /* Zeichen am Projektnamen: signalisiert vorhandene Case Study */
+  .case-mark {
+    margin-left: 0.35rem;
+    font-size: 0.7em;
+    color: var(--color-accent);
+    vertical-align: 0.15em;
+  }
+  /* Bei Cards mit "mehr lesen"-Hinweis: überlaufenden Text ausfaden
+     statt hart abzuschneiden (Overlay ist nicht scrollbar) */
+  .card-readme:has(.card-readme-more) p {
+    overflow: hidden;
+    mask-image: linear-gradient(180deg, #000 calc(100% - 1.3em), transparent);
+  }
+  /* Hinweis im Overlay: Card ist klickbar, es gibt mehr zu lesen */
+  .card-readme-more {
+    margin-top: auto;
+    padding-top: 0.6rem;
+    font-family: var(--font-display);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .card-readme-more .glyph { margin-left: 0.35rem; }
   @media (hover: hover) {
     .card:hover .card-readme,
     .card:focus-within .card-readme { opacity: 1; }
