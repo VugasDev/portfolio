@@ -330,7 +330,9 @@
     color: var(--color-text-soft);
     margin: 0;
     min-height: 0;
-    overflow-y: auto;
+    /* KEIN overflow-y:auto — wäre eine scrollbare Region ohne
+       Tastatur-Zugang (axe serious); Overlay ist eh pointer-events:none */
+    overflow: hidden;
   }
   /* Card ohne Link-Zeile: Overlay deckt die volle Card ab. */
   .card-readme-full {
@@ -344,10 +346,10 @@
     color: var(--color-accent);
     vertical-align: 0.15em;
   }
-  /* Bei Cards mit "mehr lesen"-Hinweis: überlaufenden Text ausfaden
-     statt hart abzuschneiden (Overlay ist nicht scrollbar) */
-  .card-readme:has(.card-readme-more) p {
-    overflow: hidden;
+  /* Wo Text überlaufen kann (more-Hinweis nimmt Platz weg bzw. Overlay
+     ist durch eine Link-Zeile verkleinert): sanft ausfaden statt hart clippen */
+  .card-readme:has(.card-readme-more) p,
+  .card-readme:not(.card-readme-full) p {
     mask-image: linear-gradient(180deg, #000 calc(100% - 1.3em), transparent);
   }
   /* Hinweis im Overlay: Card ist klickbar, es gibt mehr zu lesen */
