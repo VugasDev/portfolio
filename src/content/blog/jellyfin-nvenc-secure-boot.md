@@ -1,5 +1,5 @@
 ---
-title: "GPU-Transcoding für Jellyfin: NVENC, Secure Boot und ein schwarzer Bildschirm"
+title: 'GPU-Transcoding für Jellyfin: NVENC, Secure Boot und ein schwarzer Bildschirm'
 description: Wie ich eine alte GTX 1050 durch Proxmox, LXC und Docker bis zu Jellyfin durchgereicht habe — und warum Secure Boot und eine CPU ohne iGPU daraus ein Abenteuer machten.
 date: 2026-06-11
 tags:
@@ -8,7 +8,7 @@ tags:
   - nvidia
   - lxc
   - homelab
-draft: true
+draft: false
 ---
 
 Mein Jellyfin lief seit dem Setup auf reinem CPU-Transcoding. Für einen einzelnen
@@ -38,7 +38,7 @@ müssen exakt dieselbe Version haben, sonst verweigert der Treiber den Dienst.
 
 Der erste Installationsversuch endete ernüchternd: Das frisch gebaute Kernel-Modul
 ließ sich nicht laden. Mit KI-Unterstützung habe ich das Installer-Log durchgesehen,
-und dort stand die entscheidende Zeile: *Loading of unsigned module is rejected.*
+und dort stand die entscheidende Zeile: _Loading of unsigned module is rejected._
 Mein Hypervisor bootet mit **Secure Boot** — der Kernel akzeptiert nur signierte
 Module, und das NVIDIA-Modul war keins.
 
@@ -84,7 +84,7 @@ die 10 Sekunden, beim zweiten saß es: Enroll MOK, Einmal-Passwort, Reboot.
 Mit enrolltem Schlüssel lud das Modul sofort. Danach ging es zügig:
 
 - **Device-Nodes beim Boot:** Ein kleiner systemd-Service auf dem Host ruft `nvidia-smi`
-  und `nvidia-modprobe` auf, *bevor* die Gäste starten — sonst fehlen den LXCs die
+  und `nvidia-modprobe` auf, _bevor_ die Gäste starten — sonst fehlen den LXCs die
   `/dev/nvidia*`-Geräte nach jedem Reboot.
 - **LXC-Passthrough:** Vier `lxc.mount.entry`-Zeilen für die NVIDIA-Devices in der
   Container-Config.
