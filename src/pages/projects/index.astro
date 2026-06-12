@@ -2,10 +2,10 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
+import { getCaseStudySlugs, detailHref } from '../../lib/projects';
 
 const all = await getCollection('projects');
-const studies = await getCollection('caseStudies', ({ data }) => !data.draft);
-const studySlugs = new Set(studies.map(s => s.id));
+const studySlugs = await getCaseStudySlugs();
 const byStatus = (s: string) => all.filter(p => p.data.status === s);
 const groups = [
   { key: 'aktiv',      label: 'ACTIVE',     items: byStatus('aktiv') },
@@ -47,7 +47,7 @@ const groups = [
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {g.items.map(p => (
-            <ProjectCard {...p.data} caseStudyHref={studySlugs.has(p.id) ? `/projects/${p.id}` : undefined} />
+            <ProjectCard {...p.data} detailHref={detailHref(p, studySlugs)} hasCaseStudy={studySlugs.has(p.id)} />
           ))}
         </div>
       </section>

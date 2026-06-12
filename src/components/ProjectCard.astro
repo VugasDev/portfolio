@@ -7,9 +7,11 @@ interface Props {
   status: string;
   github?: string;
   url?: string;
-  caseStudyHref?: string;
+  detailHref?: string;
+  hasCaseStudy?: boolean;
 }
-const { name, description, details, tags, status, github, url, caseStudyHref } = Astro.props;
+const { name, description, details, tags, status, github, url, detailHref, hasCaseStudy } = Astro.props;
+const moreLabel = hasCaseStudy ? 'Case Study lesen' : 'Mehr erfahren';
 ---
 
 <article class="card group flex flex-col gap-3">
@@ -20,8 +22,8 @@ const { name, description, details, tags, status, github, url, caseStudyHref } =
       <h3 class="text-[1.02rem] text-(--color-text) group-hover:text-(--color-accent) transition-colors"
           style="font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">
         {name}
-        {caseStudyHref && (
-          <span class="case-mark" title="Case Study verfügbar" aria-hidden="true">&#10022;</span>
+        {detailHref && (
+          <span class="case-mark" title={hasCaseStudy ? 'Case Study verfügbar' : 'Mehr Details verfügbar'} aria-hidden="true">&#10022;</span>
         )}
       </h3>
       <span class="tag tag-accent whitespace-nowrap shrink-0">{status}</span>
@@ -35,17 +37,18 @@ const { name, description, details, tags, status, github, url, caseStudyHref } =
     </div>
 
     {details && (
-      <div class:list={['card-readme', !(github || url) && 'card-readme-full']}>
+      <div class:list={['card-readme', (detailHref || !(github || url)) && 'card-readme-full']}>
         <span class="card-readme-kicker">{name}</span>
         <p>{details}</p>
-        {caseStudyHref && (
-          <span class="card-readme-more">Case Study lesen <span class="glyph">&rarr;</span></span>
+        {detailHref && (
+          <span class="card-readme-more">{moreLabel} <span class="glyph">&rarr;</span></span>
         )}
       </div>
     )}
   </div>
 
-  {(github || url) && (
+  {/* Link-Zeile nur ohne Detailseite — sonst wohnen die Links dort. */}
+  {(github || url) && !detailHref && (
     <div class="flex gap-5 mt-auto pt-3 border-t border-(--color-border)">
       {github && (
         <a href={github} class="arrow"><span>GitHub</span><span class="glyph">&rarr;</span></a>
@@ -56,9 +59,9 @@ const { name, description, details, tags, status, github, url, caseStudyHref } =
     </div>
   )}
 
-  {/* Ganze Card klickbar, wenn eine Case Study existiert (stretched link) */}
-  {caseStudyHref && (
-    <a href={caseStudyHref} class="absolute inset-0 z-10 rounded-[var(--radius-card)]"
-       aria-label={`Case Study lesen: ${name}`}></a>
+  {/* Ganze Card klickbar, wenn eine Detailseite existiert (stretched link) */}
+  {detailHref && (
+    <a href={detailHref} class="absolute inset-0 z-10 rounded-[var(--radius-card)]"
+       aria-label={`${moreLabel}: ${name}`}></a>
   )}
 </article>
