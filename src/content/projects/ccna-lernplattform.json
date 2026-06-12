@@ -1,7 +1,7 @@
 {
   "name": "CCNA-Lernplattform",
   "description": "Selbstgebaute Web-App zur CCNA-Prüfungsvorbereitung — Fragenkatalog mit über 160 Übungsfragen, Prüfungsmodus und Lernstatistiken.",
-  "details": "Next.js-15-App mit Prisma/SQLite für die Vorbereitung auf die Cisco-CCNA-Zertifizierung. Importierter Fragenkatalog mit Exhibits (Netzwerk-Diagramme, CLI-Ausgaben), Prüfungssimulation mit Auswertung und persönlichen Statistiken über Stärken und Schwächen pro Themengebiet. Mehrbenutzerfähig mit Registrierungscodes, Session-Auth und Audit-Log. Läuft als LXC im Homelab hinter TLS-Reverse-Proxy.",
+  "details": "Next.js-15-App mit Prisma/SQLite zur CCNA-Vorbereitung: Fragenkatalog mit Exhibits, Prüfungssimulation und Schwächen-Statistik. Self-hosted als LXC im Homelab.",
   "tags": ["nextjs", "prisma", "ccna", "selfhosted"],
   "status": "aktiv"
 }
