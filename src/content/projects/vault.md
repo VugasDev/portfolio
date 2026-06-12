@@ -1,0 +1,11 @@
+---
+name: "Vault"
+description: "Self-hosted Passwort-Manager (Vaultwarden) mit Reverse-Proxy, fail2ban-Härtung und verschlüsseltem restic-Backup."
+details: "Vaultwarden als self-hosted Bitwarden-Server — die offiziellen Clients verbinden sich, der Tresor liegt aber auf eigener Hardware. Abgesichert mit Reverse-Proxy und TLS, fail2ban gegen Brute-Force und verschlüsseltem restic-Backup nach offsite, dessen Restore getestet ist."
+tags:
+  - "vaultwarden"
+  - "security"
+  - "docker"
+  - "backup"
+status: "aktiv"
+---

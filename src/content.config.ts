@@ -27,7 +27,7 @@ const guides = defineCollection({
 });
 
 const projects = defineCollection({
-  loader: glob({ pattern: '**/*.json', base: './src/content/projects' }),
+  loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
   schema: z.object({
     name: z.string(),
     description: z.string(),

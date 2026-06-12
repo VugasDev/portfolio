@@ -1,7 +1,0 @@
-{
-  "name": "Paperless Stack",
-  "description": "Papierloses Dokumenten-Management mit Paperless-ngx (OCR via Tesseract), Qdrant-RAG-Chatbot und KI-gestützter Metadaten-Vergabe.",
-  "details": "Paperless-ngx macht Dokumente per Tesseract-OCR durchsuchbar; ein lokales LLM vergibt Dokumenttyp, Korrespondent und Tags. Eine Qdrant-Vektordatenbank trägt einen RAG-Chatbot, der Fragen über den eigenen Aktenschrank mit Quellenangabe beantwortet — der gesamte Pfad bleibt lokal.",
-  "tags": ["paperless", "ocr", "rag", "docker"],
-  "status": "aktiv"
-}

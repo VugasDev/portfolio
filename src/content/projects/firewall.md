@@ -1,0 +1,11 @@
+---
+name: "Zero-Trust Firewall"
+description: "Default-Deny-Segmentierung über OPNsense: VLAN-isolierte Zonen, explizite Allow-Regeln und dokumentierte Inter-VLAN-Flows."
+details: "Default-Deny auf OPNsense: Jedes VLAN sieht nur, was explizit erlaubt ist. IoT und Gäste sind vom Server-Netz isoliert, Inter-VLAN-Zugriffe laufen gebündelt über einen zentralen Reverse-Proxy, und erzwungenes DNS verhindert das Umgehen der Filter. Jede Regel ist dokumentiert statt implizit."
+tags:
+  - "opnsense"
+  - "firewall"
+  - "vlan"
+  - "security"
+status: "aktiv"
+---
