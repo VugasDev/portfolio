@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 // Nur nicht-draft Case-Studies. cortex/mcp-stack sind draft:true (Projekte entfernt).
-const SLUGS = ['mediastack', 'netzwerk-upgrade', 'firewall'];
+const SLUGS = ['mediastack', 'netzwerk-upgrade', 'firewall', 'ccna-lernplattform'];
 const BASE = 'https://vugas.de';
 
 for (const slug of SLUGS) {
@@ -24,12 +24,30 @@ for (const slug of SLUGS) {
   });
 }
 
-test('Projekt-Cards verlinken auf die Case-Studies', async ({ page }) => {
+test('Projekt-Detailseite /projects/minecraft-modpack: rendert + GitHub-Link + SEO', async ({ page }) => {
+  const res = await page.goto('/projects/minecraft-modpack');
+  expect(res?.status()).toBe(200);
+  await expect(page.locator('h1').first()).toBeVisible();
+
+  // GitHub-Link wohnt auf der Detailseite (nicht mehr auf der Karte)
+  await expect(page.locator('a[href="https://github.com/VugasDev/minecraft-modpack"]').first()).toBeVisible();
+
+  const canonical = await page.locator('link[rel="canonical"]').getAttribute('href');
+  expect(canonical).toBe(`${BASE}/projects/minecraft-modpack/`);
+
+  const og = await page.locator('meta[property="og:image"]').getAttribute('content');
+  expect(og).toBe(`${BASE}/og/projects-minecraft-modpack.png`);
+});
+
+test('Projekt-Cards verlinken auf die Detailseiten', async ({ page }) => {
   await page.goto('/projects');
   const hrefs = await page.locator('a[href^="/projects/"]').evaluateAll(els =>
     els.map(e => e.getAttribute('href')),
   );
   expect(hrefs).toEqual(
-    expect.arrayContaining(['/projects/mediastack', '/projects/netzwerk-upgrade', '/projects/firewall']),
+    expect.arrayContaining([
+      '/projects/mediastack', '/projects/netzwerk-upgrade', '/projects/firewall',
+      '/projects/ccna-lernplattform', '/projects/minecraft-modpack',
+    ]),
   );
 });
