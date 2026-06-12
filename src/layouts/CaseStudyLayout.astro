@@ -9,10 +9,12 @@ interface Props {
   tags: string[];
   stack: string[];
   github?: string;
+  url?: string;
   screenshots: { src: string; alt: string }[];
   headings?: { depth: number; slug: string; text: string }[];
+  kicker?: string;
 }
-const { title, description, status, tags, stack, github, screenshots, headings = [] } = Astro.props;
+const { title, description, status, tags, stack, github, url, screenshots, headings = [], kicker = 'Case Study' } = Astro.props;
 ---
 <BaseLayout title={title} description={description} ogType="article" tags={tags}>
 
@@ -20,7 +22,7 @@ const { title, description, status, tags, stack, github, screenshots, headings =
        style="font-family: var(--font-display)">
     <a href="/projects" class="text-(--color-muted) hover:text-(--color-accent) transition-colors">&larr; Projects</a>
     <span class="text-(--color-border-strong)">/</span>
-    <span class="text-(--color-muted-deep)">Case Study</span>
+    <span class="text-(--color-muted-deep)">{kicker}</span>
   </nav>
 
   <div class="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-10">
@@ -33,7 +35,7 @@ const { title, description, status, tags, stack, github, screenshots, headings =
     <!-- Main content -->
     <div>
       <header class="pb-12 mb-12 border-b border-(--color-border)">
-        <div class="rise rise-1 section-num mb-5">Case Study</div>
+        <div class="rise rise-1 section-num mb-5">{kicker}</div>
         <div class="flex items-start justify-between gap-4">
           <h1 class="rise rise-2 display-lg" style="font-size: clamp(2rem, 1.4rem + 2.6vw, 3.4rem);">{title}</h1>
           <span class="tag tag-accent whitespace-nowrap shrink-0 mt-2">{status}</span>
@@ -45,9 +47,10 @@ const { title, description, status, tags, stack, github, screenshots, headings =
             {stack.map(s => <span class="tag">{s}</span>)}
           </div>
         )}
-        {github && (
-          <div class="rise rise-4 mt-5">
-            <a href={github} class="arrow"><span>GitHub</span><span class="glyph">&rarr;</span></a>
+        {(github || url) && (
+          <div class="rise rise-4 mt-5 flex gap-5">
+            {github && <a href={github} class="arrow"><span>GitHub</span><span class="glyph">&rarr;</span></a>}
+            {url && <a href={url} class="arrow"><span>Live</span><span class="glyph">&rarr;</span></a>}
           </div>
         )}
       </header>

@@ -1,25 +1,57 @@
 ---
 import { getCollection, render } from 'astro:content';
 import CaseStudyLayout from '../../layouts/CaseStudyLayout.astro';
+import { hasDetailPage } from '../../lib/projects';
 
 export async function getStaticPaths() {
   const studies = await getCollection('caseStudies', ({ data }) => !data.draft);
-  return studies.map(study => ({ params: { slug: study.id }, props: { study } }));
+  const studyBySlug = new Map(studies.map(s => [s.id, s]));
+  const studySlugs = new Set(studyBySlug.keys());
+  const projects = await getCollection('projects');
+
+  const paths: { params: { slug: string }; props: { study: typeof studies[number] | null; project: typeof projects[number] | null } }[] = [];
+  const seen = new Set<string>();
+
+  for (const project of projects) {
+    if (!hasDetailPage(project, studySlugs)) continue;
+    paths.push({ params: { slug: project.id }, props: { study: studyBySlug.get(project.id) ?? null, project } });
+    seen.add(project.id);
+  }
+  // Case Studies ohne Projekt-Eintrag (Sicherheitsnetz, Verhalten wie bisher)
+  for (const study of studies) {
+    if (!seen.has(study.id)) paths.push({ params: { slug: study.id }, props: { study, project: null } });
+  }
+  return paths;
 }
 
-const { study } = Astro.props;
-const { Content, headings } = await render(study);
-const d = study.data;
+const { study, project } = Astro.props;
+const source = study ?? project!;
+const { Content, headings } = await render(source);
+const hasBody = !!source.body?.trim();
+
+const layoutProps = study
+  ? {
+      kicker: 'Case Study',
+      title: study.data.title,
+      description: study.data.description,
+      status: study.data.status,
+      tags: study.data.tags,
+      stack: study.data.stack,
+      github: study.data.github,
+      screenshots: study.data.screenshots,
+    }
+  : {
+      kicker: 'Projekt',
+      title: project!.data.name,
+      description: project!.data.description,
+      status: project!.data.status,
+      tags: project!.data.tags,
+      stack: project!.data.tags,
+      github: project!.data.github,
+      url: project!.data.url,
+      screenshots: [] as { src: string; alt: string }[],
+    };
 ---
-<CaseStudyLayout
-  title={d.title}
-  description={d.description}
-  status={d.status}
-  tags={d.tags}
-  stack={d.stack}
-  github={d.github}
-  screenshots={d.screenshots}
-  headings={headings}
->
-  <Content />
+<CaseStudyLayout {...layoutProps} headings={headings}>
+  {hasBody ? <Content /> : project?.data.details && <p>{project.data.details}</p>}
 </CaseStudyLayout>
