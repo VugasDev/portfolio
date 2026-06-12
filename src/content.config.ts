@@ -32,7 +32,7 @@ const projects = defineCollection({
     name: z.string(),
     description: z.string(),
     details: z.string().optional(),   // README-Kurzfassung fürs Hover-Overlay
-    tags: z.array(z.string()),
+    tags: z.array(z.string()).default([]),
     status: z.enum(['aktiv', 'in Arbeit', 'Planung', 'archiviert']),
     github: z.string().url().optional(),
     url: z.string().url().optional(),
