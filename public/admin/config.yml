@@ -57,13 +57,15 @@ collections:
     label: Projekte
     folder: src/content/projects
     create: true
-    extension: json
+    extension: md
+    format: frontmatter
     sortable_fields:
       fields: [commit_date, name]
       default: { field: commit_date, direction: descending }
     fields:
       - { name: name,        label: Name,            widget: string }
       - { name: description, label: Beschreibung,    widget: string }
+      - { name: details,     label: Details (Hover-Overlay), widget: text, required: false }
       - { name: tags,        label: Tags,            widget: list }
       - name: status
         label: Status
@@ -71,3 +73,4 @@ collections:
         options: [aktiv, "in Arbeit", Planung, archiviert]
       - { name: github,      label: GitHub URL,      widget: string, required: false }
       - { name: url,         label: Live URL,        widget: string, required: false }
+      - { name: body,        label: Detailseiten-Text (optional), widget: markdown, required: false }
