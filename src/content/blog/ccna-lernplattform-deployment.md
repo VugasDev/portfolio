@@ -1,5 +1,5 @@
 ---
-title: "CCNA-Lernplattform im Homelab: Deployment und ein Cookie, das nicht bleiben wollte"
+title: 'CCNA-Lernplattform im Homelab: Deployment und ein Cookie, das nicht bleiben wollte'
 description: Wie ich meine selbstgebaute Next.js-Lernplattform als LXC auf Proxmox deployt habe — und warum der Login danach trotzdem erst einmal nicht funktionierte.
 date: 2026-06-12
 tags:
@@ -8,7 +8,7 @@ tags:
   - nextjs
   - deployment
   - debugging
-draft: true
+draft: false
 ---
 
 Für meine CCNA-Prüfungsvorbereitung habe ich mir eine eigene Lernplattform gebaut:
@@ -46,7 +46,7 @@ zu ändern. Stattdessen habe ich das Problem erst einmal außerhalb des Browsers
 reproduziert und mit der KI den Auth-Code durchgesehen. Ein `curl` direkt gegen die
 Login-API brachte die Antwort in einer einzigen Zeile:
 
-```
+```plain
 HTTP/1.1 200 OK
 set-cookie: session=…; Path=/; Secure; HttpOnly; SameSite=lax
 ```
