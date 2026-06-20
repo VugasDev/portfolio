@@ -1,7 +1,7 @@
 ---
 title: Jedes Erz nur noch über die Bohrmaschine — und der API-Sumpf dahinter
 description: Wie ich für mein Minecraft-Modpack die komplette Erz-Gewinnung auf Create Ore Excavation umgebaut habe — Tier-Gating, Adern, Fluid-Boost — und mich dabei durch Rhino-Fallen, falsche Mod-IDs und vier Mod-API-Umbrüche gekämpft habe.
-date: 2026-06-20
+date: 2026-06-19
 tags:
   - minecraft
   - modding
@@ -20,7 +20,7 @@ zähesten Debugging-Sessions, die ich am Pack hatte.
 ## Das Zielbild
 
 - **Worldgen aus:** keine natürlichen Erzblöcke, keine Vanilla-Adern.
-- **Jedes Erz als COE-Ader:** eine *endliche* Ader (erschöpft sich) plus eine *unendliche*
+- **Jedes Erz als COE-Ader:** eine _endliche_ Ader (erschöpft sich) plus eine _unendliche_
   Ley-Line (erneuerbar, aber eine Bohrkopf-Stufe höher gegated).
 - **Hartes Tier-Gating:** Basic-Bohrkopf kommt nur an Tier-1-Erze, höhere Erze brauchen
   bessere Köpfe. Kumulativ über Item-Tags gelöst.
@@ -33,13 +33,13 @@ genau da fing das Lehrgeld an.
 ## Falle 1: Statische Checks lügen bei Rhino
 
 KubeJS läuft auf **Rhino**, nicht auf Node. Ich hatte meine Skripte mit `node --check`
-abgesichert — grünes Licht. Im Spiel ließen sich die Bohrköpfe trotzdem **nicht in die Maschine
-einsetzen**. Mit KI-Unterstützung habe ich mir das KubeJS-Server-Log angesehen, und da stand
+abgesichert — grünes Licht. Im Spiel ließen sich die Bohrköpfe trotzdem \*\*nicht in die Maschine
+einsetzen\*\*. Mit KI-Unterstützung habe ich mir das KubeJS-Server-Log angesehen, und da stand
 ein harter Syntaxfehler genau in dem Skript, das die Bohrköpfe dem COE-Tag hinzufügt.
 
 Die Ursache: ich hatte den **Spread-Operator** (`[a, b, ...rest]`) und `Object.values()`
-verwendet. Node frisst das anstandslos — Rhino wirft einen Syntaxfehler und **verwirft die
-ganze Datei**. Dadurch landeten die Köpfe nie im Tag `createoreexcavation:drills`, und die
+verwendet. Node frisst das anstandslos — Rhino wirft einen Syntaxfehler und \*\*verwirft die
+ganze Datei\*\*. Dadurch landeten die Köpfe nie im Tag `createoreexcavation:drills`, und die
 Maschine lehnte sie ab. Ein einziger zu moderner Sprachausdruck, und ein komplettes Feature
 war tot.
 
@@ -56,8 +56,8 @@ Gefunden habe ich das erst, weil ich es **im Spiel** getestet habe und im Log di
 `JsonParseException` stand.
 
 Das hat sich als Grundmuster durch die ganze Session gezogen: Codec-/Format-Fehler von Mods
-kann man statisch praktisch nicht abfangen. Was geholfen hat: ich habe die **eingebauten
-Rezepte der Mods selbst** als Vorlage genommen — also direkt in die Mod-Jars geschaut, wie
+kann man statisch praktisch nicht abfangen. Was geholfen hat: ich habe die **eingebauten**
+**Rezepte der Mods selbst** als Vorlage genommen — also direkt in die Mod-Jars geschaut, wie
 COE sein Drilling-Rezept mit Fluid schreibt, wie Create sein Crushing-Rezept aufbaut. Diese
 JSON-Formate sind die maßgebliche Wahrheit, nicht irgendeine Doku.
 
