@@ -20,7 +20,7 @@ Mein DNS läuft im Homelab über **AdGuard Home**. Ich habe mir die Auflösung a
 sofort das verräterische Muster gesehen: Die Domain löste auf `0.0.0.0` bzw. `::` auf — die
 klassische „geblockt"-Antwort von AdGuard. Kein Netzwerkproblem, eine Blockliste.
 
-Die Ursache war kurios: Eine meiner aktiven Listen (HaGeZi's *„The World's Most Abused TLDs"*)
+Die Ursache war kurios: Eine meiner aktiven Listen (HaGeZi's _„The World's Most Abused TLDs"_)
 sperrt die komplette `.win`-Top-Level-Domain, weil sie massenhaft für Spam und Malware
 missbraucht wird. Meine eigene Domain wurde da einfach mitgefangen. Lösung: eine Ausnahme in
 die Allowlist (`@@||meine-domain^`), und schon war sie wieder erreichbar.
@@ -49,14 +49,14 @@ Ich bin der Reihe nach durchgegangen:
 - **Auflösung:** YouTube und die Video-CDN-Domains lösten sauber auf — echte Google-IPs, kein
   `0.0.0.0`. YouTube war auf DNS-Ebene also gar nicht blockiert. Mein „Entblocken" konnte
   nichts bringen, weil es nichts zu entblocken gab.
-- **Uplink:** Ping zu Googles CDN über IPv4 *und* IPv6 — null Paketverlust, ~16 ms, saubere
+- **Uplink:** Ping zu Googles CDN über IPv4 _und_ IPv6 — null Paketverlust, \~16 ms, saubere
   Path-MTU. Der Internetzugang war kerngesund.
 - **Umfang:** Nur ein Gerät betroffen. Per Kabel. Nur YouTube — Netflix, Twitch und Co. liefen
   flüssig.
 
 Damit fielen reihenweise Verdächtige weg: kein DNS-Block, kein WLAN, kein Uplink, kein
 netzwerkweites Problem. Ich war kurz davor, es auf den Browser zu schieben — bis ich es im
-Inkognito-Modus *und* in einem zweiten Browser reproduzierte. Systemweit also, nicht der
+Inkognito-Modus _und_ in einem zweiten Browser reproduzierte. Systemweit also, nicht der
 Browser.
 
 ### Die falsche Fährte: IPv6
@@ -67,7 +67,7 @@ am PC direkt getestet: `ping -6` zu YouTube — und es lief tadellos, 0 % Verlus
 das Problem auftrat. Hypothese widerlegt. Gut, dass ich gemessen statt geraten habe.
 
 Aber wenn IPv6 funktioniert und trotzdem „offline" kommt, obwohl der Ping durchgeht — dann
-wird eine *bestimmte Domain* geblockt, die YouTube zum Funktionieren braucht.
+wird eine _bestimmte Domain_ geblockt, die YouTube zum Funktionieren braucht.
 
 ### Das Query-Log lügt nicht
 
@@ -76,7 +76,7 @@ die Einträge meiner Client-IP nach geblockten Google-/YouTube-Domains gefiltert
 war ein Faustschlag:
 
 | Domain | geblockt |
-|---|---|
+| --- | --- |
 | `www.youtube.com` | mehrere Tausend Mal |
 | `accounts.youtube.com` | über tausend Mal |
 | die `googlevideo.com`-Streamingserver | massenhaft |
@@ -89,7 +89,7 @@ exakte Regel gezeigt, die das auslöste, und damit kam die Wahrheit ans Licht.
 
 Die Regeln, die das verursachten, sahen so aus:
 
-```
+```plain
 ||www.youtube.com^$dnstype=AAAA
 ||googlevideo.com^$dnstype=AAAA
 ||ytimg.com^$dnstype=AAAA
@@ -97,7 +97,7 @@ Die Regeln, die das verursachten, sahen so aus:
 
 Das waren **AAAA-Block-Regeln** — irgendwann hatte ich sie selbst eingebaut, um YouTube auf
 IPv4 zu zwingen (ein bekannter Anti-Buffering-Trick). Die Idee: IPv6 für YouTube unterdrücken.
-Der Haken: Mein Client *wollte* IPv6 (das ja einwandfrei funktionierte), bekam aber für die
+Der Haken: Mein Client _wollte_ IPv6 (das ja einwandfrei funktionierte), bekam aber für die
 Video- und Feed-Domains keine AAAA-Antwort mehr. Vermischt mit dem optimistischen DNS-Cache
 führte das zu abgebrochenen Verbindungen — genau den Aussetzern und „offline"-Meldungen.
 
@@ -118,7 +118,7 @@ eine Handvoll Stichproben. Stichproben können durch Caches lügen.
 ## Was übrig bleibt
 
 Ich habe die fünf AAAA-Regeln entfernt (brav per stop → edit → start), die YouTube-Domains
-lösen seitdem wieder sauber über IPv4 *und* IPv6 auf, und auf der Client-Seite einmal den
+lösen seitdem wieder sauber über IPv4 _und_ IPv6 auf, und auf der Client-Seite einmal den
 DNS-Cache geleert (`ipconfig /flushdns` plus den internen DNS-Cache des Browsers).
 
 Mitnehmen würde ich drei Dinge:
