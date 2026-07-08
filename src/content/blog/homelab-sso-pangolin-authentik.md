@@ -9,24 +9,25 @@ tags:
   - sso
   - traefik
   - reverse-proxy
-draft: true
+draft: false
 ---
 
 Meine Homelab-Dienste waren zuletzt auf zwei Wege nach außen erreichbar, und beide hatten
 einen Haken. Die nutzerseitigen Dienste (Jellyfin, Vaultwarden, die Portfolio-Startseite)
 liefen seit dem [Ingress-Umzug](/blog/netzwerk-upgrade) direkt über meinen Heimanschluss und
-einen Caddy-Reverse-Proxy. Alles andere — die *arr-Suite, Dashboards, Admin-Oberflächen — hing
+einen Caddy-Reverse-Proxy. Alles andere — die \*arr-Suite, Dashboards, Admin-Oberflächen — hing
 noch an einem **geteilten Dedicated-Server**, der ein Pangolin als Reverse Proxy fuhr und über
 einen IPsec-Tunnel zu mir nach Hause zurückroutete.
 
 Der Dedicated-Weg hatte ein hässliches Symptom: Aus manchen Netzen — vor allem **Mobilfunk** —
 starben Verbindungen im Timeout, während sie aus dem Heimnetz und aus Rechenzentren tadellos
 liefen. Die Ursache lag am Pangolin-Edge des fremden Servers (vermutlich IP-Reputation gegen
-CGNAT-Ranges), und da mir der Server nicht gehört, konnte ich das nicht fixen.
+CGNAT-Ranges), und da mir der Server nicht allein gehört, konnte ich das nicht fixen.
 
-Also der Plan: **ein einziger, selbst-gehosteter Edge**, der Caddy *und* den Dedicated ablöst,
+Also der Plan: **ein einziger, selbst-gehosteter Edge**, der Caddy _und_ den Dedicated ablöst,
 mit **zentralem Single-Sign-On** davor. Reverse Proxy: Pangolin (bringt Traefik mit).
-Identity Provider: Authentik. Klingt nach einem Nachmittag. Es wurden mehrere Tage — und die
+Identity Provider: Authentik. Quasi die selbe Architektur, die auch schon auf dem Dedicated-Server lief.
+Klingt nach einem Nachmittag. Es wurden mehrere Tage — und die
 interessanten Teile waren wie immer die, die im Plan nicht standen. Wie schon beim
 [Firewall-Audit](/blog/firewall-audit-zero-trust) hatte ich eine KI als Zuarbeiterin am
 Terminal; die eigentliche Arbeit war, jeden ihrer Schritte empirisch gegenzuprüfen.
@@ -36,7 +37,7 @@ Terminal; die eigentliche Arbeit war, jeden ihrer Schritte empirisch gegenzuprü
 Zwei neue LXC-Container auf dem Proxmox-Host, beide im Server-VLAN:
 
 - **Authentik** — der OIDC-Identity-Provider. Ein Login, eine Nutzerdatenbank.
-- **Pangolin + Traefik** — der einzige Reverse Proxy für WAN *und* LAN. Kein Tunnel, keine
+- **Pangolin + Traefik** — der einzige Reverse Proxy für WAN _und_ LAN. Kein Tunnel, keine
   Newt/Gerbil-Schicht: Pangolins Ressourcen zeigen direkt auf die internen Dienst-IPs, weil
   alles im selben Netz liegt.
 
@@ -54,7 +55,7 @@ den Umweg über die öffentliche IP nehmen. Drei Auth-Klassen sortieren die Dien
 
 - **Public** — Portfolio, Jellyfin, Vaultwarden, die Statusseite: eigene App-Anmeldung, keine
   SSO-Wall (Familie und Fremde haben keine Authentik-Accounts).
-- **Gated** — *arr, SABnzbd, Paperless, Firefly, Proxmox-Web, OPNsense-Web und Co.: Pangolin
+- **Gated** — \*arr, SABnzbd, Paperless, Firefly, Proxmox-Web, OPNsense-Web und Co.: Pangolin
   erzwingt davor den Authentik-Login.
 - **Break-glass** — jeder Dienst bleibt intern per Direkt-IP erreichbar, falls SSO mal steht.
 
@@ -67,7 +68,7 @@ Pangolins Installer lief durch, zog die Container — und der Hauptcontainer bli
 Migration. Kurioserweise **verband sich `curl` aus demselben Container problemlos** mit
 `postgres:5432`. TCP funktionierte, die Anwendung nicht.
 
-Der Fehler war ein `AggregateError` mit *zwei* gebündelten Refused — die Signatur von
+Der Fehler war ein `AggregateError` mit _zwei_ gebündelten Refused — die Signatur von
 `localhost` (127.0.0.1 **und** ::1). Die Anwendung versuchte also gar nicht, `postgres`
 anzusprechen. Ein kleines Parser-Skript brachte es an den Tag: Der vom Installer generierte
 Postgres-Connection-String sah (schematisch) so aus:
@@ -85,7 +86,7 @@ Fix: das Passwort im Connection-String Prozent-kodieren (`/` → `%2F`). Kein Ne
 Credentials nötig, nur ein sauber kodierter String.
 
 **Lektion 1:** Wenn TCP steht, aber die App „connection refused" meldet, ist nicht das Netz
-schuld, sondern wie die App die Verbindungsdaten *interpretiert*. Und Passwort-Generatoren, die
+schuld, sondern wie die App die Verbindungsdaten _interpretiert_. Und Passwort-Generatoren, die
 URL-Sonderzeichen ausspucken, sind eine Bug-Quelle, die man nur einmal im Leben debuggen will.
 
 ## HTTP-01 war die falsche Challenge
@@ -96,7 +97,7 @@ parallel zum Altbestand) und man ohnehin ein Wildcard will. Also den bestehenden
 `letsencrypt`-Resolver von HTTP-01 auf **DNS-01 über Cloudflare** umgestellt — mit demselben
 API-Token, das auch mein Caddy schon für die Wildcard nutzte.
 
-Der Clou: Weil ich den Resolver-Namen behielt, zogen automatisch *alle* Router mit — die
+Der Clou: Weil ich den Resolver-Namen behielt, zogen automatisch _alle_ Router mit — die
 bestehenden wie die künftig von Pangolin generierten. Nach einem kurzen Test gegen die
 Staging-CA (gegen Rate-Limits) stand ein gültiges Wildcard-Zertifikat für `*.vugas.de`. DNS-01
 validiert über einen TXT-Record und ist damit völlig unabhängig davon, ob der Dienst schon
@@ -105,8 +106,8 @@ erreichbar ist — genau richtig für einen Umzug im laufenden Betrieb.
 ## Der Ausfall, den ich selbst verursacht habe
 
 Jetzt der unangenehme Teil. Damit Pangolin im LAN erreichbar wird, musste AdGuard einen
-DNS-Rewrite bekommen. Ich fügte den Eintrag ein, startete AdGuard neu — und **das halbe Netz
-verlor DNS**. `:53` band nicht mehr. `systemctl` meldete den Dienst als `active`, der Prozess
+DNS-Rewrite bekommen. Ich fügte den Eintrag ein, startete AdGuard neu — und \*\*das halbe Netz
+verlor DNS\*\*. `:53` band nicht mehr. `systemctl` meldete den Dienst als `active`, der Prozess
 war da, das Log endete stumm nach „starting https server", und nichts lauschte auf Port 53.
 
 Ich verrannte mich gründlich: Config-YAML verdächtigt, `bind_hosts` geprüft, IPv6
@@ -119,9 +120,9 @@ AdGuardHome.service: Main process exited, code=killed, status=9/KILL
 AdGuardHome.service: Failed with result 'oom-kill'.
 ```
 
-**Out of memory.** Der AdGuard-Container hatte ein 512-MB-Limit und lief chronisch bei ~508 MB
+**Out of memory.** Der AdGuard-Container hatte ein 512-MB-Limit und lief chronisch bei \~508 MB
 knapp darunter. Mein Neustart löste einen Filter-Reload-Spike aus, der das Limit riss — der
-OOM-Killer schlug genau *beim DNS-Bind* zu, systemd startete neu, das Spiel wiederholte sich.
+OOM-Killer schlug genau _beim DNS-Bind_ zu, systemd startete neu, das Spiel wiederholte sich.
 Ein perfekter Crash-Loop, der so aussah, als hätte ich die Konfiguration zerschossen. Hatte ich
 aber nicht — mein Edit war völlig in Ordnung, der Zeitpunkt war nur unglücklich.
 
@@ -139,8 +140,8 @@ Kollateralschaden anrichten.
 
 ## Die API, die es offiziell nicht gab
 
-Für ~20 Dienste wollte ich die Ressourcen nicht von Hand klicken, sondern skripten. Pangolin
-hat eine Integrations-API, ich hatte einen gültigen API-Key — und bekam auf *jeden*
+Für \~20 Dienste wollte ich die Ressourcen nicht von Hand klicken, sondern skripten. Pangolin
+hat eine Integrations-API, ich hatte einen gültigen API-Key — und bekam auf _jeden_
 authentifizierten Endpoint ein `401 Unauthorized`. Der Key stimmte (die letzten Zeichen
 matchten den DB-Eintrag, `isRoot`, alle Rechte), das Format stimmte, der Header stimmte.
 
@@ -154,7 +155,7 @@ Integration API server is running on http://localhost:3003
 ```
 
 Die API lief auf einem **eigenen Port** (`:3003`) und unter einem anderen Pfad (`/v1`, nicht
-`/api/v1`) — und wird bewusst *nicht* über Traefik nach außen geroutet. Von innen war sie über
+`/api/v1`) — und wird bewusst _nicht_ über Traefik nach außen geroutet. Von innen war sie über
 `docker exec` sofort ansprechbar. Danach war der Rest Fließband: ein kleines Skript, das pro
 Dienst eine Ressource und ein Target anlegt und die Auth-Klasse setzt. Siebzehn Dienste in einem
 Durchlauf.
@@ -174,9 +175,9 @@ Weboberfläche automatisch füllt: die erlaubten `grant_types`. Leere Liste → 
 `authorization_code` → „malformed". Ein Wert gesetzt, fertig.
 
 **Das zirkuläre Gate.** Damit der Browser Authentik überhaupt erreicht, machte ich Authentik zu
-einer Pangolin-Ressource. Nur schützte Pangolin sie prompt mit seiner *eigenen* SSO-Wall — die
+einer Pangolin-Ressource. Nur schützte Pangolin sie prompt mit seiner _eigenen_ SSO-Wall — die
 wiederum Authentik braucht. Ein perfekter Kreis: Um dich bei Authentik anzumelden, musst du dich
-erst bei Authentik anmelden. Die Ressource, die *den* Login trägt, muss selbst öffentlich sein.
+erst bei Authentik anmelden. Die Ressource, die _den_ Login trägt, muss selbst öffentlich sein.
 Ein Flag umgelegt, Kreis durchbrochen.
 
 ## Der Cutover
@@ -191,8 +192,8 @@ sofortigem Rückfallnetz:
    `configctl filter reload`, und im Live-`pfctl` gegengeprüft, dass die Regel wirklich greift.
 3. **DNS:** Und hier noch eine Überraschung. Der Wildcard `*.vugas.de` war gar kein A-Record,
    sondern ein CNAME auf den Dedicated. Also auf einen A-Record mit meiner Heim-IP umgestellt.
-   Prompt zeigten `sonarr` & Co. trotzdem noch auf den alten Server: Sie hatten **eigene,
-   spezifische** Records, die den Wildcard überschrieben. Die mussten einzeln mit.
+   Prompt zeigten `sonarr` & Co. trotzdem noch auf den alten Server: Sie hatten **eigene,**
+\*\*   spezifische\*\* Records, die den Wildcard überschrieben. Die mussten einzeln mit.
 
 Weil meine Heim-IP dynamisch ist, war der letzte Schliff, den DDNS-Updater zu erweitern: Er
 pflegt jetzt neben den Einzel-Hosts auch den Wildcard-Record (mit `set -f`, sonst expandiert die
