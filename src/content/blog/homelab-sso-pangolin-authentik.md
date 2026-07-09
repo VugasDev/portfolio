@@ -204,6 +204,43 @@ Zertifikate, SSO-Login sauber, **kein Timeout mehr**. Genau der Beweis, um den e
 ging. Zum Abschluss den Caddy-Dienst gestoppt (der Container läuft nur noch für DDNS weiter) und
 die toten DNS-Records aufgeräumt.
 
+## Der Nachschlag: ein Bug, der erst am nächsten Tag zuschlug
+
+Ich hätte schwören können, es sei fertig. Doch am Tag nach dem Cutover die Nachricht: `jelly.vugas.de`
+sei vom Handy aus nicht erreichbar — mein Bruder bestätigte es. Aus dem Heimnetz lief alles, extern
+tot. Und das Verwirrendste: **mal** ging es, **mal** nicht.
+
+DNS? Zeigte korrekt auf die Heim-IP. Firewall-Regel? Im Live-`pfctl` sauber auf Pangolin. Pangolin?
+Lief, lieferte intern brav sein `302`. Ich grub mich also durch den Netz-Stack — mit `tcpdump` am
+WAN-Interface, während mein Bruder und ich abwechselnd vom Handy triggerten. (Kleine Stolperfalle:
+ein per SSH im Hintergrund gestarteter `tcpdump` stirbt an SIGHUP, sobald die Session schließt — man
+muss ihn im Vordergrund laufen lassen.)
+
+Der Mitschnitt legte Schicht für Schicht frei: Das SYN kam am WAN an. Ein SYN-ACK ging zurück — der
+TCP-Handshake wurde also beantwortet. Die MTU war sauber (MSS auf 1452 geclamped, keine
+Blackhole-Gefahr). Ein vollständiger Mitschnitt zeigte dann das eigentliche Bild: **TLS-Handshake
+komplett, Zertifikat gültig — und dann sendet der Browser einfach keinen HTTP-Request und macht nach
+10 Sekunden zu.** Kein Reset, kein Fehler, keine Log-Zeile in Traefik. Ein Gespenst.
+
+Die entscheidende Beobachtung war ein Vergleich: `vugas.de` — meine öffentliche Startseite, die über
+einen eigenen Traefik-Router *ohne* die SSO-Middleware läuft — funktionierte zuverlässig. Die gateten
+Dienste dahinter nicht, und `jelly` ging „mal ja, mal nein". Intermittenz plus „ein Dienst geht, der
+andere nicht" riecht fast immer nach **Protokoll-Racing**.
+
+Des Rätsels Lösung: Traefik bewarb auf jeder Antwort **HTTP/3** — `Alt-Svc: h3=":443"; ma=2592000`.
+Der Browser merkt sich das (30 Tage!) und versucht beim nächsten Besuch QUIC über **UDP** 443. Meine
+OPNsense forwarded aber nur **TCP** 443 auf Pangolin, kein UDP. Also lief jeder HTTP/3-Versuch ins
+Leere; je nach Browser-Laune hing die Verbindung im UDP-Blackhole oder fiel — verzögert und
+unzuverlässig — auf TCP zurück. Genau das „mal so, mal so".
+
+Der Fix war eine Zeile: die HTTP/3-Werbung in Traefik abschalten. Kein `Alt-Svc` mehr, alles läuft
+über das solide h2/TCP. (Wer HTTP/3 wirklich will, müsste zusätzlich UDP 443 forwarden.)
+
+**Lektion 5:** „Handshake komplett, aber kein Request" ist die Signatur eines Problems *oberhalb* des
+TCP-Layers — und `curl -k` verrät es dir nie, weil es weder HTTP/3 spricht noch das Zertifikat prüft.
+Ein Reverse Proxy, der ein Protokoll bewirbt, das die Firewall gar nicht durchlässt, ist eine
+subtile, gemeine Falle. Sichtbar wurde sie erst im Paket-Mitschnitt auf beiden Seiten.
+
 ## Was ich mitnehme
 
 Vier Dinge bleiben hängen. Erstens: **Installer sind Software, und Software hat Bugs** — ein
@@ -212,7 +249,8 @@ konfiguriert war. Zweitens: Der gefährlichste Ausfall ist der, den man selbst a
 man etwas Harmloses tut; der OOM-Kill hatte mit meinem Edit nichts zu tun, nur mit seinem
 Zeitpunkt. Drittens: Zwischen „geplant" und „läuft" liegen bei so einem Umzug ein halbes Dutzend
 undokumentierter Kleinigkeiten — eine deaktivierte API, ein fehlendes Feld, ein CNAME statt
-A-Record, ein Glob im falschen Moment. Und viertens: Eine KI am Terminal macht so ein Projekt
+A-Record, ein Glob im falschen Moment, ein beworbenes Protokoll, das die Firewall gar nicht
+durchlässt. Und viertens: Eine KI am Terminal macht so ein Projekt
 drastisch schneller — aber nur, weil ich jeden Befund selbst gegengeprüft habe, statt dem ersten
 grünen Häkchen zu glauben.
 
