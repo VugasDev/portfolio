@@ -9,7 +9,7 @@ tags:
   - datenschutz
   - pwa
   - homelab
-draft: true
+draft: false
 ---
 
 Ich besuche gerade drei Klassen an zwei Schulen — Berufsschule und Fachschule parallel.
@@ -26,8 +26,8 @@ interessant.
 Die erste Fassung war naheliegend gebaut: Jede Person hinterlegt ihre WebUntis-Zugangsdaten,
 für jedes Konto läuft ein eigener Abruf. Für mich allein völlig in Ordnung.
 
-Bei dreißig Leuten aus derselben Klasse sind es dreißig Abrufe für **eine einzige
-Information**. Der Plan ist ja derselbe. Und die Last landet nicht bei mir, sondern beim
+Bei dreißig Leuten aus derselben Klasse sind es dreißig Abrufe für eine einzige
+Information. Der Plan ist ja derselbe. Und die Last landet nicht bei mir, sondern beim
 WebUntis-Server der Schule.
 
 Solange das so war, verbot sich auch jedes kurze Abrufintervall. Der Job lief einmal
@@ -56,8 +56,8 @@ den die Schule selbst als gangbar bezeichnet hat.
 ## Der Teil, den ich mir selbst aufschreiben musste
 
 Beim Aufschreiben des Konzepts ist mir aufgefallen, dass das Argument der Schule nicht
-verschwindet, nur weil die Daten jetzt über Freiwillige hereinkommen. **Es verlagert sich
-zu mir.** Jeder Klassenplan enthält Lehrerkürzel und Räume. Bei mehreren bereitgestellten
+verschwindet, nur weil die Daten jetzt über Freiwillige hereinkommen. **Es verlagert sich**
+**zu mir.** Jeder Klassenplan enthält Lehrerkürzel und Räume. Bei mehreren bereitgestellten
 Klassen kann ich den Tagesablauf einzelner Lehrkräfte rekonstruieren — und die haben in
 gar nichts eingewilligt. Der bereitstellende Schüler verfügt über seinen Zugang, nicht
 über die Daten Dritter.
@@ -77,17 +77,17 @@ Rückblickend ist das der wertvollste Teil des ganzen Projekts. Nicht der Code.
 ## Vorher messen, statt hinterher raten
 
 Bevor ich das Datenmodell darauf ausgerichtet habe, wollte ich eine Sache wissen: Darf ein
-normaler Schüler-Zugang überhaupt den **Klassen**plan abrufen, oder nur den eigenen? Viele
+normaler Schüler-Zugang überhaupt den Klassenplan abrufen, oder nur den eigenen? Viele
 WebUntis-Installationen erlauben nur Letzteres. Wäre das so, wäre der bereitgestellte Plan
 der Plan des Spenders — bei Wahlpflichtkursen also falsch für alle anderen.
 
 Also habe ich es mit meinem eigenen Zugang ausprobiert, bevor ich irgendwas gebaut habe.
-Ergebnis: Der Klassenplan ist abrufbar und **deckungsgleich** mit meinem persönlichen —
+Ergebnis: Der Klassenplan ist abrufbar und deckungsgleich mit meinem persönlichen —
 null Abweichung in beide Richtungen. Und der Versuch, eine fremde Klasse abzurufen, wurde
 mit `no right for timetable` abgewiesen. Die Berechtigung ist also auf die eigene Klasse
 beschränkt, was den Einwand der Schule technisch zusätzlich entschärft.
 
-Was ich bewusst **nicht** getestet habe: ob sich an der anderen Schule fremde Klassenpläne
+Was ich bewusst nicht getestet habe: ob sich an der anderen Schule fremde Klassenpläne
 abrufen lassen. Das wäre ein Zugriff auf Daten, die ich nicht brauche und die die Schule
 ausdrücklich nicht herausgeben will. Nicht zu wissen, ob es ginge, ist hier die sauberere
 Position.
@@ -98,7 +98,7 @@ Position.
 Dinge zerlegt:
 
 | Vorher | Nachher |
-|---|---|
+| --- | --- |
 | Konto pro Person, mit Zugangsdaten | **Klassenquelle**: eine Zeile je Klasse, mit den Daten der bereitstellenden Person |
 | Stunden hängen am Konto | **Mitgliedschaft**: wer darf welche Klasse lesen |
 
@@ -135,14 +135,14 @@ nimmt Server und Schule jetzt ausschließlich daraus.
 
 **2. Die Migration hätte die Datenbank unbenutzbar gemacht.**
 
-`db.create_all()` legt fehlende **Tabellen** an. Bestehende lässt es in Ruhe. Da eine Spalte
+`db.create_all()` legt fehlende Tabellen an. Bestehende lässt es in Ruhe. Da eine Spalte
 umbenannt wurde, wäre nach dem Deploy jede Abfrage mit `no such column` gescheitert — bei
 einer Flask-App heißt das: jede Seite ein 500er, und der Migrationsbefehl hätte es nicht
 reparieren können.
 
 Lokal fällt das nie auf, weil Testdatenbanken frisch angelegt werden.
 
-Das Ärgerliche: Zwei Wochen später ist mir beim nächsten Feature **derselbe** Fehler fast
+Das Ärgerliche: Zwei Tage später ist mir beim nächsten Feature derselbe Fehler fast
 wieder passiert, als eine neue Spalte dazukam. Diesmal ist es mir noch im Branch aufgefallen.
 Seitdem gibt es einen idempotenten Befehl, der fehlende Spalten per `ALTER TABLE` nachträgt,
 und er steht als fester Schritt in der Upgrade-Anleitung.
