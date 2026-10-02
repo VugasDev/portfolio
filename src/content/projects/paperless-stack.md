@@ -7,5 +7,5 @@ tags:
   - "ocr"
   - "rag"
   - "docker"
-status: "aktiv"
+status: "in Arbeit"
 ---

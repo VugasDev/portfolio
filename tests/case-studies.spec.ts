@@ -30,7 +30,7 @@ test('Projekt-Detailseite /projects/minecraft-modpack: rendert + GitHub-Link + S
   await expect(page.locator('h1').first()).toBeVisible();
 
   // GitHub-Link wohnt auf der Detailseite (nicht mehr auf der Karte)
-  await expect(page.locator('a[href="https://github.com/VugasDev/minecraft-modpack"]').first()).toBeVisible();
+  await expect(page.locator('a[href="https://github.com/VugasDev/gaia-awakening"]').first()).toBeVisible();
 
   const canonical = await page.locator('link[rel="canonical"]').getAttribute('href');
   expect(canonical).toBe(`${BASE}/projects/minecraft-modpack/`);

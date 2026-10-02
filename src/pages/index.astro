@@ -9,6 +9,7 @@ const recentPosts = (await getCollection('blog', ({ data }) => !data.draft))
 
 const recentProjects = (await getCollection('projects'))
   .filter(p => p.data.status === 'aktiv' || p.data.status === 'in Arbeit')
+  .sort((a, b) => Number(b.data.status === 'aktiv') - Number(a.data.status === 'aktiv'))
   .slice(0, 4);
 
 // Detailseiten-Logik wie auf /projects (Substanz-Bedingung in src/lib/projects.ts).
