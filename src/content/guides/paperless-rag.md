@@ -11,6 +11,7 @@ tags:
   - docker
 series: ''
 order: null
+draft: false
 ---
 
 > **Hinweis:** Der gesamte hier beschriebene Pfad — OCR, Embeddings, LLM — bleibt **lokal**. Bei

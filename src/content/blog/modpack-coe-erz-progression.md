@@ -8,6 +8,7 @@ tags:
   - kubejs
   - create
   - debugging
+draft: false
 ---
 
 Für mein Modpack „Gaia Awakening" wollte ich eine Sache grundlegend anders machen als in

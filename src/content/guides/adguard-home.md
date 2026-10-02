@@ -10,6 +10,7 @@ tags:
   - self-hosting
 series: ''
 order: null
+draft: false
 ---
 
 > **Hinweis:** IP-Adressen sind Beispielwerte. Plane einen Fallback ein (zweiter Resolver oder

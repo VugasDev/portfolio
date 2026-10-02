@@ -10,6 +10,7 @@ tags:
   - self-hosting
 series: ''
 order: null
+draft: false
 ---
 
 > **Die unbequeme Wahrheit:** Ein Backup, dessen Restore nie durchgespielt wurde, ist kein

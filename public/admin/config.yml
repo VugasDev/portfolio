@@ -19,9 +19,16 @@ collections:
     create: true
     slug: "{{slug}}"
     extension: md
+    # Chronologisch nach Veröffentlichungsdatum (neueste oben). commit_date bleibt
+    # wählbar ("zuletzt bearbeitet"), taugt aber nicht als Standard: rückdatierte
+    # Beiträge landen sonst oben, und ohne Commit-Metadaten fällt Sveltia auf alphabetisch zurück.
+    summary: "{{date | date('YYYY-MM-DD')}} · {{draft | ternary('ENTWURF · ', '')}}{{title}}"
     sortable_fields:
-      fields: [commit_date, title, date]
-      default: { field: commit_date, direction: descending }
+      fields: [date, title, commit_date]
+      default: { field: date, direction: descending }
+    view_filters:
+      - { label: Entwürfe,        field: draft, pattern: true }
+      - { label: Veröffentlicht,  field: draft, pattern: false }
     fields:
       - { name: title,       label: Titel,          widget: string }
       - { name: description, label: Beschreibung,   widget: string }
@@ -36,9 +43,16 @@ collections:
     create: true
     slug: "{{slug}}"
     extension: md
+    # Chronologisch nach Veröffentlichungsdatum (neueste oben). commit_date bleibt
+    # wählbar ("zuletzt bearbeitet"), taugt aber nicht als Standard: rückdatierte
+    # Beiträge landen sonst oben, und ohne Commit-Metadaten fällt Sveltia auf alphabetisch zurück.
+    summary: "{{date | date('YYYY-MM-DD')}} · {{draft | ternary('ENTWURF · ', '')}}{{title}}"
     sortable_fields:
-      fields: [commit_date, title, date]
-      default: { field: commit_date, direction: descending }
+      fields: [date, title, commit_date]
+      default: { field: date, direction: descending }
+    view_filters:
+      - { label: Entwürfe,        field: draft, pattern: true }
+      - { label: Veröffentlicht,  field: draft, pattern: false }
     fields:
       - { name: title,       label: Titel,           widget: string }
       - { name: description, label: Beschreibung,    widget: string }

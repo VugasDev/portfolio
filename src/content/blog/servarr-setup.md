@@ -7,6 +7,7 @@ tags:
   - servarr
   - docker
   - homelab
+draft: false
 ---
 
 > **Hinweis:** Dieser Beitrag behandelt ausschließlich Aufbau und Automatisierung eines
