@@ -48,14 +48,13 @@ Im September kam das Thema wieder hoch, diesmal von der anderen Seite, und diesm
 ich die Falle schon. Meine Synchronisations- und Backup-Jobs auf dem Homelab-Host nutzten
 bis dahin die **eingebaute Client-ID von rclone**, die sich alle rclone-Nutzer teilen.
 rclone warnte schon länger bei jedem Aufruf, dass diese ID im Lauf von 2026 abgeschaltet
-wird. Dann lief sie in ein akutes
-Rate-Limit, und die Jobs krochen nur noch.
+wird. Dann lief sie in ein akutes Rate-Limit, und die Jobs krochen nur noch.
 
 Die Lösung war klar: eine **eigene OAuth-App**, diesmal von Anfang an auf „In production“.
 Neu war nur eine Hürde: Anders als die Backup-App braucht diese vollen Zugriff auf Google
 Drive, und dafür verlangt Google zum Veröffentlichen ein Branding, also eine Startseite und
-eine Datenschutzerklärung. Deshalb hat diese Website seit Ende September in
-der Datenschutzerklärung einen eigenen Abschnitt zu meiner privaten Google-Drive-App.
+eine Datenschutzerklärung. Deshalb hat diese Website seit Ende September in der
+Datenschutzerklärung einen eigenen Abschnitt zu meiner privaten Google-Drive-App.
 
 Eine Prüfung durch Google war nicht nötig. Bei einer App für den Eigengebrauch ist die
 Verifizierung nicht erforderlich. Beim Login erscheint dafür der Hinweis „nicht verifizierte
