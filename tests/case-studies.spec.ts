@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 // Nur nicht-draft Case-Studies. cortex/mcp-stack sind draft:true (Projekte entfernt).
-const SLUGS = ['mediastack', 'netzwerk-upgrade', 'firewall', 'ccna-lernplattform'];
+const SLUGS = ['mediastack', 'netzwerk-upgrade', 'firewall', 'ccna-lernplattform', 'dns-schulung'];
 const BASE = 'https://vugas.de';
 
 for (const slug of SLUGS) {
