@@ -1,13 +1,13 @@
 ---
-title: "Stolperstein: Ein AdGuard-Rate-Limit für ein ganzes VLAN"
-description: "Ich wollte meinen DNS-Server gegen Missbrauch härten und habe dabei allen Geräten eines Netzes einen gemeinsamen Topf von 30 Anfragen pro Sekunde verpasst. Das Ergebnis: WLAN ja, Internet nein."
+title: 'Stolperstein: Ein AdGuard-Rate-Limit für ein ganzes VLAN'
+description: 'Ich wollte meinen DNS-Server gegen Missbrauch härten und habe dabei allen Geräten eines Netzes einen gemeinsamen Topf von 30 Anfragen pro Sekunde verpasst. Das Ergebnis: WLAN ja, Internet nein.'
 date: 2026-05-21
 tags:
   - stolperstein
   - adguard
   - dns
   - homelab
-draft: true
+draft: false
 ---
 
 > **Stolpersteine** sind kurze Posts über Fehler, die mich Zeit gekostet haben — mit Ursache
