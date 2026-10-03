@@ -1,5 +1,13 @@
 ---
+import { localePath, type Lang } from '../lib/i18n';
+
+interface Props { lang?: Lang }
+const { lang = 'de' } = Astro.props;
 const year = new Date().getFullYear();
+// Impressum und Datenschutz gibt es nur auf Deutsch; auf englischen Seiten steht das dabei.
+const legal = lang === 'en'
+  ? [{ href: '/impressum', label: 'Legal notice (DE)' }, { href: '/datenschutz', label: 'Privacy (DE)' }]
+  : [{ href: '/impressum', label: 'Impressum' }, { href: '/datenschutz', label: 'Datenschutz' }];
 ---
 
 <footer class="border-t border-(--color-border) mt-24">
@@ -29,8 +37,8 @@ const year = new Date().getFullYear();
         <li><a class="arrow" href="/rss.xml">
           <span>RSS / Log</span><span class="glyph">&rarr;</span>
         </a></li>
-        <li><a class="arrow" href="/cv">
-          <span>Lebenslauf / CV</span><span class="glyph">&rarr;</span>
+        <li><a class="arrow" href={localePath(lang, '/cv')}>
+          <span>{lang === 'en' ? 'Résumé / CV' : 'Lebenslauf / CV'}</span><span class="glyph">&rarr;</span>
         </a></li>
       </ul>
     </div>
@@ -58,8 +66,9 @@ const year = new Date().getFullYear();
       <span class="text-(--color-muted)">vugas.de &mdash; {year}</span>
       <span class="hidden sm:inline text-(--color-muted-deep)">Homelab &middot; Self-Hosting &middot; AI</span>
       <span class="flex items-center gap-4">
-        <a href="/impressum" class="hover:text-(--color-text-soft) transition-colors">Impressum</a>
-        <a href="/datenschutz" class="hover:text-(--color-text-soft) transition-colors">Datenschutz</a>
+        {legal.map(l => (
+          <a href={l.href} hreflang={lang === 'en' ? 'de' : undefined} class="hover:text-(--color-text-soft) transition-colors">{l.label}</a>
+        ))}
         <span class="live" style="font-size: 0.62rem;">SYSTEM</span>
       </span>
     </div>

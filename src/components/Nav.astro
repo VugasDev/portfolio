@@ -1,4 +1,13 @@
 ---
+import { localePath, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang?: Lang;
+  /** Sprachfassungen dieser Seite; der Umschalter erscheint nur, wenn es die andere gibt. */
+  alternates?: { lang: Lang; href: string }[];
+}
+const { lang = 'de', alternates = [] } = Astro.props;
+
 const navItems = [
   { href: '/',         label: 'Index',    num: '01' },
   { href: '/projects', label: 'Projects', num: '02' },
@@ -6,23 +15,28 @@ const navItems = [
   { href: '/guides',   label: 'Guides',   num: '04' },
   { href: '/about',    label: 'About',    num: '05' },
   { href: '/cv',       label: 'CV',       num: '06' },
-];
-const currentPath = Astro.url.pathname;
+].map(item => ({ ...item, href: localePath(lang, item.href) }));
+const home = localePath(lang, '/');
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) =>
-  currentPath === href || (href !== '/' && currentPath.startsWith(href));
+  currentPath === href || (href !== home && currentPath.startsWith(href + '/'));
+
+const otherLang: Lang = lang === 'de' ? 'en' : 'de';
+const other = alternates.find(a => a.lang === otherLang);
 ---
 
 <nav class="w-full border-b border-(--color-border) sticky top-0 z-40"
      style="background: var(--color-glass); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
   <div class="mx-auto max-w-[1280px] px-5 md:px-8 h-12 flex items-center justify-between">
 
-    <a href="/" class="flex items-center gap-2 group">
+    <a href={home} class="flex items-center gap-2 group">
       <span style="font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; font-size: 0.95rem;"
             class="text-(--color-text) group-hover:text-(--color-text) transition-colors duration-200">
         vugas<span style="color: var(--color-accent)">.</span>de
       </span>
     </a>
 
+    <div class="flex items-center">
     <ul class="hidden md:flex items-center gap-1">
       {navItems.map(({ href, label, num }) => (
         <li>
@@ -56,5 +70,16 @@ const isActive = (href: string) =>
         </li>
       ))}
     </ul>
+
+    {other && (
+      <a href={other.href} hreflang={otherLang} lang={otherLang} data-nav-lang-switch
+         title={otherLang === 'en' ? 'English version' : 'Deutsche Fassung'}
+         class="ml-4 md:ml-2 px-2.5 py-1 rounded-full border border-(--color-border-strong) text-[0.64rem] uppercase
+                text-(--color-text-soft) hover:text-(--color-accent) hover:border-(--color-accent) transition-colors"
+         style="font-family: var(--font-display); letter-spacing: 0.1em;">
+        {otherLang}
+      </a>
+    )}
+    </div>
   </div>
 </nav>

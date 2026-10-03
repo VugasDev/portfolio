@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Résumé Lars Meykel Stuhlmacher</title>
+<meta name="author" content="Lars Meykel Stuhlmacher">
+<!--
+  English web version of the résumé for vugas.de/en/cv — deliberately WITHOUT date of birth,
+  place of birth and phone number. Content mirrors lebenslauf-web.html (as of October 2026);
+  change both files together.
+  Render: node cv/render.mjs  → public/downloads/Resume_Lars_Stuhlmacher.pdf
+-->
+<style>
+  :root { --accent: #5b21b6; --text: #1a1a24; --muted: #5a5a68; --line: #e2e0ea; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @page { size: A4; margin: 14mm 20mm 12mm 20mm; }
+  body { font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; font-size: 9.6pt; line-height: 1.45; color: var(--text); }
+  a { color: var(--accent); text-decoration: none; font-weight: 700; }
+  b, strong { font-weight: 700; }
+  .acc { color: var(--accent); font-weight: 700; }
+
+  header { display: flex; justify-content: space-between; gap: 8mm; margin-bottom: 5mm; }
+  h1 { font-size: 22pt; letter-spacing: -0.01em; line-height: 1.1; }
+  h1 span { color: var(--accent); }
+  .rolle { color: var(--muted); font-size: 10pt; margin-top: 1.5mm; }
+  .kontakt { display: grid; grid-template-columns: 1fr 1fr; gap: 1mm 8mm; margin-top: 5mm; font-size: 8.8pt; }
+  .foto { width: 33mm; height: 44mm; object-fit: cover; border-radius: 2mm; flex: none; }
+
+  h2 { font-size: 8.4pt; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); font-weight: 700;
+       border-bottom: 1px solid var(--text); padding-bottom: 1.6mm; margin: 6mm 0 2.6mm; }
+  h2 small { letter-spacing: 0; text-transform: none; font-weight: 400; font-size: 8.4pt; }
+
+  .eintrag { display: grid; grid-template-columns: 30mm 1fr; gap: 0 6mm; margin-bottom: 3mm; break-inside: avoid; }
+  .zeit { color: var(--muted); font-size: 8.4pt; padding-top: 0.6mm; }
+  .titel { font-weight: 700; font-size: 9.8pt; }
+  .ort { color: var(--muted); font-size: 8.6pt; }
+  ul { padding-left: 4.5mm; margin-top: 1mm; }
+  li { margin-bottom: 0.6mm; }
+  .badge { display: inline-block; border: 1px solid var(--accent); color: var(--accent); border-radius: 3mm;
+           font-size: 7.4pt; font-weight: 700; padding: 0 2mm; margin-left: 2mm; vertical-align: 1px; }
+
+  .faehig { display: grid; grid-template-columns: 30mm 1fr; gap: 1.6mm 6mm; }
+  .faehig dt { font-weight: 700; font-size: 8.8pt; }
+  .zwei { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8mm; }
+  .fuss { display: flex; justify-content: space-between; color: var(--muted); font-size: 8pt; margin-top: 8mm; }
+  .umbruch { break-before: page; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Lars Meykel <span>Stuhlmacher</span></h1>
+    <div class="rolle">IT Specialist for System Integration (apprentice) · Junior position after graduation</div>
+    <div class="kontakt">
+      <div>Hohe Straße 23, 47051 Duisburg, Germany</div>
+      <div>lars@stuhlmacher.me</div>
+      <div><a href="https://vugas.de/en/">vugas.de</a> — portfolio &amp; homelab docs</div>
+      <div><a href="https://github.com/VugasDev">github.com/VugasDev</a></div>
+    </div>
+  </div>
+  <img class="foto" src="foto.jpg" alt="Application photo of Lars Meykel Stuhlmacher">
+</header>
+
+<h2>Profile</h2>
+<p>
+  Apprentice <span class="acc">IT specialist for system integration</span> (intermediate exam: <span class="acc">87/100</span>;
+  registered for the early final exam in <span class="acc">winter 2026/27</span> — brought forward by 6 months, regular
+  end of contract 08/2027) with a <span class="acc">completed first IT qualification as a state-certified computer
+  scientist in multimedia</span> (application development for web &amp; games). This combination brings together
+  administration and an understanding of applications: I don’t just run systems, I also understand the software on
+  them. Focus areas: network infrastructure, IT security, system administration — deepened privately in a self-hosted
+  homelab (Proxmox, OPNsense, zero trust), publicly documented on <a href="https://vugas.de/en/">vugas.de</a>.
+</p>
+
+<h2>Work experience</h2>
+<div class="eintrag">
+  <div class="zeit">09/2024 – present</div>
+  <div><div class="titel">Apprentice IT Specialist for System Integration</div><div class="ort">UFP Deutschland GmbH</div>
+    <ul><li>Active Directory administration and firewall configuration</li><li>Direct user support in day-to-day operations</li></ul></div>
+</div>
+<div class="eintrag">
+  <div class="zeit">07/2023 – 12/2023</div>
+  <div><div class="titel">Fraud Analyst</div><div class="ort">TARGO Dienstleistungs GmbH</div>
+    <ul><li>Fraud prevention in banking — analysis of suspicious transactions</li>
+      <li>Automation with VBA in Access databases, including adapting the database schemas</li>
+      <li>Wrote my own PowerShell scripts and adapted existing ones</li>
+      <li>Took on cross-team tasks on my own initiative, including beyond the job description</li></ul></div>
+</div>
+<div class="eintrag">
+  <div class="zeit">11/2022 – 04/2023</div>
+  <div><div class="titel">Soldier, Signaller</div><div class="ort">German Armed Forces (Bundeswehr)</div>
+    <ul><li>Basic training in Havelberg, followed by service training and specialist basic training as an armoured infantryman</li>
+      <li>Focus on signals: setting up and operating radio systems near the front line to keep the connection between troops and command post</li></ul></div>
+</div>
+<div class="eintrag">
+  <div class="zeit">03/2022 – 10/2022</div>
+  <div><div class="titel">Production Assistant</div><div class="ort">Finke Formenbau GmbH &amp; Finke Anwendungstechnik GmbH</div></div>
+</div>
+<div class="eintrag">
+  <div class="zeit">06/2021 – 10/2021</div>
+  <div><div class="titel">Web Developer</div><div class="ort">Qwellcode GmbH</div>
+    <ul><li>Dynamic, responsive websites with HTML, CSS3, PHP and MySQL</li><li>Customer support; employer reference with the top rating</li></ul></div>
+</div>
+
+<h2>Education</h2>
+<div class="eintrag">
+  <div class="zeit">since 09/2026</div>
+  <div><div class="titel">Bachelor Professional in IT (IHK)</div>
+    <div class="ort">part-time evening programme (Tue + Thu, 5–10 pm) — no impact on working hours</div></div>
+</div>
+<div class="eintrag">
+  <div class="zeit">09/2024 – exp. winter 2026/27</div>
+  <div><div class="titel">IT Specialist for System Integration <span class="badge">Intermediate exam: 87/100</span></div>
+    <div class="ort">UFP Deutschland GmbH / Berufskolleg Uerdingen, Krefeld — registered for the early final exam in winter 2026/27, brought forward by 6 months (regularly until 08/2027)</div></div>
+</div>
+<div class="eintrag">
+  <div class="zeit">10/2018 – 07/2021</div>
+  <div><div class="titel">State-certified Computer Scientist, Multimedia <span class="badge">completed</span></div>
+    <div class="ort">b.i.b. International College — application developer for web &amp; games (German Qualifications Framework level 4)</div></div>
+</div>
+
+<h2>Skills</h2>
+<dl class="faehig">
+  <dt>Infrastructure</dt><dd>Proxmox VE, Docker / Docker Compose, Linux (Debian), Windows Server, Active Directory</dd>
+  <dt>Networking &amp; security</dt><dd>OPNsense, VLANs (802.1Q), zero-trust firewalling, IPsec VPN, DNS/DHCP, fail2ban, backup strategies (3-2-1, restic)</dd>
+  <dt>Development</dt><dd>PHP, C#, SQL, Bash, VBA (Access), PowerShell (training and work experience); reading and analysing Python &amp; TypeScript</dd>
+  <dt>Tools &amp; methods</dt><dd>Git/GitHub, CI/CD (webhook deploys), technical documentation, AI-assisted workflows (Ollama, Claude) — including review and verification of the results</dd>
+</dl>
+
+<h2>Homelab &amp; projects <small>— documented on vugas.de</small></h2>
+<ul>
+  <li><b>Zero-trust network:</b> OPNsense firewall, 6 VLANs, default deny, enforced DNS — audited via the API</li>
+  <li><b>Self-hosted services:</b> Vaultwarden, Paperless-ngx with a RAG chatbot, Jellyfin media stack (Docker on Proxmox)</li>
+  <li><b>3-2-1 backup:</b> restic + rclone-crypt off-site, automated monthly restore tests</li>
+  <li><b>MCP server for the Proxmox VE API:</b> 88 tools across 8 modules — specified by me, implemented with AI assistance and reviewed; public at github.com/VugasDev/mcp-proxmox</li>
+</ul>
+
+<div class="zwei">
+  <div>
+    <h2>Certificates</h2>
+    <ul>
+      <li><b>KMK foreign language certificate English C1</b> — passed (oral 30/30, written 92/100)</li>
+      <li><b>Cisco CCNA</b> — in preparation</li>
+    </ul>
+  </div>
+  <div>
+    <h2>Languages</h2>
+    <ul>
+      <li><b>German</b> — native</li>
+      <li><b>English</b> — C1 (KMK-certified)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="fuss"><span>Duisburg, October 2026</span><span>Lars Meykel Stuhlmacher</span></div>
+
+</body>
+</html>

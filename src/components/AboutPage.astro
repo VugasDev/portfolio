@@ -1,0 +1,206 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { bothLangs, type Lang } from '../lib/i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const en = lang === 'en';
+
+const copy = {
+  de: {
+    title: 'Über mich — Lars Meykel Stuhlmacher',
+    description: 'Fachinformatiker Systemintegration (Ausbildung, Abschluss 2027). Wer ich bin, was ich baue und wie ich mit KI arbeite.',
+    facts: [
+      ['Role',       'Fachinformatiker Systemintegration (i.&thinsp;A.)'],
+      ['Ausbildung', '2. Lehrjahr &middot; AP1: 87 Pkt. &middot; Abschluss vsl. 2027'],
+      ['Studium',    'Bachelor Professional in IT (IHK) &mdash; ab 09/2026'],
+      ['Zertifikate','KMK-Fremdsprachenzertifikat Englisch C1 &middot; Cisco CCNA (in Vorbereitung)'],
+      ['Location',   'Duisburg, Deutschland'],
+      ['Stack',      'Proxmox / Docker / OPNsense'],
+      ['Contact',    'contact@vugas.de'],
+      ['Status',     'Offen f&uuml;r Junior-Positionen ab Abschluss'],
+      ['Unterlagen', 'Vollst&auml;ndige Bewerbungsunterlagen auf Anfrage'],
+    ],
+    nowItems: [
+      'Mediastack: NVIDIA-Treiber auf dem Host, NVENC f&uuml;r Jellyfin-Transcoding aktivieren',
+      'Paperless: RAG-Chatbot &uuml;ber alle Dokumente, Migration auf Mistral',
+      'Portfolio mit Guides &amp; Blogposts f&uuml;llen &mdash; weniger halbfertige Drafts',
+    ],
+    builds: [
+      ['INFRA',  'Proxmox-Hypervisor, VLANs, Zero-Trust-Firewall via OPNsense, IPsec Site-to-Site (IKEv2).'],
+      ['MEDIA',  'Jellyfin-Medienserver mit *arr-Automatisierung &mdash; Metadaten, Untertitel (Bazarr), reproduzierbare Qualit&auml;tsprofile (Recyclarr), Transcoding.'],
+      ['AUTO',   'n8n-Workflows, lokale AI-Agenten via Ollama, Claude API f&uuml;r komplexere Tasks.'],
+      ['TOOLS',  'Eigene MCP-Server f&uuml;r Claude Code, CLI-Tools, kleine Dashboards.'],
+    ],
+  },
+  en: {
+    title: 'About — Lars Meykel Stuhlmacher',
+    description: 'Apprentice IT specialist for system integration (graduating 2027). Who I am, what I build and how I work with AI.',
+    facts: [
+      ['Role',       'IT specialist for system integration (apprentice)'],
+      ['Training',   '2nd year &middot; intermediate exam: 87/100 &middot; graduating 2027'],
+      ['Studies',    'Bachelor Professional in IT (IHK) &mdash; since 09/2026'],
+      ['Certificates','KMK foreign language certificate English C1 &middot; Cisco CCNA (in preparation)'],
+      ['Location',   'Duisburg, Germany'],
+      ['Stack',      'Proxmox / Docker / OPNsense'],
+      ['Contact',    'contact@vugas.de'],
+      ['Status',     'Open to junior positions after graduation'],
+      ['Documents',  'Full application documents on request'],
+    ],
+    nowItems: [
+      'Media stack: NVIDIA drivers on the host, enabling NVENC for Jellyfin transcoding',
+      'Paperless: RAG chatbot across all documents, migration to Mistral',
+      'Filling the portfolio with guides &amp; blog posts &mdash; fewer half-finished drafts',
+    ],
+    builds: [
+      ['INFRA',  'Proxmox hypervisor, VLANs, zero-trust firewall with OPNsense, IPsec site-to-site (IKEv2).'],
+      ['MEDIA',  'Jellyfin media server with *arr automation &mdash; metadata, subtitles (Bazarr), reproducible quality profiles (Recyclarr), transcoding.'],
+      ['AUTO',   'n8n workflows, local AI agents via Ollama, Claude API for more complex tasks.'],
+      ['TOOLS',  'My own MCP servers for Claude Code, CLI tools, small dashboards.'],
+    ],
+  },
+}[lang];
+const { facts, nowItems, builds } = copy;
+---
+
+
+<BaseLayout title={copy.title} description={copy.description} lang={lang} alternates={bothLangs('/about/')}>
+
+  <header class="pt-6 md:pt-10 pb-16 border-b border-(--color-border)">
+    <div class="rise rise-1 section-num mb-5">05 // OPERATOR / PROFILE</div>
+    <div class="grid grid-cols-12 gap-6 md:gap-10">
+      <div class="col-span-12 md:col-span-8">
+        <h1 class="rise rise-2 display-xl">
+          Lars Meykel<br/><span style="color: var(--color-accent);">Stuhlmacher</span>.
+        </h1>
+        <p class="rise rise-3 text-(--color-text-soft) text-[0.98rem] leading-[1.65] max-w-[62ch] mt-8"
+           style="font-family: var(--font-sans)">
+          {en
+            ? <>After completing a first IT qualification as a state-certified computer scientist
+          (application development), I&rsquo;m currently doing my second apprenticeship: IT specialist
+          for system integration (2nd&nbsp;year, graduating in 2027) &mdash; administration and
+          development from one source. In parallel, I&rsquo;m preparing for the Cisco CCNA. What I learn
+          at work, I deepen at home: for years I&rsquo;ve been building and running my own
+          infrastructure &mdash; from VLAN segmentation to an AI agent system &mdash; and writing
+          everything down so others can rebuild it.</>
+            : <>Nach abgeschlossener IT-Ausbildung zum Staatlich gepr&uuml;ften Informatiker
+          (Anwendungsentwicklung) mache ich aktuell meine zweite Ausbildung: Fachinformatiker
+          f&uuml;r Systemintegration
+          (2.&nbsp;Lehrjahr, Abschluss vsl. 2027) &mdash; Administration und Entwicklung aus einer
+          Hand. Parallel bereite ich mich auf den Cisco CCNA vor. Was ich im Beruf lerne, vertiefe
+          ich zuhause: Seit Jahren baue und betreibe ich eine eigene Infrastruktur &mdash; von
+          VLAN-Segmentierung bis zum AI-Agenten-System &mdash; und schreibe dabei alles auf,
+          damit andere es nachbauen k&ouml;nnen.</>}
+        </p>
+      </div>
+
+      <aside class="col-span-12 md:col-span-4 md:pt-3">
+        <div class="rise rise-4 rule mb-5"><span>File</span></div>
+        <dl class="rise rise-5 grid grid-cols-[auto_1fr] gap-x-5 gap-y-3.5"
+            style="font-family: var(--font-mono)">
+          {facts.map(([k, v]) => (
+            <>
+              <dt class="text-(--color-muted-deep) text-[0.64rem] tracking-[0.18em] uppercase pt-0.5">{k}</dt>
+              <dd class="text-(--color-text-soft) text-[0.82rem] leading-snug" set:html={v}></dd>
+            </>
+          ))}
+        </dl>
+      </aside>
+    </div>
+  </header>
+
+  <section class="grid grid-cols-12 gap-10 py-16 border-b border-(--color-border)">
+    <div class="col-span-12 md:col-span-7">
+      <div class="rule mb-6"><span>What I Build</span></div>
+      <ul>
+        {builds.map(([k, v]) => (
+          <li class="grid grid-cols-[6rem_1fr] gap-5 py-4 border-t border-(--color-border)">
+            <span class="text-(--color-accent) text-[0.68rem] tracking-[0.22em] uppercase pt-1"
+                  style="font-family: var(--font-mono)">{k}</span>
+            <p class="text-(--color-text-soft) leading-[1.6] text-[0.9rem]"
+               style="font-family: var(--font-sans)" set:html={v}></p>
+          </li>
+        ))}
+      </ul>
+      <div class="border-b border-(--color-border)"></div>
+    </div>
+
+    <div class="col-span-12 md:col-span-5">
+      <div class="rule rule-accent mb-6"><span>/NOW</span></div>
+      <ul>
+        {nowItems.map((n, i) => (
+          <li class="flex items-baseline gap-4 py-3 border-t border-(--color-border)">
+            <span class="text-(--color-muted-deep) text-[0.66rem] tabular-nums tracking-[0.1em] shrink-0"
+                  style="font-family: var(--font-mono)">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <span class="text-(--color-text-soft) text-[0.9rem] leading-[1.55]"
+                  style="font-family: var(--font-sans)" set:html={n}></span>
+          </li>
+        ))}
+      </ul>
+      <div class="border-b border-(--color-border)"></div>
+    </div>
+  </section>
+
+  <section id="ki" class="py-16 border-b border-(--color-border) scroll-mt-24">
+    <div class="rule rule-accent mb-8"><span>/AI</span></div>
+    <div class="grid grid-cols-12 gap-6 md:gap-10">
+      <div class="col-span-12 md:col-span-8">
+        <h2 class="display-lg mb-8" style="max-width: 16ch;">
+          {en
+            ? <>How I work with <span style="color: var(--color-accent);">AI</span>.</>
+            : <>Wie ich mit <span style="color: var(--color-accent);">KI</span> arbeite.</>}
+        </h2>
+        <div class="space-y-5 text-(--color-text-soft) text-[0.96rem] leading-[1.7] max-w-[64ch]"
+             style="font-family: var(--font-sans)">
+          <p>
+            {en
+            ? <>To me, AI is a lever, not an autopilot. I use it to delegate work, not thinking —
+            architecture, decisions and responsibility for the result stay with me. Where possible, it
+            runs locally on my own network; I use cloud models deliberately where they make the
+            difference, without handing over my data. Neither hype nor a reflexive no: I check where AI
+            creates real value and see through the rest. That way I build more and learn faster — and
+            remain the person who understands what they ship.</>
+            : <>KI ist für mich ein Hebel, kein Autopilot. Ich delegiere damit Arbeit, nicht das
+            Denken — Architektur, Entscheidungen und die Verantwortung fürs Ergebnis bleiben bei
+            mir. Wo es geht, läuft sie lokal im eigenen Netz; Cloud-Modelle setze ich gezielt dort
+            ein, wo sie den Unterschied machen, ohne meine Daten aus der Hand zu geben. Weder Hype
+            noch Reflex-Nein: ich prüfe, wo KI echten Wert schafft, und durchschaue den Rest. So
+            baue ich mehr und lerne schneller — und bleibe die Person, die versteht, was sie
+            ausliefert.</>}
+          </p>
+          <p>
+            {en
+            ? <>With code, this applies twice over. Generating code, text and config with AI is an
+            enormous accelerator — but the output is a proposal, not a result. The difference is made
+            in the review: vibe coding without review produces tech debt and security holes that only
+            show up in production; with consistent proofreading, tests and a real understanding of
+            what the code does, the same speed becomes a reliable lever. I let AI generate — but I take
+            responsibility for every line as if I had written it myself.</>
+            : <>Beim Code gilt das doppelt. Code, Text und Config mit KI zu generieren, ist ein
+            enormer Beschleuniger — aber der Output ist ein Vorschlag, kein Ergebnis. Der
+            Unterschied entscheidet sich an der Gegenprüfung: Vibe-Coding ohne Review produziert
+            Tech-Debt und Sicherheitslücken, die erst im Betrieb auffallen; mit konsequentem
+            Gegenlesen, Tests und einem echten Verständnis dafür, was der Code tut, wird dieselbe
+            Geschwindigkeit zum verlässlichen Hebel. Ich lasse generieren — aber ich verantworte
+            jede Zeile, als hätte ich sie selbst geschrieben.</>}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pt-16 pb-10">
+    <div class="rule mb-8"><span>Philosophy</span></div>
+    <blockquote class="pl-0">
+      <p class="display-lg"
+         style="font-size: clamp(2.4rem, 1.6rem + 3.8vw, 4.2rem); line-height: 0.95; max-width: 22ch; color: var(--color-text);">
+        {en
+            ? <>You learn by building.<br/>And then by <span style="color: var(--color-accent);">writing it down</span>.</>
+            : <>Man lernt durch Bauen.<br/>Und dann durch <span style="color: var(--color-accent);">Aufschreiben</span>.</>}
+      </p>
+    </blockquote>
+  </section>
+
+</BaseLayout>

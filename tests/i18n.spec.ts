@@ -44,3 +44,46 @@ for (const section of ['blog', 'guides'] as const) {
     }
   });
 }
+
+// Seiten, die es in beiden Sprachen gibt: hreflang in beide Richtungen und ein Sprachumschalter
+// in der Navigation, der auf die jeweils andere Fassung zeigt.
+const PAGES = ['/', '/projects/', '/about/', '/cv/'];
+for (const path of PAGES) {
+  test(`${path} und /en${path}: zweisprachig verknüpft`, async ({ page }) => {
+    const enPath = path === '/' ? '/en/' : `/en${path}`;
+    for (const [self, other, lang] of [[path, enPath, 'de'], [enPath, path, 'en']] as const) {
+      const r = await page.goto(self);
+      expect(r?.status(), `Status für ${self}`).toBe(200);
+      expect(await page.locator('html').getAttribute('lang')).toBe(lang);
+      expect(await page.locator(`link[rel="alternate"][hreflang="${lang}"]`).getAttribute('href')).toBe(`${BASE}${self}`);
+      expect(await page.locator(`link[rel="alternate"][hreflang="${lang === 'de' ? 'en' : 'de'}"]`).getAttribute('href')).toBe(`${BASE}${other}`);
+      expect(await page.locator('[data-nav-lang-switch]').getAttribute('href')).toBe(other);
+    }
+  });
+}
+
+test('englische Seiten verlinken intern nur englische Seiten (außer Impressum/Datenschutz/Downloads)', async ({ page }) => {
+  for (const path of ['/en', '/en/projects/', '/en/about/', '/en/cv/']) {
+    await page.goto(path);
+    const hrefs = await page.locator('a[href^="/"]:not([data-nav-lang-switch])').evaluateAll(els =>
+      els.map(e => e.getAttribute('href')!),
+    );
+    const german = hrefs.filter(h => !/^\/(en(\/|$)|impressum|datenschutz|downloads\/|rss\.xml)/.test(h));
+    expect(german, `deutsche Links auf ${path}`).toEqual([]);
+  }
+});
+
+test('/projects: jedes Projekt hat eine englische Fassung', async ({ page }) => {
+  await page.goto('/projects');
+  const de = await page.locator('main article h3').count();
+  await page.goto('/en/projects');
+  expect(await page.locator('main article h3').count()).toBe(de);
+  const enDetail = await page.locator('main a[href^="/en/projects/"]').evaluateAll(els =>
+    Array.from(new Set(els.map(e => e.getAttribute('href')!))),
+  );
+  for (const href of enDetail) {
+    const r = await page.goto(href);
+    expect(r?.status(), `Status für ${href}`).toBe(200);
+    expect(await page.locator('html').getAttribute('lang')).toBe('en');
+  }
+});

@@ -7,8 +7,9 @@ interface Props {
   type?: 'website' | 'article';
   publishedDate?: Date;
   tags?: string[];
+  lang?: 'de' | 'en';
 }
-const { title, description, type = 'website', publishedDate, tags = [] } = Astro.props;
+const { title, description, type = 'website', publishedDate, tags = [], lang = 'de' } = Astro.props;
 
 const site = Astro.site ?? new URL('https://vugas.de');
 const canonical = new URL(Astro.url.pathname, site);
@@ -18,7 +19,9 @@ const person = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Lars Meykel Stuhlmacher',
-  jobTitle: 'Fachinformatiker Systemintegration (Auszubildender)',
+  jobTitle: lang === 'en'
+    ? 'IT Specialist for System Integration (apprentice)'
+    : 'Fachinformatiker Systemintegration (Auszubildender)',
   knowsLanguage: ['de', 'en'],
   url: site.href,
   sameAs: ['https://github.com/VugasDev'],
@@ -48,6 +51,7 @@ const article =
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:site_name" content="VUGAS.DE" />
+<meta property="og:locale" content={lang === 'en' ? 'en_GB' : 'de_DE'} />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />

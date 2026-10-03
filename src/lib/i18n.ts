@@ -1,12 +1,31 @@
-// Zweisprachigkeit für Blog und Guides: Deutsch ist die Hauptsprache (Pfade ohne Präfix),
-// Englisch liegt unter /en/... Die übrigen Seiten sind nur deutsch.
+// Zweisprachigkeit: Deutsch ist die Hauptsprache (Pfade ohne Präfix), Englisch liegt unter /en/...
+// Zweisprachig sind Startseite, Projekte, Blog, Guides, About und CV; Impressum und Datenschutz
+// bleiben rein deutsch.
 export type Lang = 'de' | 'en';
 
 export const LANGS: Lang[] = ['de', 'en'];
 
-/** Pfad einer Blog-/Guide-Seite in der gewünschten Sprache. */
+/** Pfad einer Seite in der gewünschten Sprache ('/' wird zu '/en'). */
 export function localePath(lang: Lang, path: string): string {
-  return lang === 'en' ? `/en${path}` : path;
+  if (lang === 'de') return path;
+  return path === '/' ? '/en' : `/en${path}`;
+}
+
+/** Sprachfassungen einer zweisprachigen Seite, für hreflang und den Sprachumschalter. */
+export function bothLangs(path: string): { lang: Lang; href: string }[] {
+  // Startseite: /en/ mit Slash, passend zur Canonical-URL des statischen Builds.
+  return [{ lang: 'de', href: path }, { lang: 'en', href: path === '/' ? '/en/' : localePath('en', path) }];
+}
+
+const statusEn: Record<string, string> = {
+  aktiv: 'active',
+  'in Arbeit': 'in progress',
+  Planung: 'planned',
+  archiviert: 'archived',
+};
+
+export function statusLabel(value: string, lang: Lang): string {
+  return lang === 'en' ? statusEn[value] ?? value : value;
 }
 
 export function formatDate(date: Date, lang: Lang, opts: Intl.DateTimeFormatOptions): string {

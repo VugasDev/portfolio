@@ -1,0 +1,52 @@
+---
+title: "Media Stack"
+description: "Self-hosted media automation with Jellyfin + the *arr suite: central management, metadata, subtitles and transcoding of my own collection on an unprivileged LXC."
+status: "aktiv"
+tags: ["jellyfin", "servarr", "docker"]
+stack: ["Jellyfin", "Sonarr", "Radarr", "Prowlarr", "SABnzbd", "Bazarr", "Recyclarr", "Docker", "Proxmox LXC", "ZFS"]
+screenshots: []
+draft: false
+---
+
+## Problem
+
+A legally acquired media collection that has grown over the years — Blu-ray and DVD rips of
+my own discs, my own recordings, purchased content — scattered across several drives is
+practically unusable. The goal was a unified, automated library: clean metadata,
+multilingual subtitles, normalized quality and streaming to every device — fully
+self-hosted, without the cloud, cleanly integrated into a VLAN-segmented homelab.
+
+## Architecture
+
+Everything runs in an unprivileged Proxmox LXC in the server VLAN on linuxserver.io images.
+Jellyseerr takes requests from the household, the *arr suite automates organization,
+renaming, metadata and library monitoring, Recyclarr enforces reproducible TRaSH guide
+quality profiles, Bazarr adds subtitles, Jellyfin streams to every device.
+
+```mermaid
+flowchart LR
+  U["Household / Jellyseerr"] -->|Request| ARR["*arr suite (automation)"]
+  ARR -->|"Organization & metadata"| LIB["Library"]
+  REC["Recyclarr (TRaSH)"] -->|Quality profiles| ARR
+  ARR -->|Subtitles| BAZ["Bazarr"]
+  LIB --> JF["Jellyfin"]
+  JF -->|Stream| U
+```
+
+## Stack
+
+Jellyfin as the media server, Sonarr/Radarr/Prowlarr for library automation and metadata,
+SABnzbd as the download client, Recyclarr for reproducible quality profiles, Bazarr for
+multilingual subtitles — as containers in an LXC (Debian 12, 4 vCPU / 8 GB), storage on ZFS
+(`tank-storage`).
+
+## Learnings
+
+- **An unprivileged LXC with targeted capabilities** is the right balance between security
+  and hardware access — no fully privileged container needed.
+- **Recyclarr** makes quality profiles versionable and reproducible instead of maintaining
+  them by hand in every *arr app.
+- **VLAN segmentation (a dedicated server VLAN)** cleanly separates the media services from
+  the rest of the network.
+- **GPU transcoding (NVIDIA NVENC)** is still pending — CPU transcoding is enough for now;
+  passing the driver through on the host is the next step.
