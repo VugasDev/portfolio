@@ -48,5 +48,6 @@ Storage auf ZFS (`tank-storage`).
 - **Recyclarr** macht Qualitätsprofile versionier- und reproduzierbar, statt sie manuell in
   jeder *arr-App zu pflegen.
 - **VLAN-Segmentierung (eigenes Server-VLAN)** trennt die Media-Dienste sauber vom restlichen Netz.
-- **GPU-Transcoding (NVIDIA NVENC)** steht noch aus — CPU-Transcoding reicht aktuell, der
-  Treiber-Durchgriff auf den Host ist der nächste Schritt.
+- **GPU-Transcoding (NVIDIA NVENC)** läuft seit Juni: Die GTX 1050 des Hosts ist per
+  Device-Mount in den unprivilegierten LXC durchgereicht, NVENC samt Tone-Mapping schafft
+  im Test rund 4,5-fache Echtzeit.

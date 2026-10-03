@@ -48,5 +48,6 @@ multilingual subtitles — as containers in an LXC (Debian 12, 4 vCPU / 8 GB), s
   them by hand in every *arr app.
 - **VLAN segmentation (a dedicated server VLAN)** cleanly separates the media services from
   the rest of the network.
-- **GPU transcoding (NVIDIA NVENC)** is still pending — CPU transcoding is enough for now;
-  passing the driver through on the host is the next step.
+- **GPU transcoding (NVIDIA NVENC)** has been running since June: the host's GTX 1050 is
+  passed through to the unprivileged LXC via a device mount, and NVENC including tone
+  mapping manages around 4.5× real time in testing.
