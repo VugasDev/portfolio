@@ -79,7 +79,9 @@ heran. Ohne Cloud ging es also nicht. Und weil in meinem Homelab auch Daten lieg
 keinen Cloud-Anbieter etwas angehen, war der nächste Baustein eine
 **Anonymisierungs-Pipeline**: Bevor eine Anfrage das Haus verlässt, erkennt Presidio
 personenbezogene Daten, ein kleines lokales Modell ersetzt sie durch Platzhalter, und erst
-die bereinigte Fassung geht an die Cloud.
+die bereinigte Fassung geht an die Cloud. Die Antwort sollte danach lokal wieder
+zurückübersetzt werden. Getestet habe ich die Pipeline wegen der übrigen Probleme allerdings
+nie.
 
 ```mermaid
 flowchart LR
@@ -97,7 +99,8 @@ flowchart LR
   N -->|"Ergebnis"| CX
   CX -->|"zu groß für lokal"| PR
   LL -->|"bereinigte Anfrage"| CL
-  CL -->|"Antwort"| CX
+  CL -->|"Antwort"| LL
+  LL -->|"zurückübersetzt"| CX
 ```
 
 ### Was daraus wurde

@@ -75,7 +75,8 @@ can't match the big cloud models on demanding tasks. So there was no way around 
 And because my homelab also holds data that is no cloud provider's business, the next
 building block was an **anonymization pipeline**: before a request leaves the house,
 Presidio detects personal data, a small local model replaces it with placeholders, and only
-the cleaned version goes to the cloud.
+the cleaned version goes to the cloud. The answer was then supposed to be translated back
+locally. Because of the other problems, though, I never actually tested the pipeline.
 
 ```mermaid
 flowchart LR
@@ -93,7 +94,8 @@ flowchart LR
   N -->|"result"| CX
   CX -->|"too big for local"| PR
   LL -->|"cleaned request"| CL
-  CL -->|"answer"| CX
+  CL -->|"answer"| LL
+  LL -->|"translated back"| CX
 ```
 
 ### What became of it
