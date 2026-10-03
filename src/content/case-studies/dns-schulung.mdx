@@ -4,7 +4,9 @@ description: "Eine DNS-Schulung als Capture-the-Flag: Bis zu acht Teams reparier
 status: "archiviert"
 tags: ["dns", "docker", "bind9", "schulung"]
 stack: ["Docker", "BIND9", "Unbound", "Python", "Bash", "PowerShell", "WSL2", "Windows-Hotspot"]
-screenshots: []
+screenshots:
+  - src: "/images/projects/dns-schulung-leaderboard.png"
+    alt: "Live-Leaderboard mit Beispieldaten: Fortschritt je Fehler, First Blood (Blutstropfen) und per solve aufgegebene Aufgaben (Totenkopf)"
 draft: true
 ---
 
@@ -58,9 +60,9 @@ In jeder Umgebung stecken sieben Fehler, nach Schwierigkeit gestaffelt:
 
 Die Teams arbeiten mit einer Handvoll Befehle: `status` zeigt offene Fehler, `check <n>`
 prüft einen Fix automatisch und erklärt nach dem Lösen, warum das ein Fehler war. `hint`
-gibt Hinweise in drei Stufen, jede kostet ein Viertel der Punkte. `solve` zeigt die
-komplette Lösung, kostet aber **alle** bisherigen Punkte des Teams. Wer einen Fehler als
-erstes Team löst, bekommt 50 Punkte **First Blood** dazu. Das Leaderboard ist für alle im
+gibt Hinweise in drei Stufen, von einem konzeptuellen Schubs bis zum Spoiler. `solve` zeigt
+die komplette Lösung, danach bringt dieser Fehler dauerhaft keine Punkte mehr. Wer einen
+Fehler als erstes Team löst, bekommt 50 Punkte **First Blood** dazu. Das Leaderboard ist für alle im
 Browser erreichbar und aktualisiert sich alle fünf Sekunden.
 
 ## Der eigentliche Aufwand: ein Doppelklick
@@ -104,8 +106,8 @@ Team lag zwischen „sehr gut“ und „gut“, ich selbst bekam eine 1+.
 - **Die Umgebung ist das Risiko, nicht der Inhalt.** Die DNS-Fehler waren schnell
   eingebaut. Die meiste Zeit ging in einen verlässlichen Start auf einem Windows-Rechner,
   der vorher neu gestartet wurde, schlief oder eine andere PowerShell hatte.
-- **Spielmechanik steuert Verhalten.** Die Punkteregeln sind bewusst so gebaut: `solve`
-  kostet alles, ein Hinweis nur ein Viertel. Damit lohnt sich der kleine Schubs mehr als die
-  fertige Lösung, und die Teams bleiben selbst am Problem.
+- **Spielmechanik steuert Verhalten.** Gestufte Hinweise und eine Lösung, die die Punkte
+  für den Fehler kostet, sollen dazu bringen, sich erst einen kleinen Schubs zu holen statt
+  der fertigen Lösung. So bleiben die Teams selbst am Problem.
 - **Alles in einem Repo.** Präsentation, Handout, Quiz und Lab liegen zusammen und lassen
   sich per Bootstrap-Skript auf einem neuen Rechner aufsetzen.
