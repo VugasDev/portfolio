@@ -30,8 +30,8 @@ ging es los: Geräte hingen im WLAN, hatten aber „kein Internet". Seiten luden
 Domains ließen sich nicht auflösen. Lokale Dienste über ihre IP funktionierten dagegen
 weiter.
 
-> **TODO Lars:** Wer oder was ist dir zuerst aufgefallen (Handy, Smart-TV, Mitbewohner)?
-> Wie lange hat es gedauert, bis du auf das Rate-Limit gekommen bist?
+Bemerkt habe ich es selbst, und einen Hinweis auf die Ursache gab es nirgends: AdGuard
+meldete keinen Fehler, die Geräte zeigten nur „kein Internet“.
 
 ## Die Ursache
 

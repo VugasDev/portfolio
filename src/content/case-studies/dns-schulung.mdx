@@ -10,19 +10,18 @@ draft: true
 
 ## Auftrag
 
-Im Rahmen der Berufsschule sollte ich eine Schulung konzipieren und halten, im Szenario
-einer internen Betriebsschulung für Azubis im zweiten Lehrjahr. Mein Thema war DNS. Zum
-Paket gehörten eine Präsentation von etwa 15 Minuten, ein einseitiges Handout, ein kurzes
-Quiz und ein praktischer Teil von 15 bis 45 Minuten.
+In der Berufsschule sollten wir in Fünfergruppen eine Schulung konzipieren und halten, im
+Szenario einer internen Betriebsschulung für Azubis im zweiten Lehrjahr. Unser Thema war
+DNS. Zum Paket gehörten eine Präsentation von etwa 15 Minuten, ein einseitiges Handout,
+ein kurzes Quiz, eine Fragerunde und ein praktischer Teil von 15 bis 45 Minuten.
 
-Für den praktischen Teil wollte ich keine Klick-Anleitung, die alle im Gleichschritt
-abarbeiten. DNS lernt man, indem man kaputte Auflösung repariert. Also wurde daraus ein
-kleines **Capture-the-Flag**: Jedes Team bekommt seine eigene, absichtlich fehlerhafte
+Präsentation und Handout entstanden im Team. Mein Teil war der praktische: das Lab samt
+Leaderboard und Startskripten.
+
+Dafür wollte ich keine Klick-Anleitung, die alle im Gleichschritt abarbeiten. DNS lernt
+man, indem man kaputte Auflösung repariert. Also wurde daraus ein kleines
+**Capture-the-Flag**: Jedes Team bekommt seine eigene, absichtlich fehlerhafte
 DNS-Umgebung und sammelt Punkte für jeden behobenen Fehler.
-
-> **TODO Lars:** Wann hast du die Schulung gehalten, wie viele Teams haben mitgemacht und
-> wie kam es an? Ein, zwei Sätze zur Durchführung (und gern die Bewertung, falls du sie
-> nennen magst) machen die Case Study rund.
 
 ## Das Lab
 
@@ -43,7 +42,6 @@ flowchart LR
     C1 -->|"check"| LB["Leaderboard"]
     C8 -->|"check"| LB
   end
-  W -->|"Beamer"| LB
 ```
 
 In jeder Umgebung stecken sieben Fehler, nach Schwierigkeit gestaffelt:
@@ -62,8 +60,8 @@ Die Teams arbeiten mit einer Handvoll Befehle: `status` zeigt offene Fehler, `ch
 prüft einen Fix automatisch und erklärt nach dem Lösen, warum das ein Fehler war. `hint`
 gibt Hinweise in drei Stufen, jede kostet ein Viertel der Punkte. `solve` zeigt die
 komplette Lösung, kostet aber **alle** bisherigen Punkte des Teams. Wer einen Fehler als
-erstes Team löst, bekommt 50 Punkte **First Blood** dazu. Das Leaderboard aktualisiert sich
-alle fünf Sekunden und läuft während der Übung auf dem Beamer.
+erstes Team löst, bekommt 50 Punkte **First Blood** dazu. Das Leaderboard ist für alle im
+Browser erreichbar und aktualisiert sich alle fünf Sekunden.
 
 ## Der eigentliche Aufwand: ein Doppelklick
 
@@ -91,6 +89,12 @@ April entstanden 22 Commits, 17 davon Fixes:
   Container, damit er einen Neustart übersteht.
 - **Ein Bug im alten docker-compose** (`ContainerConfig`) verhinderte das Neuerstellen von
   Containern. Die Lösung: alte Team-Container vor jedem Start gezielt entfernen.
+
+## Ergebnis
+
+Bei der Schulung haben 27 Mitschüler in sieben Teams parallel im Lab gearbeitet. Sie kam bei der Klasse und beim Lehrer gut
+an. Bewertet wurde das Gesamtpaket aus Präsentation, Fragerunde und Schulung: Das ganze
+Team lag zwischen „sehr gut“ und „gut“, ich selbst bekam eine 1+.
 
 ## Learnings
 
