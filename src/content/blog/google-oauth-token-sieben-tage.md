@@ -38,23 +38,23 @@ Refresh-Tokens nach **sieben Tagen** verfallen. Das ist Absicht und kein Bug: Te
 sollen nicht dauerhaft auf Nutzerdaten zugreifen.
 
 Kurzfristig hilft `rclone config reconnect gdrive:` mit einem neuen Browser-Login. Das
-verschiebt das Problem aber nur um eine Woche.
-
-> **TODO Lars:** Wie hast du es im Mai gelöst — App auf „In production“ gestellt oder erst
-> mal regelmäßig neu verbunden?
+verschiebt das Problem aber nur um eine Woche. Die eigentliche Lösung war ein Klick: Ich
+habe die App, ein eigenes Google-Cloud-Projekt nur für dieses Backup, in der Console auf
+**„In production“** gestellt. Damit gilt die Sieben-Tage-Grenze nicht mehr.
 
 ## Teil 2: Die geteilte Client-ID
 
-Im September kam das Thema wieder hoch, diesmal von der anderen Seite. Meine
-Synchronisations- und Backup-Jobs auf dem Homelab-Host nutzten bis dahin die **eingebaute
-Client-ID von rclone**, die sich alle rclone-Nutzer teilen. rclone warnte schon länger bei
-jedem Aufruf, dass diese ID im Lauf von 2026 abgeschaltet wird. Dann lief sie in ein akutes
-Rate-Limit, und die Jobs krochen nur noch.
+Im September kam das Thema wieder hoch, diesmal von der anderen Seite, und diesmal kannte
+ich die Falle schon. Meine Synchronisations- und Backup-Jobs auf dem Homelab-Host nutzten
+bis dahin die **eingebaute Client-ID von rclone**, die sich alle rclone-Nutzer teilen.
+rclone warnte schon länger bei jedem Aufruf, dass diese ID im Lauf von 2026 abgeschaltet
+wird. Dann lief sie in ein akutes Rate-Limit, und die Jobs krochen nur noch.
 
-Die saubere Lösung ist eine **eigene OAuth-App**, und die muss auf „In production“ stehen,
-damit die Sieben-Tage-Grenze nicht greift. Dafür verlangt Google ein Branding: eine
-Startseite und eine Datenschutzerklärung. Deshalb hat diese Website seit Ende September in
-der Datenschutzerklärung einen eigenen Abschnitt zu meiner privaten Google-Drive-App.
+Die Lösung war klar: eine **eigene OAuth-App**, diesmal von Anfang an auf „In production“.
+Neu war nur eine Hürde: Anders als die Backup-App braucht diese vollen Zugriff auf Google
+Drive, und dafür verlangt Google zum Veröffentlichen ein Branding, also eine Startseite und
+eine Datenschutzerklärung. Deshalb hat diese Website seit Ende September in der
+Datenschutzerklärung einen eigenen Abschnitt zu meiner privaten Google-Drive-App.
 
 Eine Prüfung durch Google war nicht nötig. Bei einer App für den Eigengebrauch ist die
 Verifizierung nicht erforderlich. Beim Login erscheint dafür der Hinweis „nicht verifizierte
