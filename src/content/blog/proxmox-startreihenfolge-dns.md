@@ -1,6 +1,6 @@
 ---
-title: "Stolperstein: Nach dem Reboot lieferte jede Domain 404"
-description: "Ein Kernel-Update, ein Neustart des Proxmox-Hosts und danach waren alle meine Dienste von außen weg, obwohl jeder Container lief. Schuld war die Reihenfolge, in der sie gestartet sind."
+title: 'Stolperstein: Nach dem Reboot lieferte jede Domain 404'
+description: Ein Kernel-Update, ein Neustart des Proxmox-Hosts und danach waren alle meine Dienste von außen weg, obwohl jeder Container lief. Schuld war die Reihenfolge, in der sie gestartet sind.
 date: 2026-09-24
 tags:
   - stolperstein
@@ -9,7 +9,7 @@ tags:
   - pangolin
   - dns
   - homelab
-draft: true
+draft: false
 ---
 
 > **Stolpersteine** sind kurze Posts über Fehler, die mich Zeit gekostet haben — mit Ursache
