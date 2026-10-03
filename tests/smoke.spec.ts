@@ -12,7 +12,7 @@ test('alle internen Nav-Links rendern eine Zielseite', async ({ page }) => {
     Array.from(new Set(els.map(e => e.getAttribute('href')!))),
   );
   expect(hrefs).toEqual(
-    expect.arrayContaining(['/', '/projects', '/blog', '/guides', '/about']),
+    expect.arrayContaining(['/', '/projects', '/blog', '/guides', '/about', '/cv']),
   );
   for (const href of hrefs) {
     const res = await page.goto(href);
@@ -63,4 +63,23 @@ test('unbekannte URL rendert die 404-Seite', async ({ page }) => {
   expect(res?.status()).toBe(404);
   await expect(page.getByText('404').first()).toBeVisible();
   await expect(page.locator('h1')).toContainText(/not found/i);
+});
+
+test('Arbeitgeber-Seite: Lebenslauf-PDF erreichbar, Belege ohne tote Links', async ({ page, request }) => {
+  const res = await page.goto('/cv');
+  expect(res?.status()).toBe(200);
+  await expect(page.locator('h1').first()).toBeVisible();
+
+  const pdf = await page.locator('a[download]').first().getAttribute('href');
+  const pdfRes = await request.get(pdf!);
+  expect(pdfRes.status()).toBe(200);
+  expect((await pdfRes.body()).subarray(0, 5).toString()).toBe('%PDF-');
+
+  const internal = await page.locator('main a[href^="/"]:not([download])').evaluateAll(els =>
+    Array.from(new Set(els.map(e => e.getAttribute('href')!))),
+  );
+  for (const href of internal) {
+    const r = await request.get(href);
+    expect(r.status(), `Status für ${href}`).toBe(200);
+  }
 });
