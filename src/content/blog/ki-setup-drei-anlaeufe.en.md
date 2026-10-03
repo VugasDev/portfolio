@@ -9,7 +9,7 @@ tags:
   - proxmox
   - architektur
   - homelab
-draft: true
+draft: false
 ---
 
 I work a lot with AI agents: for the homelab, for code, for my apprenticeship. The question
@@ -20,16 +20,30 @@ result.
 
 ## Attempt 1: Cortex, the command center (April)
 
-The first idea was big. **Cortex** was meant to be a self-built dashboard that controls my
-entire homelab and all AI agents from one place. On paper there were **twelve modules**:
-agent orchestration, workflow engine, MCP management, monitoring, ticketing, documentation,
-remote access, Proxmox integration and the dashboard itself.
+### The idea: one place for everything I do with AI
 
-At its heart was a **"CEO agent"**: a cloud model that understands tasks and delegates them to
-three specialized sub-agents. One for infrastructure, one for code, one for analysis, each
-with its own model, local via Ollama or in the cloud, all behind a shared LiteLLM gateway. In
-the dashboard you saw this as an interactive org chart, and every delegation showed up live
-in the chat.
+Early this year, Claude Code and similar tools became noticeably powerful. No longer just
+chat with code snippets, but agents that read, plan, run commands and check their own work
+on their own. I didn't want to tap into that value only now and then, I wanted to **build it
+into my daily routine**. So I taught myself through videos and posts how to really work with
+(agentic) AI: building context properly, breaking tasks down, giving agents tools.
+
+That turned into **Cortex**: my central point of interaction with AI. A self-built dashboard
+through which I talk to all agents and control my entire homelab. On paper there were
+**twelve modules**: agent orchestration, workflow engine, MCP management, monitoring,
+ticketing, documentation, remote access, Proxmox integration and the dashboard itself.
+
+### The AI org chart
+
+The shape of it came from **Mario Alka**, who kept showing a very similar system in his
+TikTok videos: AI agents organized like a company, with clear roles and a hierarchy. I
+already had the basic idea in my head; his videos showed me what it could look like in
+practice, and I borrowed a few things and let myself be inspired.
+
+So at its heart was a **"CEO agent"**: a cloud model that understands tasks and delegates
+them to three specialized sub-agents. One for infrastructure, one for code, one for analysis,
+each with its own model, all behind a shared LiteLLM gateway. In the dashboard you saw this
+as an interactive org chart, and every delegation showed up live in the chat.
 
 ```mermaid
 flowchart TD
@@ -37,24 +51,69 @@ flowchart TD
   CEO --> A1["Infrastructure agent"]
   CEO --> A2["Code agent"]
   CEO --> A3["Analysis agent"]
-  A1 & A2 & A3 --> GW["LiteLLM gateway"]
-  GW --> L["Ollama (local, CPU only)"]
+  A1 --> GW["LiteLLM gateway"]
+  A2 --> GW
+  A3 --> GW
+  GW --> L["Local models (Ollama)"]
   GW --> C["Cloud APIs"]
 ```
 
+### The hardware problem: a homelab, not a data center
+
+The decisive difference from Mario: he has a company behind him and can set up his own AI
+servers. I have a **small server without a GPU** and a **desktop PC with a gaming GPU (RTX
+4070, 12 GB)** that can run local models at least to some extent.
+
+That led to the **multi-host idea**: Cortex itself runs around the clock on the server, and
+the compute work is offloaded to the desktop PC. The PC registers with Cortex as a compute
+node, brings its own models, does the work and sends the result back to the server, where it
+shows up in the chat. More nodes were supposed to join later just as easily, whether on the
+LAN or over VPN.
+
+But even the 4070 sets tight limits: with 12 GB of VRAM, only smaller models fit, and they
+can't match the big cloud models on demanding tasks. So there was no way around the cloud.
+And because my homelab also holds data that is no cloud provider's business, the next
+building block was an **anonymization pipeline**: before a request leaves the house,
+Presidio detects personal data, a small local model replaces it with placeholders, and only
+the cleaned version goes to the cloud.
+
+```mermaid
+flowchart LR
+  subgraph S["Server (24/7, CPU only)"]
+    CX["Cortex<br/>dashboard, chat, org chart"]
+  end
+  subgraph P["Desktop PC (RTX 4070)"]
+    N["Compute node<br/>local models"]
+  end
+  subgraph AN["Anonymization (local)"]
+    PR["Presidio<br/>detects personal data"] --> LL["small local model<br/>replaces with placeholders"]
+  end
+  CL["Cloud models"]
+  CX -->|"task"| N
+  N -->|"result"| CX
+  CX -->|"too big for local"| PR
+  LL -->|"cleaned request"| CL
+  CL -->|"answer"| CX
+```
+
+### What became of it
+
 I built quite a lot of it: **127 commits in just over two weeks**, a Next.js dashboard with
-Postgres, an alert panel, monitoring integration and a chat interface with streaming. Next
-up was a distributed architecture for multiple compute nodes.
+Postgres, an alert panel, monitoring integration and a chat interface with streaming. The
+distributed architecture with compute nodes was worked out as the next step.
 
-In June, I shut the whole stack down. The official reason in the ticket: work continues only
-with new hardware or much better local models. Without a GPU, the local models ran on the CPU
-only, and that wasn't enough for the sub-agents.
+In June, I shut the whole stack down anyway. The reason in the ticket: work continues only
+with new hardware or much better local models. Cortex remained a **wish concept**. With my
+hardware and the public models that run on it, the system would never have met my
+requirements: the sub-agents would either have been too weak or would have ended up passing
+almost everything on to the cloud anyway, just with more detours.
 
-Looking back, though, that was only the trigger. The real problem: **I had built the command
-center before I knew what I wanted to command from it.** Twelve modules for a single user,
-separate interfaces for tickets and documentation running alongside Obsidian, and a
-delegation chain that mostly looked nice. In the end, most of the value came from what already
-existed: Claude Code in the terminal.
+Looking back, there's a second lesson in it: **I had built the command center before I knew
+what I wanted to command from it.** Twelve modules for a single user, separate interfaces for
+tickets and documentation running alongside Obsidian, and a delegation chain that mostly
+looked nice. In the end, most of the value came from what already existed: Claude Code in the
+terminal. I didn't give up on the idea of a central point of interaction, though; it just
+came back by a different route, as attempt 3 shows.
 
 ## Attempt 2: Three instances, one shared brain (June to September)
 
