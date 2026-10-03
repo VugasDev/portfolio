@@ -1,0 +1,15 @@
+---
+import GuideArticle from '../../../components/GuideArticle.astro';
+import { publishedGuides } from '../../../lib/translations';
+
+export async function getStaticPaths() {
+  const { en } = await publishedGuides();
+  return en.map(guide => ({
+    params: { id: guide.id },
+    props: { guide, guides: en, altHref: `/guides/${guide.id}/` },
+  }));
+}
+
+const { guide, guides, altHref } = Astro.props;
+---
+<GuideArticle guide={guide} guides={guides} lang="en" altHref={altHref} />

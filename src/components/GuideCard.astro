@@ -1,18 +1,21 @@
 ---
+import { difficultyLabel, localePath, type Lang } from '../lib/i18n';
+
 interface Props {
   title: string;
   description: string;
   difficulty: string;
   id: string;
   tags: string[];
+  lang?: Lang;
 }
-const { title, description, difficulty, id, tags } = Astro.props;
+const { title, description, difficulty, id, tags, lang = 'de' } = Astro.props;
 ---
 
-<a href={`/guides/${id}`} class="card group block">
+<a href={localePath(lang, `/guides/${id}`)} class="card group block">
   <div class="flex items-center justify-between mb-4">
     <span class="section-num">Guide</span>
-    <span class="tag tag-accent">{difficulty}</span>
+    <span class="tag tag-accent">{difficultyLabel(difficulty, lang)}</span>
   </div>
 
   <h3 class="text-[1.02rem] text-(--color-text) group-hover:text-(--color-accent) transition-colors mb-3"

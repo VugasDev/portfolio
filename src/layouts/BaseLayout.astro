@@ -18,6 +18,10 @@ interface Props {
   ogType?: 'website' | 'article';
   publishedDate?: Date;
   tags?: string[];
+  /** Sprache der Seite (Blog/Guides gibt es zweisprachig, alles andere ist deutsch). */
+  lang?: 'de' | 'en';
+  /** Sprachfassungen derselben Seite, inkl. der aktuellen — erzeugt hreflang-Links. */
+  alternates?: { lang: 'de' | 'en'; href: string }[];
 }
 
 const {
@@ -26,11 +30,14 @@ const {
   ogType = 'website',
   publishedDate,
   tags = [],
+  lang = 'de',
+  alternates = [],
 } = Astro.props;
+const site = Astro.site ?? new URL('https://vugas.de');
 ---
 
 <!doctype html>
-<html lang="de">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -40,6 +47,12 @@ const {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title="VUGAS.DE / LOG" href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    {alternates.length > 1 && alternates.map(a => (
+      <link rel="alternate" hreflang={a.lang} href={new URL(a.href, site).href} />
+    ))}
+    {alternates.length > 1 && (
+      <link rel="alternate" hreflang="x-default" href={new URL(alternates.find(a => a.lang === 'de')!.href, site).href} />
+    )}
   </head>
   <body class="min-h-screen">
     <Nav />

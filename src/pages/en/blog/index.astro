@@ -1,0 +1,7 @@
+---
+import BlogList from '../../../components/BlogList.astro';
+import { publishedBlog } from '../../../lib/translations';
+
+const { en } = await publishedBlog();
+---
+<BlogList posts={en} lang="en" altHref="/blog/" />
