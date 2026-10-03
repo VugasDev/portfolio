@@ -8,6 +8,7 @@ tags:
   - kubejs
   - modding
   - ai
+draft: false
 ---
 
 Modpack-Entwicklung ist überraschend nah an „echter" Softwareentwicklung: Abhängigkeiten,

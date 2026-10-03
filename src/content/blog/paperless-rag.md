@@ -8,6 +8,7 @@ tags:
   - rag
   - ai
   - self-hosting
+draft: false
 ---
 
 Jeder kennt den Schuhkarton voller Rechnungen, Verträge und Behördenpost. Meine digitale Version

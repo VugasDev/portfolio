@@ -10,6 +10,7 @@ tags:
   - backup
 series: ''
 order: null
+draft: false
 ---
 
 > **Hinweis:** Ein selbst gehosteter Passwort-Manager ist ein hochsensibler Dienst. Setze ihn nur

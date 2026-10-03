@@ -8,6 +8,7 @@ tags:
   - proxmox
   - homelab
   - networking
+draft: false
 ---
 
 Lange lief mein gesamtes Homelab in einem einzigen flachen `/24` hinter der Router-Box

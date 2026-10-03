@@ -8,6 +8,7 @@ tags:
   - docker
   - backup
   - self-hosting
+draft: false
 ---
 
 Passwörter sind das eine Geheimnis, das ich nicht bei einem Drittanbieter liegen haben wollte.

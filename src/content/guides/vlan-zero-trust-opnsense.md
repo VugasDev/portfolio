@@ -11,6 +11,7 @@ tags:
   - security
 series: ''
 order: null
+draft: false
 ---
 
 > **Hinweis:** Alle IP-Adressen und VLAN-IDs in diesem Guide sind Beispielwerte. Passe sie an dein

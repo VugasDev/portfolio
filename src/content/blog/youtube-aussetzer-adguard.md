@@ -8,6 +8,7 @@ tags:
   - dns
   - ipv6
   - troubleshooting
+draft: false
 ---
 
 Es fing harmlos an. Ich konnte plötzlich einen meiner Server über seine Domain nicht mehr

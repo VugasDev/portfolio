@@ -1,5 +1,5 @@
 ---
-name: "Minecraft Modpack"
+name: "Gaia Awakening"
 description: "Create-zentriertes Kitchen-Sink-Modpack für NeoForge 1.21.1 — eigene Items und Fluids via KubeJS, 58-teilige Quest-Progression, KI-gestützter Build-Workflow."
 details: "Create-zentriertes Kitchen-Sink-Pack für NeoForge 1.21.1 mit eigenen Items und Fluids über KubeJS, einer 58-teiligen Quest-Progression und angepasster Weltgenerierung. Entwickelt mit einer KI als Pair-Programmer gegen die API-Reibung von KubeJS — kleine Commits, sprechende Alpha-Versionen."
 tags:
@@ -8,7 +8,7 @@ tags:
   - "kubejs"
   - "modding"
 status: "in Arbeit"
-github: "https://github.com/VugasDev/minecraft-modpack"
+github: "https://github.com/VugasDev/gaia-awakening"
 ---
 
 ## Worum es geht
@@ -29,3 +29,9 @@ trivialisieren und die Create-Maschinen im Zentrum der Progression bleiben.
 Entwickelt mit einer KI als Pair-Programmer gegen die API-Reibung von KubeJS:
 kleine Commits, sprechende Alpha-Versionen, jede Änderung in-game gegengetestet.
 Das Repo ist öffentlich — Skripte, Quests und Konfiguration zum Nachlesen.
+
+## Stand
+
+Das Pack ist noch nicht veröffentlicht. Der Release ist für CurseForge geplant:
+Einige FTB-Mods dürfen nicht über Modrinth verteilt werden, ein Release dort
+scheidet damit aus.
