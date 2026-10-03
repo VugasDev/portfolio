@@ -79,7 +79,7 @@ const alternates = altHref ? [{ lang, href: selfHref }, { lang: otherLang, href:
           </ol>
         </nav>
       ) : (
-        <Toc headings={headings} />
+        <Toc headings={headings} lang={lang} />
       )}
     </aside>
 

@@ -17,6 +17,7 @@ for (const section of ['blog', 'guides'] as const) {
       const r = await page.goto(href);
       expect(r?.status(), `Status für ${href}`).toBe(200);
       expect(await page.locator('html').getAttribute('lang'), `lang auf ${href}`).toBe('en');
+      await expect(page.locator('nav.toc')).not.toContainText('Auf dieser Seite');
 
       const de = await page.locator('link[rel="alternate"][hreflang="de"]').getAttribute('href');
       const en = await page.locator('link[rel="alternate"][hreflang="en"]').getAttribute('href');

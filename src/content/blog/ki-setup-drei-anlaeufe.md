@@ -12,8 +12,8 @@ tags:
 draft: true
 ---
 
-Ich arbeite viel mit KI-Agenten: für das Homelab, für Code, für die Ausbildung. Die Frage war nie, *ob* ich sie nutze, sondern *wo sie laufen* und *woher sie
-wissen, was ich weiß*. Bis zur heutigen Lösung habe ich drei Architekturen gebaut. Die ersten
+Ich arbeite viel mit KI-Agenten: für das Homelab, für Code, für die Ausbildung. Die Frage
+war nie, *ob* ich sie nutze, sondern *wo sie laufen* und *woher sie wissen, was ich weiß*. Bis zur heutigen Lösung habe ich drei Architekturen gebaut. Die ersten
 beiden sind gescheitert, und genau die erzähle ich hier mit, weil man aus ihnen mehr lernt
 als aus dem Endergebnis.
 
@@ -43,8 +43,7 @@ flowchart TD
 
 Gebaut habe ich davon eine ganze Menge: **127 Commits in gut zwei Wochen**, ein
 Next.js-Dashboard mit Postgres, Alarm-Panel, Monitoring-Anbindung und einer Chat-Oberfläche
-mit Streaming. Danach war
-eine verteilte Architektur für mehrere Rechenknoten geplant.
+mit Streaming. Danach war eine verteilte Architektur für mehrere Rechenknoten geplant.
 
 Im Juni habe ich den Stack komplett stillgelegt. Der offizielle Grund im Ticket: Weiter geht
 es erst mit neuer Hardware oder deutlich besseren lokalen Modellen. Ohne Grafikkarte liefen

@@ -1,11 +1,11 @@
 ---
-interface Props { headings: { depth: number; slug: string; text: string }[] }
-const { headings } = Astro.props;
+interface Props { headings: { depth: number; slug: string; text: string }[]; lang?: 'de' | 'en' }
+const { headings, lang = 'de' } = Astro.props;
 const items = headings.filter(h => h.depth === 2 || h.depth === 3);
 ---
 {items.length >= 2 && (
-  <nav class="toc" aria-label="Inhalt">
-    <div class="section-num mb-3">Auf dieser Seite</div>
+  <nav class="toc" aria-label={lang === 'en' ? 'Contents' : 'Inhalt'}>
+    <div class="section-num mb-3">{lang === 'en' ? 'On this page' : 'Auf dieser Seite'}</div>
     <ul>
       {items.map(h => (
         <li>
