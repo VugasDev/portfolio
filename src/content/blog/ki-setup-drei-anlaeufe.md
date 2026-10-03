@@ -9,7 +9,7 @@ tags:
   - proxmox
   - architektur
   - homelab
-draft: true
+draft: false
 ---
 
 Ich arbeite viel mit KI-Agenten: für das Homelab, für Code, für die Ausbildung. Die Frage
@@ -19,16 +19,33 @@ als aus dem Endergebnis.
 
 ## Anlauf 1: Cortex, die Kommandozentrale (April)
 
-Die erste Idee war groß. **Cortex** sollte ein selbst gebautes Dashboard werden, das mein
-gesamtes Homelab und alle KI-Agenten an einer Stelle steuert. Auf dem Papier standen
-**zwölf Module**: Agenten-Orchestrierung, Workflow-Engine, MCP-Verwaltung, Monitoring,
-Ticketsystem, Dokumentation, Fernzugriff, Proxmox-Anbindung und das Dashboard selbst.
+### Die Idee: ein einziger Ort für alles, was ich mit KI mache
 
-Das Herzstück war ein **„CEO-Agent“**: ein Cloud-Modell, das Aufgaben versteht und an drei
-spezialisierte Sub-Agenten delegiert. Einer für Infrastruktur, einer für Code, einer für
-Analyse, jeweils mit eigenem Modell, lokal über Ollama oder in der Cloud, alles hinter einem
-gemeinsamen LiteLLM-Gateway. Im Dashboard sah man das als interaktives Organigramm, und jede
-Delegation erschien live im Chat.
+Anfang des Jahres wurden Claude Code und vergleichbare Werkzeuge spürbar stark. Nicht mehr
+nur Chat mit Codeschnipseln, sondern Agenten, die selbstständig lesen, planen, Befehle
+ausführen und ihre Arbeit prüfen. Diesen Mehrwert wollte ich nicht nur ab und zu
+mitnehmen, sondern **aktiv in meinen Alltag einbauen**. Also habe ich mir über Videos und
+Beiträge angeeignet, wie man mit (agentischer) KI wirklich arbeitet: Kontext richtig
+aufbauen, Aufgaben zerlegen, Agenten Werkzeuge geben.
+
+Daraus wurde **Cortex**: mein zentraler Interaktionspunkt mit KI. Ein selbst gebautes
+Dashboard, über das ich mit allen Agenten spreche und mein gesamtes Homelab steuere. Auf dem
+Papier standen **zwölf Module**: Agenten-Orchestrierung, Workflow-Engine, MCP-Verwaltung,
+Monitoring, Ticketsystem, Dokumentation, Fernzugriff, Proxmox-Anbindung und das Dashboard
+selbst.
+
+### Das KI-Organigramm
+
+Die Form dafür kam von **Mario Alka**, der in seinen TikTok-Videos immer wieder ein sehr
+ähnliches System gezeigt hat: KI-Agenten, organisiert wie ein Unternehmen, mit klaren Rollen
+und einer Hierarchie. Die Grundidee hatte ich selbst schon im Kopf, bei ihm habe ich
+gesehen, wie das konkret aussehen kann, mir einiges abgeschaut und mich inspirieren lassen.
+
+Das Herzstück war deshalb ein **„CEO-Agent“**: ein Cloud-Modell, das Aufgaben versteht und
+an drei spezialisierte Sub-Agenten delegiert. Einer für Infrastruktur, einer für Code, einer
+für Analyse, jeweils mit eigenem Modell, alles hinter einem gemeinsamen LiteLLM-Gateway. Im
+Dashboard sah man das als interaktives Organigramm, und jede Delegation erschien live im
+Chat.
 
 ```mermaid
 flowchart TD
@@ -36,24 +53,77 @@ flowchart TD
   CEO --> A1["Infrastruktur-Agent"]
   CEO --> A2["Code-Agent"]
   CEO --> A3["Analyse-Agent"]
-  A1 & A2 & A3 --> GW["LiteLLM-Gateway"]
-  GW --> L["Ollama (lokal, nur CPU)"]
+  A1 --> GW["LiteLLM-Gateway"]
+  A2 --> GW
+  A3 --> GW
+  GW --> L["Lokale Modelle (Ollama)"]
   GW --> C["Cloud-APIs"]
 ```
 
+### Das Hardware-Problem: kein Rechenzentrum, sondern ein Homelab
+
+Der entscheidende Unterschied zu Mario: Er hat ein Unternehmen im Rücken und kann sich
+eigene KI-Server hinstellen. Ich habe einen **kleinen Server ohne Grafikkarte** und einen
+**Desktop-PC mit einer Gaming-GPU (RTX 4070, 12 GB)**, mit der sich lokale Modelle
+zumindest etwas betreiben lassen.
+
+Daraus entstand die **Multi-Host-Idee**: Cortex selbst läuft rund um die Uhr auf dem
+Server, die Rechenarbeit wird an den Desktop-PC ausgelagert. Der PC meldet sich als
+Rechenknoten bei Cortex an, bringt seine Modelle mit, rechnet und schickt das Ergebnis
+zurück an den Server, wo es im Chat erscheint. Weitere Knoten sollten später einfach
+dazukommen können, egal ob im LAN oder über VPN.
+
+Aber auch die 4070 setzt enge Grenzen: Mit 12 GB Grafikspeicher passen nur kleinere
+Modelle, und die kommen bei anspruchsvollen Aufgaben nicht an die großen Cloud-Modelle
+heran. Ohne Cloud ging es also nicht. Und weil in meinem Homelab auch Daten liegen, die
+keinen Cloud-Anbieter etwas angehen, war der nächste Baustein eine
+**Anonymisierungs-Pipeline**: Bevor eine Anfrage das Haus verlässt, erkennt Presidio
+personenbezogene Daten, ein kleines lokales Modell ersetzt sie durch Platzhalter, und erst
+die bereinigte Fassung geht an die Cloud. Die Antwort sollte danach lokal wieder
+zurückübersetzt werden. Getestet habe ich die Pipeline wegen der übrigen Probleme allerdings
+nie.
+
+```mermaid
+flowchart LR
+  subgraph S["Server (24/7, nur CPU)"]
+    CX["Cortex<br/>Dashboard, Chat, Organigramm"]
+  end
+  subgraph P["Desktop-PC (RTX 4070)"]
+    N["Rechenknoten<br/>lokale Modelle"]
+  end
+  subgraph AN["Anonymisierung (lokal)"]
+    PR["Presidio<br/>erkennt Personendaten"] --> LL["kleines lokales Modell<br/>ersetzt durch Platzhalter"]
+  end
+  CL["Cloud-Modelle"]
+  CX -->|"Aufgabe"| N
+  N -->|"Ergebnis"| CX
+  CX -->|"zu groß für lokal"| PR
+  LL -->|"bereinigte Anfrage"| CL
+  CL -->|"Antwort"| LL
+  LL -->|"zurückübersetzt"| CX
+```
+
+### Was daraus wurde
+
 Gebaut habe ich davon eine ganze Menge: **127 Commits in gut zwei Wochen**, ein
 Next.js-Dashboard mit Postgres, Alarm-Panel, Monitoring-Anbindung und einer Chat-Oberfläche
-mit Streaming. Danach war eine verteilte Architektur für mehrere Rechenknoten geplant.
+mit Streaming. Die verteilte Architektur mit Rechenknoten war als nächster Schritt
+ausgearbeitet.
 
-Im Juni habe ich den Stack komplett stillgelegt. Der offizielle Grund im Ticket: Weiter geht
-es erst mit neuer Hardware oder deutlich besseren lokalen Modellen. Ohne Grafikkarte liefen
-die lokalen Modelle nur auf der CPU, und das reichte für die Sub-Agenten nicht.
+Im Juni habe ich den Stack trotzdem komplett stillgelegt. Der Grund im Ticket: Weiter geht
+es erst mit neuer Hardware oder deutlich besseren lokalen Modellen. Cortex ist ein
+**Wunschkonzept** geblieben. Mit meiner Hardware und den öffentlichen Modellen, die darauf
+laufen, hätte das System meine Anforderungen nie erfüllt: Die Sub-Agenten wären entweder zu
+schwach gewesen oder hätten am Ende doch fast alles an die Cloud weitergereicht, nur mit
+mehr Umwegen.
 
-Im Rückblick war das aber nur der Auslöser. Das eigentliche Problem: **Ich hatte die
-Kommandozentrale gebaut, bevor ich wusste, was ich von ihr aus steuern will.** Zwölf Module
-für einen einzigen Nutzer, eigene Oberflächen für Tickets und Dokumentation, die neben
-Obsidian herlaufen, und eine Delegationskette, die vor allem schön aussah. Den Großteil des
-Mehrwerts lieferte am Ende das, was es ohnehin schon gab: Claude Code im Terminal.
+Im Rückblick steckt darin noch eine zweite Lektion: **Ich hatte die Kommandozentrale gebaut,
+bevor ich wusste, was ich von ihr aus steuern will.** Zwölf Module für einen einzigen
+Nutzer, eigene Oberflächen für Tickets und Dokumentation, die neben Obsidian herlaufen, und
+eine Delegationskette, die vor allem schön aussah. Den Großteil des Mehrwerts lieferte am
+Ende das, was es ohnehin schon gab: Claude Code im Terminal. Die Idee vom zentralen
+Interaktionspunkt habe ich aber nicht aufgegeben, sie ist nur auf einem anderen Weg
+zurückgekommen, wie Anlauf 3 zeigt.
 
 ## Anlauf 2: Drei Instanzen, ein geteiltes Gehirn (Juni bis September)
 

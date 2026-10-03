@@ -25,7 +25,7 @@ export default defineConfig({
     // Mermaid im Dark-Theme: dunkle Nodes + helle Labels — sonst rendert das
     // Default-Theme helle Nodes, deren Labels durch unsere Prose-Farben hell
     // werden (hell-auf-hell, unlesbar).
-    rehypePlugins: [[rehypeMermaid, { strategy: 'inline-svg', mermaidConfig: { theme: 'dark' } }]],
+    rehypePlugins: [[rehypeMermaid, { strategy: 'inline-svg', mermaidConfig: { theme: 'dark', htmlLabels: false, flowchart: { htmlLabels: false } } }]],
     syntaxHighlight: { type: 'shiki', excludeLangs: ['mermaid'] },
     // github-dark-default: hellerer Kommentar-Token (#8b949e) — erfüllt AA auf
     // unserem dunklen Code-Hintergrund (#120E1C); das alte Default github-dark
