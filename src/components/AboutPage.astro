@@ -1,0 +1,270 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { bothLangs, localePath, type Lang } from '../lib/i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const en = lang === 'en';
+
+const copy = {
+  de: {
+    title: 'Über mich — Lars Meykel Stuhlmacher',
+    description: 'Fachinformatiker Systemintegration (Ausbildung, Abschluss 2027). Wer ich bin, was ich baue, wie ich mit KI arbeite und wohin ich will.',
+    facts: [
+      ['Role',       'Fachinformatiker Systemintegration (i.&thinsp;A.)'],
+      ['Ausbildung', '3. Lehrjahr &middot; AP1: 87 Pkt. &middot; Abschluss vsl. Winter 2026/27'],
+      ['Studium',    'Bachelor Professional in IT (IHK) &mdash; seit 09/2026, berufsbegleitend'],
+      ['Zertifikate','KMK-Fremdsprachenzertifikat Englisch C1 &middot; Cisco CCNA (in Vorbereitung)'],
+      ['Location',   'Duisburg, Deutschland'],
+      ['Stack',      'Proxmox / Docker / OPNsense'],
+      ['Contact',    'contact@vugas.de'],
+      ['Ziel',       'IT-Security &amp; Netzwerke, KI im Einsatz, Ausbildereignung'],
+      ['Status',     'Offen f&uuml;r Junior-Positionen ab Abschluss'],
+      ['Unterlagen', 'Vollst&auml;ndige Bewerbungsunterlagen auf Anfrage'],
+    ],
+    nowItems: [
+      'Vorgezogene Abschlusspr&uuml;fung im Winter 2026/27, parallel der Bachelor Professional in IT',
+      'Claude-Host: zentraler KI-Arbeitsplatz im Homelab, mit dem Obsidian-Vault als gemeinsamem Ged&auml;chtnis',
+      'Paperless reparieren und den Dokumentenbestand nachscannen',
+    ],
+    builds: [
+      ['INFRA',  'Proxmox-Hypervisor, VLANs, Zero-Trust-Firewall via OPNsense, IPsec Site-to-Site (IKEv2).'],
+      ['MEDIA',  'Jellyfin-Medienserver mit *arr-Automatisierung &mdash; Metadaten, Untertitel (Bazarr), reproduzierbare Qualit&auml;tsprofile (Recyclarr), Hardware-Transcoding per NVENC.'],
+      ['AUTO',   'n8n-Workflows, lokale Modelle via Ollama, Claude Code und Claude API f&uuml;r komplexere Aufgaben.'],
+      ['TOOLS',  'Eigene MCP-Server f&uuml;r Claude Code, CLI-Tools, kleine Dashboards.'],
+    ],
+  },
+  en: {
+    title: 'About — Lars Meykel Stuhlmacher',
+    description: 'Apprentice IT specialist for system integration (graduating 2027). Who I am, what I build, how I work with AI and where I’m headed.',
+    facts: [
+      ['Role',       'IT specialist for system integration (apprentice)'],
+      ['Training',   '3rd year &middot; intermediate exam: 87/100 &middot; graduating winter 2026/27'],
+      ['Studies',    'Bachelor Professional in IT (IHK) &mdash; since 09/2026, part-time'],
+      ['Certificates','KMK foreign language certificate English C1 &middot; Cisco CCNA (in preparation)'],
+      ['Location',   'Duisburg, Germany'],
+      ['Stack',      'Proxmox / Docker / OPNsense'],
+      ['Contact',    'contact@vugas.de'],
+      ['Goals',      'IT security &amp; networking, AI in practice, trainer qualification'],
+      ['Status',     'Open to junior positions after graduation'],
+      ['Documents',  'Full application documents on request'],
+    ],
+    nowItems: [
+      'Early final exam in winter 2026/27, alongside the Bachelor Professional in IT',
+      'Claude host: a central AI workstation in the homelab, with the Obsidian vault as shared memory',
+      'Repairing Paperless and re-scanning the document archive',
+    ],
+    builds: [
+      ['INFRA',  'Proxmox hypervisor, VLANs, zero-trust firewall with OPNsense, IPsec site-to-site (IKEv2).'],
+      ['MEDIA',  'Jellyfin media server with *arr automation &mdash; metadata, subtitles (Bazarr), reproducible quality profiles (Recyclarr), hardware transcoding via NVENC.'],
+      ['AUTO',   'n8n workflows, local models via Ollama, Claude Code and the Claude API for more complex tasks.'],
+      ['TOOLS',  'My own MCP servers for Claude Code, CLI tools, small dashboards.'],
+    ],
+  },
+}[lang];
+const { facts, nowItems, builds } = copy;
+---
+
+
+<BaseLayout title={copy.title} description={copy.description} lang={lang} alternates={bothLangs('/about/')}>
+
+  <header class="pt-6 md:pt-10 pb-16 border-b border-(--color-border)">
+    <div class="rise rise-1 section-num mb-5">05 // OPERATOR / PROFILE</div>
+    <div class="grid grid-cols-12 gap-6 md:gap-10">
+      <div class="col-span-12 md:col-span-8">
+        <h1 class="rise rise-2 display-xl">
+          Lars Meykel<br/><span style="color: var(--color-accent);">Stuhlmacher</span>.
+        </h1>
+        <p class="rise rise-3 text-(--color-text-soft) text-[0.98rem] leading-[1.65] max-w-[62ch] mt-8"
+           style="font-family: var(--font-sans)">
+          {en
+            ? <>After completing a first IT qualification as a state-certified computer scientist in
+                multimedia (application development for web &amp; games), I&rsquo;m currently doing my
+                second apprenticeship: IT specialist for system integration (3rd&nbsp;year, early final
+                exam in winter 2026/27) &mdash; administration and development from one source. Since
+                September 2026, I&rsquo;ve also been studying part-time for the Bachelor Professional in IT,
+                and I&rsquo;m preparing for the Cisco CCNA. What I learn at work, I deepen at home: I build
+                and run my own infrastructure &mdash; from VLAN segmentation to my own AI workstation
+                &mdash; and write everything down so others can rebuild it.</>
+            : <>Nach abgeschlossener IT-Ausbildung zum Staatlich gepr&uuml;ften Informatiker Multimedia
+                (Anwendungsentwicklung Web &amp; Games) mache ich aktuell meine zweite Ausbildung:
+                Fachinformatiker f&uuml;r Systemintegration (3.&nbsp;Lehrjahr, vorgezogene
+                Abschlusspr&uuml;fung im Winter 2026/27) &mdash; Administration und Entwicklung aus einer
+                Hand. Seit September 2026 studiere ich berufsbegleitend f&uuml;r den Bachelor Professional
+                in IT, parallel bereite ich mich auf den Cisco CCNA vor. Was ich im Beruf lerne, vertiefe
+                ich zuhause: Ich baue und betreibe eine eigene Infrastruktur &mdash; von der
+                VLAN-Segmentierung bis zum eigenen KI-Arbeitsplatz &mdash; und schreibe dabei alles auf,
+                damit andere es nachbauen k&ouml;nnen.</>}
+        </p>
+      </div>
+
+      <aside class="col-span-12 md:col-span-4 md:pt-3">
+        <div class="rise rise-4 rule mb-5"><span>File</span></div>
+        <dl class="rise rise-5 grid grid-cols-[auto_1fr] gap-x-5 gap-y-3.5"
+            style="font-family: var(--font-mono)">
+          {facts.map(([k, v]) => (
+            <>
+              <dt class="text-(--color-muted-deep) text-[0.64rem] tracking-[0.18em] uppercase pt-0.5">{k}</dt>
+              <dd class="text-(--color-text-soft) text-[0.82rem] leading-snug" set:html={v}></dd>
+            </>
+          ))}
+        </dl>
+      </aside>
+    </div>
+  </header>
+
+  <section class="grid grid-cols-12 gap-y-10 md:gap-x-10 py-16 border-b border-(--color-border)">
+    <div class="col-span-12 md:col-span-7">
+      <div class="rule mb-6"><span>What I Build</span></div>
+      <ul>
+        {builds.map(([k, v]) => (
+          <li class="grid grid-cols-[6rem_1fr] gap-5 py-4 border-t border-(--color-border)">
+            <span class="text-(--color-accent) text-[0.68rem] tracking-[0.22em] uppercase pt-1"
+                  style="font-family: var(--font-mono)">{k}</span>
+            <p class="text-(--color-text-soft) leading-[1.6] text-[0.9rem]"
+               style="font-family: var(--font-sans)" set:html={v}></p>
+          </li>
+        ))}
+      </ul>
+      <div class="border-b border-(--color-border)"></div>
+    </div>
+
+    <div class="col-span-12 md:col-span-5">
+      <div class="rule rule-accent mb-6"><span>/NOW</span></div>
+      <ul>
+        {nowItems.map((n, i) => (
+          <li class="flex items-baseline gap-4 py-3 border-t border-(--color-border)">
+            <span class="text-(--color-muted-deep) text-[0.66rem] tabular-nums tracking-[0.1em] shrink-0"
+                  style="font-family: var(--font-mono)">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <span class="text-(--color-text-soft) text-[0.9rem] leading-[1.55]"
+                  style="font-family: var(--font-sans)" set:html={n}></span>
+          </li>
+        ))}
+      </ul>
+      <div class="border-b border-(--color-border)"></div>
+    </div>
+  </section>
+
+  <section id="ki" class="py-16 border-b border-(--color-border) scroll-mt-24">
+    <div class="rule rule-accent mb-8"><span>/AI</span></div>
+    <div class="grid grid-cols-12 gap-6 md:gap-10">
+      <div class="col-span-12 md:col-span-8">
+        <h2 class="display-lg mb-8" style="max-width: 16ch;">
+          {en
+            ? <>How I work with <span style="color: var(--color-accent);">AI</span>.</>
+            : <>Wie ich mit <span style="color: var(--color-accent);">KI</span> arbeite.</>}
+        </h2>
+        <div class="space-y-5 text-(--color-text-soft) text-[0.96rem] leading-[1.7] max-w-[64ch]"
+             style="font-family: var(--font-sans)">
+          <p>
+            {en
+            ? <>To me, AI is a lever, not an autopilot. I use it to delegate work, not thinking —
+            architecture, decisions and responsibility for the result stay with me. Where possible, it
+            runs locally on my own network; I use cloud models deliberately where they make the
+            difference, without handing over my data. Neither hype nor a reflexive no: I check where AI
+            creates real value and see through the rest. That way I build more and learn faster — and
+            remain the person who understands what they ship.</>
+            : <>KI ist für mich ein Hebel, kein Autopilot. Ich delegiere damit Arbeit, nicht das
+            Denken — Architektur, Entscheidungen und die Verantwortung fürs Ergebnis bleiben bei
+            mir. Wo es geht, läuft sie lokal im eigenen Netz; Cloud-Modelle setze ich gezielt dort
+            ein, wo sie den Unterschied machen, ohne meine Daten aus der Hand zu geben. Weder Hype
+            noch Reflex-Nein: ich prüfe, wo KI echten Wert schafft, und durchschaue den Rest. So
+            baue ich mehr und lerne schneller — und bleibe die Person, die versteht, was sie
+            ausliefert.</>}
+          </p>
+          <p>
+            {en
+            ? <>With code, this applies twice over. Generating code, text and config with AI is an
+            enormous accelerator — but the output is a proposal, not a result. The difference is made
+            in the review: vibe coding without review produces tech debt and security holes that only
+            show up in production; with consistent proofreading, tests and a real understanding of
+            what the code does, the same speed becomes a reliable lever. I let AI generate — but I take
+            responsibility for every line as if I had written it myself.</>
+            : <>Beim Code gilt das doppelt. Code, Text und Config mit KI zu generieren, ist ein
+            enormer Beschleuniger — aber der Output ist ein Vorschlag, kein Ergebnis. Der
+            Unterschied entscheidet sich an der Gegenprüfung: Vibe-Coding ohne Review produziert
+            Tech-Debt und Sicherheitslücken, die erst im Betrieb auffallen; mit konsequentem
+            Gegenlesen, Tests und einem echten Verständnis dafür, was der Code tut, wird dieselbe
+            Geschwindigkeit zum verlässlichen Hebel. Ich lasse generieren — aber ich verantworte
+            jede Zeile, als hätte ich sie selbst geschrieben.</>}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="weg" class="py-16 border-b border-(--color-border) scroll-mt-24">
+    <div class="rule rule-accent mb-8"><span>/NEXT</span></div>
+    <div class="grid grid-cols-12 gap-6 md:gap-10">
+      <div class="col-span-12 md:col-span-8">
+        <h2 class="display-lg mb-8" style="max-width: 18ch;">
+          {en
+            ? <>Where I&rsquo;m <span style="color: var(--color-accent);">headed</span>.</>
+            : <>Wohin es <span style="color: var(--color-accent);">geht</span>.</>}
+        </h2>
+        <div class="space-y-5 text-(--color-text-soft) text-[0.96rem] leading-[1.7] max-w-[64ch]"
+             style="font-family: var(--font-sans)">
+          {en ? (
+            <>
+              <p>
+                IT and especially AI are fun for me in their own right. But what excites me just as much
+                is teaching others: learning together, growing together &mdash; and above all, sparking
+                that &ldquo;aha&rdquo; moment in someone else. That was also the idea behind my
+                <a href={localePath(lang, '/projects/dns-schulung')} class="text-(--color-accent) hover:underline">DNS training</a>:
+                a broken lab where you work it out yourself instead of a tutorial to tick off.
+              </p>
+              <p>
+                That&rsquo;s why the Bachelor Professional in IT is about more than deepening my technical
+                knowledge for me: along the way, I want to earn my trainer qualification (AEVO) and later
+                work as a trainer for apprentices.
+              </p>
+              <p>
+                On the technical side, there are two directions. I want to go much further into AI and try
+                out where it is genuinely useful &mdash; real use cases instead of demos. And I want to
+                specialise in IT security and networking. Both are incredibly complex fields, but they&rsquo;re
+                not only the ones I enjoy most, they&rsquo;re also where I think I&rsquo;m already strongest.
+              </p>
+            </>
+          ) : (
+            <>
+              <p>
+                Mir macht nicht nur IT und gerade KI an sich Spa&szlig;. Genauso begeistert mich, anderen
+                etwas beizubringen: gemeinsam lernen, gemeinsam wachsen &mdash; und am meisten freut mich
+                dieser &bdquo;Aha&ldquo;-Moment bei anderen. Genau das war auch die Idee hinter meiner
+                <a href={localePath(lang, '/projects/dns-schulung')} class="text-(--color-accent) hover:underline">DNS-Schulung</a>:
+                ein kaputtes Lab, in dem man selbst draufkommt, statt einer Anleitung zum Abarbeiten.
+              </p>
+              <p>
+                Deshalb will ich mit dem Bachelor Professional in IT nicht nur mein fachliches Wissen
+                vertiefen, sondern ihn auch nutzen, um meine Ausbildereignung (AEVO) zu erwerben und
+                sp&auml;ter als Ausbilder t&auml;tig zu werden.
+              </p>
+              <p>
+                Fachlich gibt es zwei Richtungen. Ich will noch viel weiter in Richtung KI gehen und
+                erproben, wo sie wirklich sinnvoll ist &mdash; echte Anwendungsf&auml;lle statt Demos. Und
+                ich will mich auf IT-Security und Netzwerke spezialisieren. Das sind unfassbar komplexe
+                Themengebiete, die mir aber nicht nur Spa&szlig; machen, sondern in denen ich mich auch
+                schon am st&auml;rksten aufgestellt sehe.
+              </p>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pt-16 pb-10">
+    <div class="rule mb-8"><span>Philosophy</span></div>
+    <blockquote class="pl-0">
+      <p class="display-lg"
+         style="font-size: clamp(2.4rem, 1.6rem + 3.8vw, 4.2rem); line-height: 0.95; max-width: 22ch; color: var(--color-text);">
+        {en
+            ? <>You learn by building.<br/>And then by <span style="color: var(--color-accent);">writing it down</span>.</>
+            : <>Man lernt durch Bauen.<br/>Und dann durch <span style="color: var(--color-accent);">Aufschreiben</span>.</>}
+      </p>
+    </blockquote>
+  </section>
+
+</BaseLayout>

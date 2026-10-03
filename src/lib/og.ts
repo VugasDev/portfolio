@@ -1,5 +1,4 @@
-import { getCollection } from 'astro:content';
-import { hasDetailPage } from './projects';
+import { getProjects, getCaseStudies, hasDetailPage } from './projects';
 import { publishedBlog, publishedGuides } from './translations';
 
 export interface OgEntry {
@@ -24,27 +23,39 @@ const STATIC_PAGES: OgEntry[] = [
   { slug: 'en-blog',   title: 'Notes from the Lab', kicker: 'LOG' },
   { slug: 'en-guides', title: 'Guides',             kicker: 'GUIDES' },
   { slug: 'cv',       title: 'Auf einen Blick',    kicker: 'FÜR ARBEITGEBER' },
+  { slug: 'en',          title: 'Homelab · Self-Hosting · AI Agents', kicker: 'VUGAS.DE / UNIT-01' },
+  { slug: 'en-about',    title: 'Operator',      kicker: 'OPERATOR' },
+  { slug: 'en-projects', title: 'What I build',  kicker: 'PROJECTS' },
+  { slug: 'en-cv',       title: 'At a glance',   kicker: 'FOR EMPLOYERS' },
   { slug: 'impressum',   title: 'Impressum',   kicker: 'LEGAL' },
   { slug: 'datenschutz', title: 'Datenschutz', kicker: 'LEGAL' },
 ];
 
+async function projectEntries(prefix: string, lang: 'de' | 'en'): Promise<OgEntry[]> {
+  const [caseStudies, projects] = await Promise.all([getCaseStudies(lang), getProjects(lang)]);
+  const studySlugs = new Set(caseStudies.map(c => c.id));
+  return [
+    ...caseStudies.map(c => ({ slug: `${prefix}projects-${c.id}`, title: c.data.title, kicker: 'CASE STUDY' })),
+    ...projects
+      .filter(p => !studySlugs.has(p.id) && hasDetailPage(p, studySlugs))
+      .map(p => ({ slug: `${prefix}projects-${p.id}`, title: p.data.name, kicker: 'PROJECT' })),
+  ];
+}
+
 export async function getAllOgEntries(): Promise<OgEntry[]> {
-  const [{ de: blog, en: blogEn }, { de: guides, en: guidesEn }, caseStudies, projects] = await Promise.all([
+  const [{ de: blog, en: blogEn }, { de: guides, en: guidesEn }, projectsDe, projectsEn] = await Promise.all([
     publishedBlog(),
     publishedGuides(),
-    getCollection('caseStudies', ({ data }) => !data.draft),
-    getCollection('projects'),
+    projectEntries('', 'de'),
+    projectEntries('en-', 'en'),
   ]);
-  const studySlugs = new Set(caseStudies.map(c => c.id));
   return [
     ...STATIC_PAGES,
     ...blog.map(p => ({ slug: `blog-${p.id}`, title: p.data.title, kicker: 'LOG' })),
     ...guides.map(g => ({ slug: `guides-${g.id}`, title: g.data.title, kicker: 'GUIDES' })),
     ...blogEn.map(p => ({ slug: `en-blog-${p.id}`, title: p.data.title, kicker: 'LOG' })),
     ...guidesEn.map(g => ({ slug: `en-guides-${g.id}`, title: g.data.title, kicker: 'GUIDES' })),
-    ...caseStudies.map(c => ({ slug: `projects-${c.id}`, title: c.data.title, kicker: 'CASE STUDY' })),
-    ...projects
-      .filter(p => !studySlugs.has(p.id) && hasDetailPage(p, studySlugs))
-      .map(p => ({ slug: `projects-${p.id}`, title: p.data.name, kicker: 'PROJECT' })),
+    ...projectsDe,
+    ...projectsEn,
   ];
 }

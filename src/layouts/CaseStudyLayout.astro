@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import Toc from '../components/Toc.astro';
+import { localePath, statusLabel, t, type Lang } from '../lib/i18n';
 
 interface Props {
   title: string;
@@ -13,23 +14,32 @@ interface Props {
   screenshots: { src: string; alt: string }[];
   headings?: { depth: number; slug: string; text: string }[];
   kicker?: string;
+  lang?: Lang;
+  alternates?: { lang: Lang; href: string }[];
 }
-const { title, description, status, tags, stack, github, url, screenshots, headings = [], kicker = 'Case Study' } = Astro.props;
+const { title, description, status, tags, stack, github, url, screenshots, headings = [], kicker = 'Case Study', lang = 'de', alternates = [] } = Astro.props;
+const other = alternates.find(a => a.lang !== lang);
 ---
-<BaseLayout title={title} description={description} ogType="article" tags={tags}>
+<BaseLayout title={title} description={description} ogType="article" tags={tags} lang={lang} alternates={alternates}>
 
   <nav class="pt-4 mb-10 flex items-center gap-3 text-[0.68rem] tracking-[0.14em] uppercase"
        style="font-family: var(--font-display)">
-    <a href="/projects" class="text-(--color-muted) hover:text-(--color-accent) transition-colors">&larr; Projects</a>
+    <a href={localePath(lang, '/projects')} class="text-(--color-muted) hover:text-(--color-accent) transition-colors">&larr; Projects</a>
     <span class="text-(--color-border-strong)">/</span>
     <span class="text-(--color-muted-deep)">{kicker}</span>
+    {other && (
+      <a href={other.href} hreflang={other.lang} lang={other.lang} data-lang-switch
+         class="ml-auto text-(--color-accent) hover:underline normal-case tracking-normal text-[0.78rem]">
+        {t[lang].switchLabel} &rarr;
+      </a>
+    )}
   </nav>
 
   <div class="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-10">
 
     <!-- Sidebar TOC -->
     <aside class="hidden md:block">
-      <Toc headings={headings} />
+      <Toc headings={headings} lang={lang} />
     </aside>
 
     <!-- Main content -->
@@ -38,7 +48,7 @@ const { title, description, status, tags, stack, github, url, screenshots, headi
         <div class="rise rise-1 section-num mb-5">{kicker}</div>
         <div class="flex items-start justify-between gap-4">
           <h1 class="rise rise-2 display-lg" style="font-size: clamp(2rem, 1.4rem + 2.6vw, 3.4rem);">{title}</h1>
-          <span class="tag tag-accent whitespace-nowrap shrink-0 mt-2">{status}</span>
+          <span class="tag tag-accent whitespace-nowrap shrink-0 mt-2">{statusLabel(status, lang)}</span>
         </div>
         <p class="rise rise-3 text-(--color-text-soft) text-[0.98rem] leading-[1.65] max-w-[62ch] mt-6"
            style="font-family: var(--font-sans)">{description}</p>
@@ -71,7 +81,7 @@ const { title, description, status, tags, stack, github, url, screenshots, headi
             ))}
           </div>
         ) : (
-          <p class="text-(--color-muted) text-[0.85rem]" style="font-family: var(--font-mono)">// noch keine Screenshots</p>
+          <p class="text-(--color-muted) text-[0.85rem]" style="font-family: var(--font-mono)">{lang === 'en' ? '// no screenshots yet' : '// noch keine Screenshots'}</p>
         )}
       </section>
     </div>

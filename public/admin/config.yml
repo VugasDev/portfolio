@@ -9,8 +9,9 @@ backend:
 # Sichtbarkeit steuert allein das Frontmatter-Feld `draft` (Astro-Filter).
 # Der Review-Schritt ist durch den blogpost-Skill-Push mit draft:true abgebildet.
 
-# Zweisprachigkeit (Blog & Guides): Deutsch in <slug>.md, Englisch daneben in <slug>.en.md.
-# Die englische Fassung geht nur live, wenn sie selbst UND die deutsche veröffentlicht sind.
+# Zweisprachigkeit (Blog, Guides, Projekte): Deutsch in <slug>.md, Englisch daneben in <slug>.en.md.
+# Blog/Guides: Die englische Fassung geht nur live, wenn sie selbst UND die deutsche veröffentlicht sind.
+# Projekte: Ein Projekt ohne englische Datei fehlt auf /en/projects (ein Test schlägt dann an).
 i18n:
   structure: multiple_files
   locales: [de, en]
@@ -84,18 +85,20 @@ collections:
     create: true
     extension: md
     format: frontmatter
+    i18n: true
     sortable_fields:
       fields: [commit_date, name]
       default: { field: commit_date, direction: descending }
     fields:
-      - { name: name,        label: Name,            widget: string }
-      - { name: description, label: Beschreibung,    widget: string }
-      - { name: details,     label: Details (Hover-Overlay), widget: text, required: false }
-      - { name: tags,        label: Tags,            widget: list }
+      - { name: name,        label: Name,            widget: string, i18n: true }
+      - { name: description, label: Beschreibung,    widget: string, i18n: true }
+      - { name: details,     label: Details (Hover-Overlay), widget: text, required: false, i18n: true }
+      - { name: tags,        label: Tags,            widget: list, i18n: duplicate }
       - name: status
         label: Status
         widget: select
         options: [aktiv, "in Arbeit", Planung, archiviert]
-      - { name: github,      label: GitHub URL,      widget: string, required: false }
-      - { name: url,         label: Live URL,        widget: string, required: false }
-      - { name: body,        label: Detailseiten-Text (optional), widget: markdown, required: false }
+        i18n: duplicate
+      - { name: github,      label: GitHub URL,      widget: string, required: false, i18n: duplicate }
+      - { name: url,         label: Live URL,        widget: string, required: false, i18n: duplicate }
+      - { name: body,        label: Detailseiten-Text (optional), widget: markdown, required: false, i18n: true }

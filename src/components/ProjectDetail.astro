@@ -1,0 +1,43 @@
+---
+import { render } from 'astro:content';
+import CaseStudyLayout from '../layouts/CaseStudyLayout.astro';
+import { localePath, type Lang } from '../lib/i18n';
+import type { DetailProps } from '../lib/projects';
+
+interface Props extends DetailProps { lang: Lang }
+const { study, project, altHref, lang } = Astro.props;
+const source = (study ?? project)!;
+const { Content, headings } = await render(source);
+const hasBody = !!source.body?.trim();
+const slug = source.id;
+const otherLang: Lang = lang === 'de' ? 'en' : 'de';
+const alternates = altHref
+  ? [{ lang, href: localePath(lang, `/projects/${slug}/`) }, { lang: otherLang, href: altHref }]
+  : [];
+
+const layoutProps = study
+  ? {
+      kicker: 'Case Study',
+      title: study.data.title,
+      description: study.data.description,
+      status: study.data.status,
+      tags: study.data.tags,
+      stack: study.data.stack,
+      github: study.data.github,
+      screenshots: study.data.screenshots,
+    }
+  : {
+      kicker: lang === 'en' ? 'Project' : 'Projekt',
+      title: project!.data.name,
+      description: project!.data.description,
+      status: project!.data.status,
+      tags: project!.data.tags,
+      stack: project!.data.tags,
+      github: project!.data.github,
+      url: project!.data.url,
+      screenshots: [] as { src: string; alt: string }[],
+    };
+---
+<CaseStudyLayout {...layoutProps} headings={headings} lang={lang} alternates={alternates}>
+  {hasBody ? <Content /> : project?.data.details && <p>{project.data.details}</p>}
+</CaseStudyLayout>

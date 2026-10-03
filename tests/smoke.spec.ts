@@ -65,8 +65,8 @@ test('unbekannte URL rendert die 404-Seite', async ({ page }) => {
   await expect(page.locator('h1')).toContainText(/not found/i);
 });
 
-test('Arbeitgeber-Seite: Lebenslauf-PDF erreichbar, Belege ohne tote Links', async ({ page, request }) => {
-  const res = await page.goto('/cv');
+for (const path of ['/cv', '/en/cv']) test(`Arbeitgeber-Seite ${path}: Lebenslauf-PDF erreichbar, Belege ohne tote Links`, async ({ page, request }) => {
+  const res = await page.goto(path);
   expect(res?.status()).toBe(200);
   await expect(page.locator('h1').first()).toBeVisible();
 

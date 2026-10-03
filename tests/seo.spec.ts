@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const MAIN = ['/', '/about', '/projects', '/blog', '/guides', '/cv'];
+const MAIN = ['/', '/about', '/projects', '/blog', '/guides', '/cv', '/en', '/en/about', '/en/projects', '/en/blog', '/en/guides', '/en/cv'];
 const BASE = 'https://vugas.de';
 
 for (const path of MAIN) {

@@ -18,7 +18,7 @@ self-hosted, ohne Cloud, sauber in ein VLAN-segmentiertes Homelab integriert.
 
 ## Architektur
 
-Alles läuft in einem unprivilegierten Proxmox-LXC (114, `10.17.10.14`, VLAN 10 SRV) auf
+Alles läuft in einem unprivilegierten Proxmox-LXC im Server-VLAN auf
 linuxserver.io-Images. Jellyseerr nimmt Wünsche aus dem Haushalt entgegen, die *arr-Suite
 automatisiert Organisation, Umbenennung, Metadaten und Bibliotheks-Monitoring, Recyclarr
 erzwingt reproduzierbare TRaSH-Guide-Qualitätsprofile, Bazarr ergänzt Untertitel, Jellyfin
@@ -38,7 +38,7 @@ flowchart LR
 
 Jellyfin als Medienserver, Sonarr/Radarr/Prowlarr für Bibliotheks-Automatisierung und
 Metadaten, SABnzbd als Download-Client, Recyclarr für reproduzierbare Qualitätsprofile,
-Bazarr für mehrsprachige Untertitel — als Container im LXC 114 (Debian 12, 4 vCPU / 8 GB),
+Bazarr für mehrsprachige Untertitel — als Container in einem LXC (Debian 12, 4 vCPU / 8 GB),
 Storage auf ZFS (`tank-storage`).
 
 ## Learnings
@@ -47,6 +47,7 @@ Storage auf ZFS (`tank-storage`).
   Sicherheit und Hardware-Zugriff — kein voller privilegierter Container nötig.
 - **Recyclarr** macht Qualitätsprofile versionier- und reproduzierbar, statt sie manuell in
   jeder *arr-App zu pflegen.
-- **VLAN-Segmentierung (VLAN 10 SRV)** trennt die Media-Dienste sauber vom restlichen Netz.
-- **GPU-Transcoding (NVIDIA NVENC)** steht noch aus — CPU-Transcoding reicht aktuell, der
-  Treiber-Durchgriff auf den Host ist der nächste Schritt.
+- **VLAN-Segmentierung (eigenes Server-VLAN)** trennt die Media-Dienste sauber vom restlichen Netz.
+- **GPU-Transcoding (NVIDIA NVENC)** läuft seit Juni: Die GTX 1050 des Hosts ist per
+  Device-Mount in den unprivilegierten LXC durchgereicht, NVENC samt Tone-Mapping schafft
+  im Test rund 4,5-fache Echtzeit.

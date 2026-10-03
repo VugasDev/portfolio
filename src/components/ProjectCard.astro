@@ -1,4 +1,6 @@
 ---
+import { statusLabel, type Lang } from '../lib/i18n';
+
 interface Props {
   name: string;
   description: string;
@@ -9,9 +11,14 @@ interface Props {
   url?: string;
   detailHref?: string;
   hasCaseStudy?: boolean;
+  lang?: Lang;
 }
-const { name, description, details, tags, status, github, url, detailHref, hasCaseStudy } = Astro.props;
-const moreLabel = hasCaseStudy ? 'Case Study lesen' : 'Mehr erfahren';
+const { name, description, details, tags, status, github, url, detailHref, hasCaseStudy, lang = 'de' } = Astro.props;
+const en = lang === 'en';
+const moreLabel = hasCaseStudy ? (en ? 'Read case study' : 'Case Study lesen') : (en ? 'Learn more' : 'Mehr erfahren');
+const markTitle = hasCaseStudy
+  ? (en ? 'Case study available' : 'Case Study verfügbar')
+  : (en ? 'More details available' : 'Mehr Details verfügbar');
 ---
 
 <article class="card group flex flex-col gap-3">
@@ -23,10 +30,10 @@ const moreLabel = hasCaseStudy ? 'Case Study lesen' : 'Mehr erfahren';
           style="font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">
         {name}
         {detailHref && (
-          <span class="case-mark" title={hasCaseStudy ? 'Case Study verfügbar' : 'Mehr Details verfügbar'} aria-hidden="true">&#10022;</span>
+          <span class="case-mark" title={markTitle} aria-hidden="true">&#10022;</span>
         )}
       </h3>
-      <span class="tag tag-accent whitespace-nowrap shrink-0">{status}</span>
+      <span class="tag tag-accent whitespace-nowrap shrink-0">{statusLabel(status, lang)}</span>
     </div>
 
     <p class="text-[0.85rem] text-(--color-muted) leading-[1.55] max-w-[60ch]"

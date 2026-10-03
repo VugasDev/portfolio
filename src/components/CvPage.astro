@@ -1,0 +1,276 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getProjects, getCaseStudySlugs, hasDetailPage } from '../lib/projects';
+import { publishedBlog, publishedGuides } from '../lib/translations';
+import { bothLangs, localePath, type Lang } from '../lib/i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const en = lang === 'en';
+const lp = (path: string) => localePath(lang, path);
+
+// Belege nur verlinken, wenn die Zielseite in dieser Sprache im Build existiert
+// (Entwürfe und fehlende Übersetzungen erzeugen keine Seite).
+const studySlugs = await getCaseStudySlugs(lang);
+const projectPages = (await getProjects(lang))
+  .filter(p => hasDetailPage(p, studySlugs))
+  .map(p => lp(`/projects/${p.id}`));
+const blog = await publishedBlog();
+const guides = await publishedGuides();
+const blogPages = (en ? blog.en : blog.de).map(p => lp(`/blog/${p.id}`));
+const guidePages = (en ? guides.en : guides.de).map(g => lp(`/guides/${g.id}`));
+const existing = new Set([...projectPages, ...[...studySlugs].map(s => lp(`/projects/${s}`)), ...blogPages, ...guidePages]);
+
+type Proof = { href: string; label: string };
+type Competence = { area: string; text: string; proofs: Proof[] };
+
+const competencesDe: Competence[] = [
+  {
+    area: 'Netzwerk & Security',
+    text: 'OPNsense mit sechs VLANs und Default-Deny: Jede Zone sieht nur, was explizit erlaubt ist. DNS ist erzwungen, Inter-VLAN-Zugriffe sind dokumentiert.',
+    proofs: [
+      { href: '/projects/firewall', label: 'Zero-Trust-Firewall' },
+      { href: '/guides/vlan-zero-trust-opnsense', label: 'Guide: VLANs & Zero Trust' },
+    ],
+  },
+  {
+    area: 'Virtualisierung & Betrieb',
+    text: 'Proxmox VE mit Containern und VMs, Reverse-Proxy mit SSO, Monitoring. Vom flachen Netz zur segmentierten VLAN-Topologie migriert.',
+    proofs: [
+      { href: '/projects/netzwerk-upgrade', label: 'Netzwerk-Upgrade' },
+      { href: '/blog/homelab-sso-pangolin-authentik', label: 'SSO mit Pangolin & Authentik' },
+    ],
+  },
+  {
+    area: 'Backup & Wiederherstellung',
+    text: '3-2-1-Prinzip mit verschlüsseltem Offsite-Backup (restic) und automatisierten monatlichen Restore-Tests. Ein Backup zählt erst, wenn das Zurückspielen geprobt ist.',
+    proofs: [
+      { href: '/guides/backup-konzept-3-2-1', label: 'Guide: Backup-Konzept 3-2-1' },
+    ],
+  },
+  {
+    area: 'Fehleranalyse & Dokumentation',
+    text: 'Störungen werden bei mir nicht nur behoben, sondern aufgeschrieben: Symptom, Ursache, Lösung, Lehre. Daraus entsteht die Reihe „Stolpersteine“.',
+    proofs: [
+      { href: '/blog/proxmox-startreihenfolge-dns', label: 'Stolperstein: 404 nach dem Reboot' },
+      { href: '/blog/adguard-rate-limit-pro-subnetz', label: 'Stolperstein: Rate-Limit für ein ganzes VLAN' },
+    ],
+  },
+  {
+    area: 'Wissen vermitteln',
+    text: 'DNS-Schulung für die Klasse als Capture-the-Flag: 27 Teilnehmende in sieben Teams, eigenes Docker-Lab mit Live-Leaderboard. Bewertet mit 1+.',
+    proofs: [
+      { href: '/projects/dns-schulung', label: 'Case Study: DNS-Schulungs-Lab' },
+    ],
+  },
+  {
+    area: 'Anwendungsverständnis',
+    text: 'Vor der Systemintegration bereits Staatlich geprüfter Informatiker (Anwendungsentwicklung). Ich betreibe Systeme nicht nur, ich verstehe auch die Software darauf.',
+    proofs: [
+      { href: '/projects/stundenplan', label: 'Stundenplan-App' },
+      { href: '/projects/ccna-lernplattform', label: 'CCNA-Lernplattform' },
+    ],
+  },
+];
+
+const competencesEn: Competence[] = [
+  {
+    area: 'Networking & security',
+    text: 'OPNsense with six VLANs and default deny: each zone sees only what is explicitly allowed. DNS is enforced, inter-VLAN access is documented.',
+    proofs: [
+      { href: '/projects/firewall', label: 'Zero-trust firewall' },
+      { href: '/guides/vlan-zero-trust-opnsense', label: 'Guide: VLANs & zero trust' },
+    ],
+  },
+  {
+    area: 'Virtualization & operations',
+    text: 'Proxmox VE with containers and VMs, reverse proxy with SSO, monitoring. Migrated from a flat network to a segmented VLAN topology.',
+    proofs: [
+      { href: '/projects/netzwerk-upgrade', label: 'Network upgrade' },
+      { href: '/blog/homelab-sso-pangolin-authentik', label: 'SSO with Pangolin & Authentik' },
+    ],
+  },
+  {
+    area: 'Backup & recovery',
+    text: '3-2-1 principle with encrypted off-site backup (restic) and automated monthly restore tests. A backup only counts once restoring it has been rehearsed.',
+    proofs: [
+      { href: '/guides/backup-konzept-3-2-1', label: 'Guide: 3-2-1 backup concept' },
+    ],
+  },
+  {
+    area: 'Troubleshooting & documentation',
+    text: 'I don’t just fix incidents, I write them up: symptom, cause, fix, lesson. That’s where the “Pitfalls” series comes from.',
+    proofs: [
+      { href: '/blog/proxmox-startreihenfolge-dns', label: 'Pitfall: 404 after the reboot' },
+      { href: '/blog/adguard-rate-limit-pro-subnetz', label: 'Pitfall: a rate limit for an entire VLAN' },
+    ],
+  },
+  {
+    area: 'Teaching',
+    text: 'A DNS training for my class as a capture-the-flag: 27 participants in seven teams, my own Docker lab with a live leaderboard. Graded 1+ (top grade).',
+    proofs: [
+      { href: '/projects/dns-schulung', label: 'Case study: DNS training lab' },
+    ],
+  },
+  {
+    area: 'Software know-how',
+    text: 'Before system integration, I qualified as a state-certified computer scientist (application development). I don’t just run systems, I also understand the software on them.',
+    proofs: [
+      { href: '/projects/stundenplan', label: 'Timetable app' },
+      { href: '/projects/ccna-lernplattform', label: 'CCNA learning platform' },
+    ],
+  },
+];
+
+const competences = (en ? competencesEn : competencesDe).map(c => ({
+  ...c,
+  proofs: c.proofs.map(p => ({ ...p, href: lp(p.href) })).filter(p => existing.has(p.href)),
+}));
+
+const facts = en
+  ? [
+      { value: '87', unit: '/100', label: 'Intermediate exam (IHK, Part 1)' },
+      { value: '1+', unit: '', label: 'Grade for the DNS training' },
+      { value: 'C1', unit: '', label: 'English, KMK-certified (oral 30/30)' },
+      { value: '26/27', unit: '', label: 'Final exam in winter, brought forward by 6 months' },
+    ]
+  : [
+      { value: '87', unit: 'Punkte', label: 'Abschlussprüfung Teil 1 (IHK)' },
+      { value: '1+', unit: '', label: 'Note für die DNS-Schulung' },
+      { value: 'C1', unit: '', label: 'Englisch, KMK-zertifiziert (mündlich 30/30)' },
+      { value: '26/27', unit: '', label: 'Abschlussprüfung im Winter, um 6 Monate vorgezogen' },
+    ];
+
+const stations = en
+  ? [
+      { when: 'since 09/2026', what: 'Bachelor Professional in IT (IHK)', where: 'part-time, evenings' },
+      { when: 'since 09/2024', what: 'Apprenticeship: IT specialist for system integration', where: 'UFP Deutschland GmbH · Berufskolleg Uerdingen' },
+      { when: '07–12/2023', what: 'Fraud Analyst', where: 'TARGO Dienstleistungs GmbH' },
+      { when: '11/2022–04/2023', what: 'Soldier, signaller', where: 'German Armed Forces (Bundeswehr)' },
+      { when: '06–10/2021', what: 'Web developer', where: 'Qwellcode GmbH' },
+      { when: '2018–2021', what: 'State-certified computer scientist, multimedia', where: 'b.i.b. International College' },
+    ]
+  : [
+      { when: 'seit 09/2026', what: 'Bachelor Professional in IT (IHK)', where: 'berufsbegleitend, abends' },
+      { when: 'seit 09/2024', what: 'Ausbildung Fachinformatiker Systemintegration', where: 'UFP Deutschland GmbH · Berufskolleg Uerdingen' },
+      { when: '07–12/2023', what: 'Fraud Analyst', where: 'TARGO Dienstleistungs GmbH' },
+      { when: '11/2022–04/2023', what: 'Soldat, Fernmelder', where: 'Bundeswehr' },
+      { when: '06–10/2021', what: 'Webentwickler', where: 'Qwellcode GmbH' },
+      { when: '2018–2021', what: 'Staatlich geprüfter Informatiker Multimedia', where: 'b.i.b. International College' },
+    ];
+
+const cvHref = en ? '/downloads/Resume_Lars_Stuhlmacher.pdf' : '/downloads/Lebenslauf_Lars_Stuhlmacher.pdf';
+const mail = 'contact@vugas.de';
+---
+
+
+<BaseLayout
+  title={en ? 'For employers' : 'Für Arbeitgeber'}
+  description={en
+    ? 'Lars Meykel Stuhlmacher, apprentice IT specialist for system integration: profile, evidence from the homelab and résumé to download.'
+    : 'Lars Meykel Stuhlmacher, angehender Fachinformatiker für Systemintegration: Profil, Belege aus dem Homelab und Lebenslauf zum Download.'}
+  lang={lang}
+  alternates={bothLangs('/cv/')}
+>
+
+  <header class="pt-6 md:pt-10 pb-12 border-b border-(--color-border)">
+    <div class="section-num mb-5">{en ? '06 // FOR EMPLOYERS' : '06 // FÜR ARBEITGEBER'}</div>
+    <h1 class="display-xl">{en ? 'At a glance' : 'Auf einen Blick'}<span style="color: var(--color-accent);">.</span></h1>
+    <p class="text-(--color-text-soft) text-[0.98rem] leading-[1.65] max-w-[62ch] mt-6"
+       style="font-family: var(--font-sans)">
+      {en
+        ? <>I’m Lars, an apprentice IT specialist for system integration from Duisburg, Germany. I’m
+            taking my final exam early, in winter 2026/27, and from then on I’m looking for a junior
+            position in system administration, with a focus on networking and IT security.
+            Everything I claim here is linked on this page and can be verified.</>
+        : <>Ich bin Lars, angehender Fachinformatiker für Systemintegration aus Duisburg. Die
+            Abschlussprüfung lege ich vorgezogen im Winter 2026/27 ab und suche ab dann eine
+            Junior-Position in der Systemadministration, mit Schwerpunkt Netzwerk und IT-Security.
+            Alles, was ich hier behaupte, ist auf dieser Seite verlinkt und nachprüfbar.</>}
+    </p>
+    <div class="flex flex-wrap gap-3 mt-8">
+      <a href={cvHref} download class="btn btn-primary">{en ? 'Résumé (PDF)' : 'Lebenslauf (PDF)'}</a>
+      <a href={`mailto:${mail}?subject=${en ? 'Contact%20via%20vugas.de' : 'Kontakt%20%C3%BCber%20vugas.de'}`} class="btn">{mail}</a>
+    </div>
+  </header>
+
+  <section class="pt-12">
+    <div class="rule mb-6"><span>{en ? 'Facts' : 'Fakten'}</span></div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {facts.map(f => (
+        <div class="card">
+          <div style="font-family: var(--font-display); font-weight: 700; font-size: 2rem; line-height: 1; color: var(--color-text);">
+            {f.value}{f.unit && <span class="text-(--color-text-soft)" style="font-size: 0.9rem; font-weight: 500;"> {f.unit}</span>}
+          </div>
+          <div class="text-(--color-text-soft) text-[0.8rem] leading-snug mt-3" style="font-family: var(--font-sans)">{f.label}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="pt-14">
+    <div class="rule mb-6"><span>{en ? 'What I bring — with evidence' : 'Was ich mitbringe — mit Beleg'}</span></div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {competences.map(c => (
+        <div class="card">
+          <h2 class="text-(--color-text) text-[1rem] font-semibold" style="font-family: var(--font-display)">{c.area}</h2>
+          <p class="text-(--color-text-soft) text-[0.88rem] leading-[1.6] mt-2" style="font-family: var(--font-sans)">{c.text}</p>
+          {c.proofs.length > 0 && (
+            <ul class="mt-4 space-y-1.5">
+              {c.proofs.map(p => (
+                <li><a href={p.href} class="text-(--color-accent) text-[0.8rem] hover:underline" style="font-family: var(--font-display)">→ {p.label}</a></li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="pt-14">
+    <div class="rule mb-6"><span>{en ? 'Experience & education' : 'Stationen'}</span></div>
+    <ol class="max-w-[72ch] divide-y divide-(--color-border)">
+      {stations.map(s => (
+        <li class="py-3 grid grid-cols-1 sm:grid-cols-[10rem_1fr] gap-x-6 gap-y-0.5">
+          <span class="text-(--color-text-soft) text-[0.78rem]" style="font-family: var(--font-mono)">{s.when}</span>
+          <span style="font-family: var(--font-sans)">
+            <span class="text-(--color-text) text-[0.92rem]">{s.what}</span>
+            <span class="text-(--color-text-soft) text-[0.82rem] block">{s.where}</span>
+          </span>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="pt-14 pb-6">
+    <div class="rule mb-6"><span>{en ? 'Documents' : 'Unterlagen'}</span></div>
+    <div class="max-w-[68ch] space-y-4 text-(--color-text-soft) text-[0.93rem] leading-[1.7]" style="font-family: var(--font-sans)">
+      {en ? (
+        <>
+          <p>
+            The full <a href={cvHref} download class="text-(--color-accent)">résumé as a PDF</a> is
+            available for direct download.
+          </p>
+          <p>
+            I’m happy to send certificates and references on request (result of the intermediate exam,
+            KMK language certificate, vocational school and employer references — originals in
+            German): <a href={`mailto:${mail}?subject=Request%20for%20application%20documents`} class="text-(--color-accent)">{mail}</a>.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            Der vollständige <a href={cvHref} download class="text-(--color-accent)">Lebenslauf als PDF</a> steht
+            zum direkten Download bereit.
+          </p>
+          <p>
+            Zeugnisse und Zertifikate (Ergebnis der Abschlussprüfung Teil 1, KMK-Fremdsprachenzertifikat,
+            Berufsschul- und Arbeitszeugnisse) schicke ich gern auf Anfrage:
+            <a href={`mailto:${mail}?subject=Anfrage%20Bewerbungsunterlagen`} class="text-(--color-accent)">{mail}</a>.
+          </p>
+        </>
+      )}
+    </div>
+  </section>
+
+</BaseLayout>

@@ -6,7 +6,7 @@ import { glob } from 'astro/loaders';
 // die englischen lesen nur diese; die id ist in beiden Fällen der Slug ohne Sprachkürzel.
 const DE = ['**/*.md', '!**/*.en.md'];
 const EN = '**/*.en.md';
-const idWithoutLocale = ({ entry }: { entry: string }) => entry.replace(/(\.en)?\.md$/, '');
+const idWithoutLocale = ({ entry }: { entry: string }) => entry.replace(/(\.en)?\.mdx?$/, '');
 
 const blogSchema = z.object({
   title: z.string(),
@@ -47,31 +47,45 @@ const guidesEn = defineCollection({
   schema: guideSchema,
 });
 
+const projectSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  details: z.string().optional(),   // README-Kurzfassung fürs Hover-Overlay
+  tags: z.array(z.string()).default([]),
+  status: z.enum(['aktiv', 'in Arbeit', 'Planung', 'archiviert']),
+  github: z.string().url().optional(),
+  url: z.string().url().optional(),
+});
+
 const projects = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
-  schema: z.object({
-    name: z.string(),
-    description: z.string(),
-    details: z.string().optional(),   // README-Kurzfassung fürs Hover-Overlay
-    tags: z.array(z.string()).default([]),
-    status: z.enum(['aktiv', 'in Arbeit', 'Planung', 'archiviert']),
-    github: z.string().url().optional(),
-    url: z.string().url().optional(),
-  }),
+  loader: glob({ pattern: DE, base: './src/content/projects', generateId: idWithoutLocale }),
+  schema: projectSchema,
+});
+
+const projectsEn = defineCollection({
+  loader: glob({ pattern: EN, base: './src/content/projects', generateId: idWithoutLocale }),
+  schema: projectSchema,
+});
+
+const caseStudySchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  status: z.enum(['aktiv', 'in Arbeit', 'Planung', 'archiviert']),
+  tags: z.array(z.string()).default([]),
+  stack: z.array(z.string()).default([]),
+  github: z.string().url().optional(),
+  screenshots: z.array(z.object({ src: z.string(), alt: z.string() })).default([]),
+  draft: z.boolean().default(false),
 });
 
 const caseStudies = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/case-studies' }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    status: z.enum(['aktiv', 'in Arbeit', 'Planung', 'archiviert']),
-    tags: z.array(z.string()).default([]),
-    stack: z.array(z.string()).default([]),
-    github: z.string().url().optional(),
-    screenshots: z.array(z.object({ src: z.string(), alt: z.string() })).default([]),
-    draft: z.boolean().default(false),
-  }),
+  loader: glob({ pattern: ['**/*.mdx', '!**/*.en.mdx'], base: './src/content/case-studies', generateId: idWithoutLocale }),
+  schema: caseStudySchema,
 });
 
-export const collections = { blog, blogEn, guides, guidesEn, projects, caseStudies };
+const caseStudiesEn = defineCollection({
+  loader: glob({ pattern: '**/*.en.mdx', base: './src/content/case-studies', generateId: idWithoutLocale }),
+  schema: caseStudySchema,
+});
+
+export const collections = { blog, blogEn, guides, guidesEn, projects, projectsEn, caseStudies, caseStudiesEn };

@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from './ProjectCard.astro';
+import { getProjects, getCaseStudySlugs, detailHref } from '../lib/projects';
+import { bothLangs, type Lang } from '../lib/i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const en = lang === 'en';
+
+const all = await getProjects(lang);
+const studySlugs = await getCaseStudySlugs(lang);
+const byStatus = (s: string) => all.filter(p => p.data.status === s);
+const groups = [
+  { key: 'aktiv',      label: 'ACTIVE',     items: byStatus('aktiv') },
+  { key: 'inarbeit',   label: 'IN-PROGRESS', items: byStatus('in Arbeit') },
+  { key: 'Planung',    label: 'PLANNED',    items: byStatus('Planung') },
+  { key: 'archiviert', label: 'ARCHIVED',   items: byStatus('archiviert') },
+];
+---
+
+<BaseLayout
+  title={en ? 'Projects' : 'Projekte'}
+  description={en
+    ? 'All homelab projects — Proxmox, Docker, AI agents and more.'
+    : 'Alle Homelab-Projekte — Proxmox, Docker, AI Agents und mehr.'}
+  lang={lang}
+  alternates={bothLangs('/projects/')}
+>
+
+  <header class="pt-6 md:pt-10 pb-16 border-b border-(--color-border)">
+    <div class="rise rise-1 section-num mb-5">02 // DIRECTORY / PROJECTS</div>
+    <div class="grid grid-cols-12 gap-6">
+      <div class="col-span-12 md:col-span-9">
+        <h1 class="rise rise-2 display-xl">
+          What I <span class="text-(--color-accent)">build</span>.
+        </h1>
+        <p class="rise rise-3 text-(--color-text-soft) text-[0.98rem] leading-[1.65] max-w-[62ch] mt-8"
+           style="font-family: var(--font-sans)">
+          {en
+            ? <>From VLAN segmentation to my own AI stack &mdash; every project is planned, built and
+                run in production in the homelab.</>
+            : <>Von der VLAN-Segmentierung bis zum eigenen AI-Stack &mdash; jedes Projekt wird im
+                Homelab geplant, gebaut und produktiv betrieben.</>}
+        </p>
+      </div>
+      <aside class="col-span-12 md:col-span-3 md:pt-2">
+        <div class="rise rise-4 grid grid-cols-2 md:grid-cols-1 gap-y-5">
+          <dl class="stat"><dt>Total</dt><dd>{all.length.toString().padStart(2, '0')}</dd></dl>
+          <dl class="stat"><dt>Active</dt><dd>{byStatus('aktiv').length.toString().padStart(2, '0')}</dd></dl>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <div class="space-y-16 pt-14">
+    {groups.filter(g => g.items.length > 0).map((g, gi) => (
+      <section class={`rise rise-${Math.min(gi + 1, 6)}`}>
+        <div class="flex items-baseline justify-between mb-6">
+          <div class="rule flex-1"><span>{g.label} / {String(g.items.length).padStart(2, '0')}</span></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {g.items.map(p => (
+            <ProjectCard {...p.data} lang={lang} detailHref={detailHref(p, studySlugs, lang)} hasCaseStudy={studySlugs.has(p.id)} />
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</BaseLayout>
