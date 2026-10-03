@@ -1,0 +1,108 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Toc from './Toc.astro';
+import { difficultyLabel, localePath, t, type Lang } from '../lib/i18n';
+
+type Guide = CollectionEntry<'guides'> | CollectionEntry<'guidesEn'>;
+interface Props {
+  guide: Guide;
+  /** Alle veröffentlichten Guides derselben Sprache (für die Kapitel-Navigation von Serien). */
+  guides: Guide[];
+  lang: Lang;
+  altHref?: string;
+}
+const { guide, guides, lang, altHref } = Astro.props;
+const id = guide.id;
+
+const { Content, headings, remarkPluginFrontmatter } = await render(guide);
+const minutesRead = remarkPluginFrontmatter.minutesRead ?? 1;
+
+let chapters: Guide[] = [];
+if (guide.data.series) {
+  chapters = guides
+    .filter(g => g.data.series === guide.data.series && !g.data.draft)
+    .sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+}
+const otherLang: Lang = lang === 'de' ? 'en' : 'de';
+const selfHref = localePath(lang, `/guides/${id}/`);
+const alternates = altHref ? [{ lang, href: selfHref }, { lang: otherLang, href: altHref }] : [];
+---
+
+
+<BaseLayout title={guide.data.title} description={guide.data.description} lang={lang} alternates={alternates}>
+
+  <nav class="pt-4 mb-10 flex items-center gap-3 text-[0.68rem] tracking-[0.14em] uppercase"
+       style="font-family: var(--font-display)">
+    <a href={localePath(lang, '/guides')} class="text-(--color-muted) hover:text-(--color-accent) transition-colors">&larr; Guides</a>
+    {guide.data.series && (
+      <>
+        <span class="text-(--color-border-strong)">/</span>
+        <span class="text-(--color-muted-deep)">{guide.data.series}</span>
+      </>
+    )}
+    {altHref && (
+      <a href={altHref} hreflang={otherLang} lang={otherLang} data-lang-switch
+         class="ml-auto text-(--color-accent) hover:underline normal-case tracking-normal text-[0.78rem]">
+        {t[lang].switchLabel} &rarr;
+      </a>
+    )}
+  </nav>
+
+  <div class="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-10">
+
+    <!-- Sidebar: chapters or TOC -->
+    <aside class="hidden md:block">
+      {chapters.length > 0 ? (
+        <nav style="position: sticky; top: 5rem;" aria-label={t[lang].chapters}>
+          <div class="section-num mb-3">{t[lang].chapters}</div>
+          <ol class="border-t border-(--color-border)">
+            {chapters.map((ch, i) => (
+              <li class="border-b border-(--color-border)">
+                <a
+                  href={localePath(lang, `/guides/${ch.id}`)}
+                  class:list={[
+                    'flex items-baseline gap-3 px-2 py-2.5 text-[0.78rem]',
+                    'transition-[transform,color] duration-200 hover:translate-x-1',
+                    ch.id === id
+                      ? 'text-(--color-accent)'
+                      : 'text-(--color-muted) hover:text-(--color-text)',
+                  ]}
+                  style="font-family: var(--font-display); letter-spacing: 0.06em;"
+                >
+                  <span class="text-(--color-muted-deep) tabular-nums w-5 shrink-0">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="truncate">{ch.data.title}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      ) : (
+        <Toc headings={headings} lang={lang} />
+      )}
+    </aside>
+
+    <!-- Main content -->
+    <article class="prose max-w-none">
+      <header class="not-prose mb-12 pb-8 border-b border-(--color-border)">
+        <div class="rise rise-1 flex items-center gap-3 mb-5">
+          <span class="tag tag-accent">{difficultyLabel(guide.data.difficulty, lang)}</span>
+          {chapters.length > 0 && (
+            <span class="section-num">{t[lang].chapter} / {String(guide.data.order ?? 0).padStart(2, '0')}</span>
+          )}
+          <span class="text-(--color-border-strong)">/</span>
+          <span class="section-num">{minutesRead} min</span>
+        </div>
+        <h1 class="rise rise-2 display-lg text-(--color-text)"
+            style="font-size: clamp(2rem, 1.4rem + 2.4vw, 3.2rem);">
+          {guide.data.title}
+        </h1>
+        <p class="rise rise-3 text-(--color-text-soft) text-[0.98rem] leading-[1.65] max-w-[60ch] mt-6"
+           style="font-family: var(--font-sans)">{guide.data.description}</p>
+      </header>
+      <Content />
+    </article>
+
+  </div>
+</BaseLayout>

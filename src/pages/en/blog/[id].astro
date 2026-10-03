@@ -1,0 +1,15 @@
+---
+import BlogArticle from '../../../components/BlogArticle.astro';
+import { publishedBlog } from '../../../lib/translations';
+
+export async function getStaticPaths() {
+  const { en } = await publishedBlog();
+  return en.map(post => ({
+    params: { id: post.id },
+    props: { post, altHref: `/blog/${post.id}/` },
+  }));
+}
+
+const { post, altHref } = Astro.props;
+---
+<BlogArticle post={post} lang="en" altHref={altHref} />

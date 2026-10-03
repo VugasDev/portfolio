@@ -1,0 +1,90 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GuideCard from './GuideCard.astro';
+import { localePath, t, type Lang } from '../lib/i18n';
+
+type Guide = CollectionEntry<'guides'> | CollectionEntry<'guidesEn'>;
+interface Props {
+  guides: Guide[];
+  lang: Lang;
+  altHref?: string;
+}
+const { lang, altHref } = Astro.props;
+const guides = [...Astro.props.guides].sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const standalone = guides.filter(g => !g.data.series);
+
+const seriesMap = new Map<string, Guide>();
+for (const g of guides.filter(g => g.data.series)) {
+  const key = g.data.series!;
+  const existing = seriesMap.get(key);
+  if (!existing || (g.data.order ?? 0) < (existing.data.order ?? 0)) {
+    seriesMap.set(key, g);
+  }
+}
+const seriesEntries = [...seriesMap.values()];
+const otherLang: Lang = lang === 'de' ? 'en' : 'de';
+const selfHref = localePath(lang, '/guides/');
+const alternates = altHref ? [{ lang, href: selfHref }, { lang: otherLang, href: altHref }] : [];
+---
+
+
+<BaseLayout title="Guides" description={t[lang].guidesDescription} lang={lang} alternates={alternates}>
+
+  <header class="pt-6 md:pt-10 pb-16 border-b border-(--color-border)">
+    <div class="rise rise-1 section-num mb-5">04 // MANUALS / GUIDES</div>
+    <div class="grid grid-cols-12 gap-6">
+      <div class="col-span-12 md:col-span-9">
+        <h1 class="rise rise-2 display-xl">
+          Step by <span class="text-(--color-accent)">Step</span>.
+        </h1>
+        <p class="rise rise-3 text-(--color-text-soft) text-[0.98rem] leading-[1.65] max-w-[62ch] mt-8"
+           style="font-family: var(--font-sans)">
+          {t[lang].guidesLead}
+        </p>
+        {altHref && (
+          <a href={altHref} hreflang={otherLang} lang={otherLang} data-lang-switch
+             class="rise rise-3 inline-block mt-4 text-(--color-accent) text-[0.85rem] hover:underline"
+             style="font-family: var(--font-display)">{t[lang].indexSwitch} &rarr;</a>
+        )}
+      </div>
+      <aside class="col-span-12 md:col-span-3 md:pt-2">
+        <div class="rise rise-4 grid grid-cols-2 md:grid-cols-1 gap-y-5">
+          <dl class="stat"><dt>Guides</dt><dd>{guides.length.toString().padStart(2, '0')}</dd></dl>
+          <dl class="stat"><dt>Series</dt><dd>{seriesEntries.length.toString().padStart(2, '0')}</dd></dl>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <div class="space-y-16 pt-14">
+    {standalone.length > 0 && (
+      <section class="rise rise-1">
+        <div class="rule mb-6"><span>STANDALONE / {standalone.length.toString().padStart(2, '0')}</span></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {standalone.map(g => (
+            <GuideCard title={g.data.title} description={g.data.description}
+              difficulty={g.data.difficulty} id={g.id} tags={g.data.tags} lang={lang} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {seriesEntries.length > 0 && (
+      <section class="rise rise-2">
+        <div class="rule rule-accent mb-6"><span>SERIES / {seriesEntries.length.toString().padStart(2, '0')}</span></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {seriesEntries.map(g => (
+            <GuideCard title={g.data.series!} description={g.data.description}
+              difficulty={g.data.difficulty} id={g.id} tags={g.data.tags} lang={lang} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {guides.length === 0 && (
+      <p class="text-(--color-muted)" style="font-family: var(--font-mono)">// guides in progress</p>
+    )}
+  </div>
+</BaseLayout>

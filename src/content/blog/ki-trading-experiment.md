@@ -8,7 +8,7 @@ tags:
   - trading
   - reinforcement-learning
   - backtesting
-draft: true
+draft: false
 ---
 
 > **Vorweg:** Das hier ist ein Experiment und eine Spielerei, keine Anlageberatung. Es ist

@@ -1,0 +1,80 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Toc from './Toc.astro';
+import { formatDate, localePath, t, type Lang } from '../lib/i18n';
+
+interface Props {
+  post: CollectionEntry<'blog'> | CollectionEntry<'blogEn'>;
+  lang: Lang;
+  /** Pfad der anderen Sprachfassung, falls vorhanden. */
+  altHref?: string;
+}
+const { post, lang, altHref } = Astro.props;
+
+const { Content, headings, remarkPluginFrontmatter } = await render(post);
+const minutesRead = remarkPluginFrontmatter.minutesRead ?? 1;
+const formattedDate = formatDate(post.data.date, lang, { year: 'numeric', month: 'long', day: 'numeric' });
+const isoDate = post.data.date.toISOString().slice(0, 10);
+const selfHref = localePath(lang, `/blog/${post.id}/`);
+const otherLang: Lang = lang === 'de' ? 'en' : 'de';
+const alternates = altHref ? [{ lang, href: selfHref }, { lang: otherLang, href: altHref }] : [];
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogType="article"
+  publishedDate={post.data.date}
+  tags={post.data.tags}
+  lang={lang}
+  alternates={alternates}
+>
+
+  <nav class="pt-4 mb-10 flex items-center gap-3 text-[0.68rem] tracking-[0.14em] uppercase"
+       style="font-family: var(--font-display)">
+    <a href={localePath(lang, '/blog')} class="text-(--color-muted) hover:text-(--color-accent) transition-colors">&larr; Log</a>
+    <span class="text-(--color-border-strong)">/</span>
+    <span class="text-(--color-muted-deep)">{isoDate}</span>
+    {altHref && (
+      <a href={altHref} hreflang={otherLang} lang={otherLang} data-lang-switch
+         class="ml-auto text-(--color-accent) hover:underline normal-case tracking-normal text-[0.78rem]">
+        {t[lang].switchLabel} &rarr;
+      </a>
+    )}
+  </nav>
+
+  <div class="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-10">
+
+    <!-- Sidebar TOC -->
+    <aside class="hidden md:block">
+      <Toc headings={headings} lang={lang} />
+    </aside>
+
+    <!-- Main content -->
+    <article>
+      <header class="mb-14 pb-10 border-b border-(--color-border)">
+        <div class="rise rise-1 section-num mb-5 flex items-center gap-4">
+          <span>{formattedDate.toUpperCase()}</span>
+          <span class="text-(--color-border-strong)">/</span>
+          <span>{minutesRead} min read</span>
+        </div>
+        <h1 class="rise rise-2 display-lg text-(--color-text)"
+            style="font-size: clamp(2rem, 1.4rem + 2.6vw, 3.4rem);">
+          {post.data.title}
+        </h1>
+        <p class="rise rise-3 text-(--color-text-soft) text-[0.98rem] leading-[1.65] max-w-[60ch] mt-6"
+           style="font-family: var(--font-sans)">{post.data.description}</p>
+        <div class="rise rise-4 flex flex-wrap gap-1.5 mt-6">
+          {post.data.tags.map(tag => <span class="tag">{tag}</span>)}
+        </div>
+      </header>
+
+      <div class="prose max-w-none">
+        <Content />
+      </div>
+    </article>
+
+  </div>
+</BaseLayout>

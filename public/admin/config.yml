@@ -9,6 +9,14 @@ backend:
 # Sichtbarkeit steuert allein das Frontmatter-Feld `draft` (Astro-Filter).
 # Der Review-Schritt ist durch den blogpost-Skill-Push mit draft:true abgebildet.
 
+# Zweisprachigkeit (Blog & Guides): Deutsch in <slug>.md, Englisch daneben in <slug>.en.md.
+# Die englische Fassung geht nur live, wenn sie selbst UND die deutsche veröffentlicht sind.
+i18n:
+  structure: multiple_files
+  locales: [de, en]
+  default_locale: de
+  omit_default_locale_from_file_path: true
+
 media_folder: public/uploads
 public_folder: /uploads
 
@@ -19,6 +27,7 @@ collections:
     create: true
     slug: "{{slug}}"
     extension: md
+    i18n: true
     # Chronologisch nach Veröffentlichungsdatum (neueste oben). commit_date bleibt
     # wählbar ("zuletzt bearbeitet"), taugt aber nicht als Standard: rückdatierte
     # Beiträge landen sonst oben, und ohne Commit-Metadaten fällt Sveltia auf alphabetisch zurück.
@@ -30,12 +39,12 @@ collections:
       - { label: Entwürfe,        field: draft, pattern: true }
       - { label: Veröffentlicht,  field: draft, pattern: false }
     fields:
-      - { name: title,       label: Titel,          widget: string }
-      - { name: description, label: Beschreibung,   widget: string }
-      - { name: date,        label: Datum,           widget: datetime, format: "YYYY-MM-DD" }
-      - { name: tags,        label: Tags,            widget: list, default: [] }
-      - { name: draft,       label: Entwurf,         widget: boolean, default: false }
-      - { name: body,        label: Inhalt,          widget: markdown }
+      - { name: title,       label: Titel,          widget: string, i18n: true }
+      - { name: description, label: Beschreibung,   widget: string, i18n: true }
+      - { name: date,        label: Datum,           widget: datetime, format: "YYYY-MM-DD", i18n: duplicate }
+      - { name: tags,        label: Tags,            widget: list, default: [], i18n: duplicate }
+      - { name: draft,       label: Entwurf,         widget: boolean, default: false, i18n: true }
+      - { name: body,        label: Inhalt,          widget: markdown, i18n: true }
 
   - name: guides
     label: Guides
@@ -43,6 +52,7 @@ collections:
     create: true
     slug: "{{slug}}"
     extension: md
+    i18n: true
     # Chronologisch nach Veröffentlichungsdatum (neueste oben). commit_date bleibt
     # wählbar ("zuletzt bearbeitet"), taugt aber nicht als Standard: rückdatierte
     # Beiträge landen sonst oben, und ohne Commit-Metadaten fällt Sveltia auf alphabetisch zurück.
@@ -54,18 +64,19 @@ collections:
       - { label: Entwürfe,        field: draft, pattern: true }
       - { label: Veröffentlicht,  field: draft, pattern: false }
     fields:
-      - { name: title,       label: Titel,           widget: string }
-      - { name: description, label: Beschreibung,    widget: string }
-      - { name: date,        label: Datum,            widget: datetime, format: "YYYY-MM-DD" }
+      - { name: title,       label: Titel,           widget: string, i18n: true }
+      - { name: description, label: Beschreibung,    widget: string, i18n: true }
+      - { name: date,        label: Datum,            widget: datetime, format: "YYYY-MM-DD", i18n: duplicate }
       - name: difficulty
         label: Schwierigkeitsgrad
         widget: select
         options: [Einsteiger, Fortgeschritten, Experte]
-      - { name: tags,        label: Tags,            widget: list, default: [] }
-      - { name: series,      label: "Serie (optional)", widget: string, required: false }
-      - { name: order,       label: "Kapitel-Nr",    widget: number, required: false }
-      - { name: draft,       label: Entwurf,         widget: boolean, default: false }
-      - { name: body,        label: Inhalt,          widget: markdown }
+        i18n: duplicate
+      - { name: tags,        label: Tags,            widget: list, default: [], i18n: duplicate }
+      - { name: series,      label: "Serie (optional)", widget: string, required: false, i18n: true }
+      - { name: order,       label: "Kapitel-Nr",    widget: number, required: false, i18n: duplicate }
+      - { name: draft,       label: Entwurf,         widget: boolean, default: false, i18n: true }
+      - { name: body,        label: Inhalt,          widget: markdown, i18n: true }
 
   - name: projects
     label: Projekte

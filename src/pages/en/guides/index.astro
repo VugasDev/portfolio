@@ -1,0 +1,7 @@
+---
+import GuideList from '../../../components/GuideList.astro';
+import { publishedGuides } from '../../../lib/translations';
+
+const { en } = await publishedGuides();
+---
+<GuideList guides={en} lang="en" altHref="/guides/" />
