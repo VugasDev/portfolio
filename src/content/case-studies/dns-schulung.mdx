@@ -60,9 +60,10 @@ In jeder Umgebung stecken sieben Fehler, nach Schwierigkeit gestaffelt:
 
 Die Teams arbeiten mit einer Handvoll Befehle: `status` zeigt offene Fehler, `check <n>`
 prüft einen Fix automatisch und erklärt nach dem Lösen, warum das ein Fehler war. `hint`
-gibt Hinweise in drei Stufen, von einem konzeptuellen Schubs bis zum Spoiler. `solve` zeigt
-die komplette Lösung, danach bringt dieser Fehler dauerhaft keine Punkte mehr. Wer einen
-Fehler als erstes Team löst, bekommt 50 Punkte **First Blood** dazu. Das Leaderboard ist für alle im
+gibt Hinweise in drei Stufen, von einem konzeptuellen Schubs bis zum Spoiler, jede Stufe
+soll ein Viertel der Punkte kosten. `solve` zeigt die komplette Lösung und soll das Team
+**alle** bisherigen Punkte kosten. Wer einen Fehler als erstes Team löst, bekommt 50 Punkte
+**First Blood** dazu. Das Leaderboard ist für alle im
 Browser erreichbar und aktualisiert sich alle fünf Sekunden.
 
 ## Der eigentliche Aufwand: ein Doppelklick
@@ -92,6 +93,20 @@ April entstanden 22 Commits, 17 davon Fixes:
 - **Ein Bug im alten docker-compose** (`ContainerConfig`) verhinderte das Neuerstellen von
   Containern. Die Lösung: alte Team-Container vor jedem Start gezielt entfernen.
 
+## Nachtrag: Ein Bug, der erst beim Schreiben auffiel
+
+Beim erneuten Durchsehen des Codes für diesen Artikel habe ich gemerkt, dass die
+Strafen nicht so greifen, wie das Lab es den Teams ankündigt.
+
+Die erste Fassung von `solve` setzte die Punkte des Teams tatsächlich auf 0. Nur rechnete
+das Leaderboard beim nächsten `check` die Punkte wieder aus den gelösten Aufgaben zusammen,
+und die Strafe war verpufft. Mein Fix am selben Tag sollte sie dauerhaft machen: Die per
+`solve` aufgegebene Aufgabe wird markiert und zählt nie wieder. Dabei ist das Zurücksetzen
+aller Punkte unbemerkt herausgefallen. Seitdem kostet `solve` nur die Punkte der einen
+Aufgabe. Der angekündigte Abzug für Hinweise wird ebenfalls nirgends verrechnet.
+
+Die Warnungen im Lab sind also strenger als die Umsetzung. So gedacht war es umgekehrt.
+
 ## Ergebnis
 
 Bei der Schulung haben 27 Mitschüler in sieben Teams parallel im Lab gearbeitet. Sie kam bei der Klasse und beim Lehrer gut
@@ -106,8 +121,11 @@ Team lag zwischen „sehr gut“ und „gut“, ich selbst bekam eine 1+.
 - **Die Umgebung ist das Risiko, nicht der Inhalt.** Die DNS-Fehler waren schnell
   eingebaut. Die meiste Zeit ging in einen verlässlichen Start auf einem Windows-Rechner,
   der vorher neu gestartet wurde, schlief oder eine andere PowerShell hatte.
-- **Spielmechanik steuert Verhalten.** Gestufte Hinweise und eine Lösung, die die Punkte
-  für den Fehler kostet, sollen dazu bringen, sich erst einen kleinen Schubs zu holen statt
-  der fertigen Lösung. So bleiben die Teams selbst am Problem.
+- **Spielmechanik steuert Verhalten.** Gestufte Hinweise und eine teure Komplettlösung
+  sollen dazu bringen, sich erst einen kleinen Schubs zu holen statt der fertigen Lösung.
+  So bleiben die Teams selbst am Problem.
+- **Auch Spielregeln brauchen Tests.** Jeder DNS-Fix wird automatisch geprüft, für die
+  Punkteregeln gab es keinen solchen Test. Ein einziger Test „nach `solve` und erneutem
+  `check` hat das Team 0 Punkte“ hätte den Fehler sofort gezeigt.
 - **Alles in einem Repo.** Präsentation, Handout, Quiz und Lab liegen zusammen und lassen
   sich per Bootstrap-Skript auf einem neuen Rechner aufsetzen.

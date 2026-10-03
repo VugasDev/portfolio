@@ -46,8 +46,9 @@ habe die App, ein eigenes Google-Cloud-Projekt nur für dieses Backup, in der Co
 
 Im September kam das Thema wieder hoch, diesmal von der anderen Seite, und diesmal kannte
 ich die Falle schon. Meine Synchronisations- und Backup-Jobs auf dem Homelab-Host nutzten
-bis dahin die **eingebaute Client-ID von rclone**, die sich alle rclone-Nutzer teilen. rclone warnte schon länger bei
-jedem Aufruf, dass diese ID im Lauf von 2026 abgeschaltet wird. Dann lief sie in ein akutes
+bis dahin die **eingebaute Client-ID von rclone**, die sich alle rclone-Nutzer teilen.
+rclone warnte schon länger bei jedem Aufruf, dass diese ID im Lauf von 2026 abgeschaltet
+wird. Dann lief sie in ein akutes
 Rate-Limit, und die Jobs krochen nur noch.
 
 Die Lösung war klar: eine **eigene OAuth-App**, diesmal von Anfang an auf „In production“.
