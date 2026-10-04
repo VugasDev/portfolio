@@ -11,7 +11,7 @@ tags:
   - security
 series: ''
 order: null
-draft: true
+draft: false
 ---
 
 > **Note:** The client ID, client secret and token in this guide are placeholders. All three
