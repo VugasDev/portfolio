@@ -34,7 +34,7 @@ const legal = lang === 'en'
         <li><a class="arrow" href="https://github.com/VugasDev">
           <span>github.com/VugasDev</span><span class="glyph">&rarr;</span>
         </a></li>
-        <li><a class="arrow" href="/rss.xml">
+        <li><a class="arrow" href={lang === 'en' ? '/en/rss.xml' : '/rss.xml'}>
           <span>RSS / Log</span><span class="glyph">&rarr;</span>
         </a></li>
         <li><a class="arrow" href={localePath(lang, '/cv')}>

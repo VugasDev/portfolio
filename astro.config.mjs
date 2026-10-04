@@ -19,7 +19,11 @@ function remarkReadingTime() {
 
 export default defineConfig({
   site: 'https://vugas.de',
-  integrations: [mdx(), sitemap({ filter: (page) => !page.includes('/og/') })],
+  integrations: [mdx(), sitemap({
+    filter: (page) => !page.includes('/og/'),
+    // Sprachpaare (/x ↔ /en/x) als hreflang-Alternativen in der Sitemap
+    i18n: { defaultLocale: 'de', locales: { de: 'de-DE', en: 'en-GB' } },
+  })],
   markdown: {
     remarkPlugins: [remarkReadingTime],
     // Mermaid im Dark-Theme: dunkle Nodes + helle Labels — sonst rendert das
