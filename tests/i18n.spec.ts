@@ -87,3 +87,27 @@ test('/projects: jedes Projekt hat eine englische Fassung', async ({ page }) => 
     expect(await page.locator('html').getAttribute('lang')).toBe('en');
   }
 });
+
+test('englischer RSS-Feed: nur englische Beitragslinks, gleiche Anzahl wie der deutsche', async ({ request }) => {
+  const de = await (await request.get('/rss.xml')).text();
+  const en = await (await request.get('/en/rss.xml')).text();
+  expect(en).toContain('<language>en-gb</language>');
+  const links = [...en.matchAll(/<link>([^<]+)<\/link>/g)].map(m => m[1]).filter(l => l.includes('/blog/'));
+  expect(links.length).toBeGreaterThan(0);
+  for (const l of links) expect(l).toContain(`${BASE}/en/blog/`);
+  expect((en.match(/<item>/g) ?? []).length).toBe((de.match(/<item>/g) ?? []).length);
+});
+
+test('Sitemap verknüpft Sprachpaare per hreflang, rein deutsche Seiten ohne', async ({ request }) => {
+  const xml = await (await request.get('/sitemap-0.xml')).text();
+  expect(xml).toContain(`<loc>${BASE}/about/</loc><xhtml:link rel="alternate" hreflang="de-DE" href="${BASE}/about/"/><xhtml:link rel="alternate" hreflang="en-GB" href="${BASE}/en/about/"/>`);
+  expect(xml).toContain(`<loc>${BASE}/impressum/</loc></url>`);
+  expect(xml).not.toContain('/404');
+});
+
+test('englische 404-Seite', async ({ page }) => {
+  await page.goto('/en/404/');
+  expect(await page.locator('html').getAttribute('lang')).toBe('en');
+  await expect(page.locator('h1')).toContainText(/not found/i);
+  expect(await page.locator('main a.btn-primary').getAttribute('href')).toBe('/en');
+});
