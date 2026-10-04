@@ -507,6 +507,8 @@
     padding: 1px 5px;
     font-size: 0.875em;
   }
+  /* Typography-Plugin setzt Backticks vor/hinter Inline-Code – bei eigener Box überflüssig. */
+  .prose code::before, .prose code::after { content: none; }
   .prose pre {
     background: #120E1C;
     border: 1px solid var(--color-border);
