@@ -509,6 +509,8 @@
   }
   /* Typography-Plugin setzt Backticks vor/hinter Inline-Code – bei eigener Box überflüssig. */
   .prose code::before, .prose code::after { content: none; }
+  /* Die Box gilt nur für Inline-Code; in Codeblöcken sonst ein Rahmen um jede Zeile. */
+  .prose pre code { background: none; border: 0; border-radius: 0; padding: 0; font-size: inherit; color: inherit; }
   .prose pre {
     background: #120E1C;
     border: 1px solid var(--color-border);

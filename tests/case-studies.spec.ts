@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-// Nur nicht-draft Case-Studies. cortex/mcp-stack sind draft:true (Projekte entfernt).
+// Alle veröffentlichten Case Studies (Cortex/MCP-Stack 2026-10 entfernt, Cortex steht im Blogpost ki-setup-drei-anlaeufe).
 const SLUGS = ['mediastack', 'netzwerk-upgrade', 'firewall', 'ccna-lernplattform', 'dns-schulung'];
 const BASE = 'https://vugas.de';
 
