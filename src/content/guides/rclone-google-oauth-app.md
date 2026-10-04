@@ -11,7 +11,7 @@ tags:
   - security
 series: ''
 order: null
-draft: true
+draft: false
 ---
 
 > **Hinweis:** Client-ID, Client-Secret und Token in diesem Guide sind Platzhalter. Alle drei
