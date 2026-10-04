@@ -8,7 +8,7 @@ tags:
   - nvidia
   - secure-boot
   - homelab
-draft: true
+draft: false
 ---
 
 > **Pitfalls** are short posts about mistakes that cost me time — with the cause and the fix,

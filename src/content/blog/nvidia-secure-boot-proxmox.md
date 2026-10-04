@@ -8,7 +8,7 @@ tags:
   - nvidia
   - secure-boot
   - homelab
-draft: true
+draft: false
 ---
 
 > **Stolpersteine** sind kurze Posts über Fehler, die mich Zeit gekostet haben — mit Ursache
