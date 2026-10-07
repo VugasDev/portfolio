@@ -83,3 +83,18 @@ for (const path of ['/cv', '/en/cv']) test(`Arbeitgeber-Seite ${path}: Lebenslau
     expect(r.status(), `Status für ${href}`).toBe(200);
   }
 });
+
+for (const prefix of ['', '/en']) test(`Status-Panel ${prefix || '/'}: Zahlen entsprechen den Übersichtsseiten`, async ({ page }) => {
+  await page.goto(prefix || '/');
+  const stat = async (key: string) => Number(await page.locator(`[data-stat="${key}"] span`).nth(1).textContent());
+  const [projects, log, guides] = [await stat('projects'), await stat('log'), await stat('guides')];
+
+  await page.goto(`${prefix}/projects`);
+  expect(await page.locator('main article h3').count()).toBe(projects);
+  await page.goto(`${prefix}/blog`);
+  const posts = await page.locator(`main a[href^="${prefix}/blog/"]`).evaluateAll(els => new Set(els.map(e => e.getAttribute('href'))).size);
+  expect(posts).toBe(log);
+  await page.goto(`${prefix}/guides`);
+  const gs = await page.locator(`main a[href^="${prefix}/guides/"]`).evaluateAll(els => new Set(els.map(e => e.getAttribute('href'))).size);
+  expect(gs).toBe(guides);
+});

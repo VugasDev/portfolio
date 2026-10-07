@@ -28,6 +28,18 @@ const featuredGuides = (en ? guides.en : guides.de)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
 
+// Status-Panel: beim Build aus den veröffentlichten Inhalten berechnet, damit nichts veraltet.
+// Später sollen Live-Werte aus dem Homelab dazukommen (BL-012); data-stat dient dann als Anker.
+const allProjects = await getProjects(lang);
+const pad = (n: number) => String(n).padStart(2, '0');
+const status = [
+  { key: 'projects', label: 'Projects', value: pad(allProjects.length) },
+  { key: 'case-studies', label: 'Case Studies', value: pad(studySlugs.size) },
+  { key: 'log', label: 'Log', value: pad((en ? blog.en : blog.de).length) },
+  { key: 'guides', label: 'Guides', value: pad((en ? guides.en : guides.de).length) },
+  { key: 'build', label: en ? 'Updated' : 'Stand', value: formatDate(new Date(), lang, { year: 'numeric', month: '2-digit', day: '2-digit' }) },
+];
+
 const stack = [
   'Proxmox', 'Docker', 'OPNsense', 'IPsec',
   'n8n', 'Ollama', 'Jellyfin', 'Claude', 'MCP',
@@ -83,25 +95,20 @@ const stack = [
         </div>
       </div>
 
-      <!-- Right: Glass Status Panel -->
+      <!-- Right: Glass Status Panel – Werte beim Build aus den Inhalten berechnet (BL-012) -->
       <aside class="rise rise-5">
         <div style="background: var(--color-glass); border: 1px solid var(--color-border-strong); border-radius: var(--radius-card); padding: 1.25rem;">
           <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-display); font-size: 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid var(--color-border);">
             <span style="font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.55; color: var(--color-text-soft);">System</span>
             <span class="live" style="font-size: 0.75rem;">ready</span>
           </div>
-          <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-display); font-size: 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid var(--color-border);">
-            <span style="font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.55; color: var(--color-text-soft);">Nodes</span>
-            <span style="font-weight: 700; color: var(--color-text);">07</span>
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-display); font-size: 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid var(--color-border);">
-            <span style="font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.55; color: var(--color-text-soft);">VLANs</span>
-            <span style="font-weight: 700; color: var(--color-text);">06</span>
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-display); font-size: 0.8rem; padding: 0.5rem 0;">
-            <span style="font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.55; color: var(--color-text-soft);">Storage</span>
-            <span style="font-weight: 700; color: var(--color-text);">18 TB</span>
-          </div>
+          {status.map((row, i) => (
+            <div data-stat={row.key}
+                 style={`display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-display); font-size: 0.8rem; padding: 0.5rem 0;${i < status.length - 1 ? ' border-bottom: 1px solid var(--color-border);' : ''}`}>
+              <span style="font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.55; color: var(--color-text-soft);">{row.label}</span>
+              <span style="font-weight: 700; color: var(--color-text);">{row.value}</span>
+            </div>
+          ))}
         </div>
       </aside>
     </div>

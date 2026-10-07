@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 // Alle veröffentlichten Case Studies (Cortex/MCP-Stack 2026-10 entfernt, Cortex steht im Blogpost ki-setup-drei-anlaeufe).
-const SLUGS = ['mediastack', 'netzwerk-upgrade', 'firewall', 'ccna-lernplattform', 'dns-schulung'];
+const SLUGS = ['mediastack', 'netzwerk-upgrade', 'firewall', 'ccna-lernplattform', 'dns-schulung', 'mcp-proxmox'];
 const BASE = 'https://vugas.de';
 
 for (const slug of SLUGS) for (const prefix of ['', '/en']) {
