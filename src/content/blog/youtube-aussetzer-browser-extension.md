@@ -8,7 +8,7 @@ tags:
   - windows
   - powershell
   - networking
-draft: true
+draft: false
 ---
 
 Im Sommer hatte ich schon einmal mit YouTube-Aussetzern gekämpft. Damals waren es meine
