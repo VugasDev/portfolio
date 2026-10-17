@@ -98,3 +98,42 @@ for (const prefix of ['', '/en']) test(`Status-Panel ${prefix || '/'}: Zahlen en
   const gs = await page.locator(`main a[href^="${prefix}/guides/"]`).evaluateAll(els => new Set(els.map(e => e.getAttribute('href'))).size);
   expect(gs).toBe(guides);
 });
+
+const liveStats = (ageMs = 0) => ({
+  version: 1,
+  generated_at: new Date(Date.now() - ageMs).toISOString().replace(/\.\d+Z$/, 'Z'),
+  services: { up: 4, total: 4 },
+  guests: { running: 18, total: 22 },
+  storage: { used_bytes: 7.2e12, total_bytes: 18e12 },
+  uptime_seconds: 23 * 86400 + 5000,
+});
+
+for (const [prefix, tb] of [['', '7,2 / 18 TB'], ['/en', '7.2 / 18 TB']] as const) {
+  test(`Status-Panel ${prefix || '/'}: Live-Werte aus /api/stats`, async ({ page }) => {
+    await page.route('**/api/stats', r => r.fulfill({ json: liveStats() }));
+    await page.goto(prefix || '/');
+    const value = (key: string) => page.locator(`[data-stat="${key}"] [data-stat-value]`);
+    await expect(value('services')).toHaveText('4/4 online');
+    await expect(value('guests')).toHaveText('18 / 22');
+    await expect(value('storage')).toHaveText(tb);
+    await expect(value('uptime')).toHaveText('23 d');
+    await expect(page.locator('[data-stat-system]')).toHaveText('live');
+  });
+}
+
+for (const [name, handler] of [
+  ['Sammler nicht erreichbar', (r: any) => r.fulfill({ status: 503, json: { error: 'unavailable' } })],
+  ['Daten älter als zwei Stunden', (r: any) => r.fulfill({ json: liveStats(3 * 60 * 60 * 1000) })],
+  ['kaputte Antwort', (r: any) => r.fulfill({ body: 'kein json', contentType: 'application/json' })],
+] as const) {
+  test(`Status-Panel: ${name} → nur Build-Werte`, async ({ page }) => {
+    await page.route('**/api/stats', handler);
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    for (const key of ['services', 'guests', 'storage', 'uptime']) {
+      await expect(page.locator(`[data-stat="${key}"]`)).toBeHidden();
+    }
+    await expect(page.locator('[data-stat="projects"]')).toBeVisible();
+    await expect(page.locator('[data-stat-system]')).toHaveText('ready');
+  });
+}

@@ -37,6 +37,30 @@ server {
         add_header Cache-Control "no-cache";
     }
 
+    # Live-Kennzahlen fürs Status-Panel (BL-012): intern zum Sammler auf dem Status-Dashboard.
+    # Ziel kommt aus der Umgebungsvariable STATS_UPSTREAM (nginx-Template, beim Start ersetzt),
+    # damit keine interne Adresse im Repo steht. Fällt der Sammler aus, antwortet nginx mit 503
+    # und die Seite zeigt nur ihre Build-Werte.
+    location = /api/stats {
+        set $stats_upstream "${STATS_UPSTREAM}";
+        proxy_pass $stats_upstream;
+        proxy_connect_timeout 2s;
+        proxy_read_timeout 3s;
+        proxy_intercept_errors on;
+        error_page 400 403 404 500 502 503 504 = @stats_unavailable;
+        proxy_hide_header Content-Type;
+        proxy_hide_header Server;
+        add_header Content-Type "application/json" always;
+        add_header Cache-Control "public, max-age=60" always;
+        add_header X-Content-Type-Options "nosniff" always;
+    }
+
+    location @stats_unavailable {
+        default_type application/json;
+        add_header Cache-Control "no-store" always;
+        return 503 '{"error":"unavailable"}';
+    }
+
     # Unbekannte Pfade bekommen eine echte 404 (statt der Startseite mit Status 200),
     # unter /en/ die englische Fehlerseite.
     error_page 404 /404.html;

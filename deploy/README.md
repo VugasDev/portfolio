@@ -102,3 +102,21 @@ curl -s http://127.0.0.1:8087/status | jq .data.template.status   # -> "unlocked
 
 Sicherheit: `bw serve` lauscht nur auf `127.0.0.1` (keine API-Auth). Das Master-Passwort
 existiert ausschließlich in `/etc/portfolio/bw-master`; die Deploy-Scripts halten keine Secrets.
+
+## Live-Werte im Status-Panel (`/api/stats`, BL-012)
+
+Die Startseite holt im Browser `/api/stats`. nginx reicht die Anfrage intern an den Sammler
+`homelab-stats` auf dem Status-Dashboard weiter (Repo `status-dashboard`, Ordner
+`homelab-stats/`). Ohne erreichbaren Sammler antwortet nginx mit `503` und das Panel zeigt nur
+die Build-Werte.
+
+Das Ziel steht **nicht** im Repo, sondern in der Umgebungsvariable `STATS_UPSTREAM`
+(`nginx.conf.template`, beim Containerstart vom nginx-Image ersetzt):
+
+1. In Vaultwarden einen Eintrag `portfolio-STATS_UPSTREAM` anlegen, Passwortfeld z. B.
+   `http://<status-dashboard-ip>:9003/stats.json` (keine Zugangsdaten, nur die interne Adresse).
+2. `deploy/bw-sync-env.sh` übernimmt ihn als optionale Variable in die `.env`.
+3. `docker compose up -d portfolio` und prüfen: `curl -s https://vugas.de/api/stats`
+
+Fehlt der Eintrag, setzt Compose einen Platzhalter, der nie antwortet – die Seite funktioniert
+weiter, nur ohne Live-Zeilen.

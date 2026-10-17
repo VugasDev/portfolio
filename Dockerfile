@@ -11,5 +11,6 @@ RUN npm run build
 
 FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Template: das nginx-Image ersetzt beim Start ${STATS_UPSTREAM} aus der Umgebung
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 EXPOSE 80

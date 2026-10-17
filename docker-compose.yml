@@ -5,6 +5,9 @@ services:
     restart: unless-stopped
     ports:
       - "3010:80"
+    environment:
+      # Interne Adresse des homelab-stats-Sammlers (aus .env); ohne Wert antwortet /api/stats mit 503.
+      - STATS_UPSTREAM=${STATS_UPSTREAM:-http://127.0.0.1:9/stats.json}
 
   webhook:
     image: node:22-alpine     # nur Trigger schreiben; git macht der Host -> kein git/ssh nötig
