@@ -13,6 +13,8 @@ DRY_RUN=0
 if [ "${1:-}" = "--dry-run" ]; then DRY_RUN=1; fi
 
 VARS=(WEBHOOK_SECRET OAUTH_CLIENT_ID OAUTH_CLIENT_SECRET ORIGINS REDIRECT_URL)
+# Optional: fehlen sie in Bitwarden, wird die Zeile ausgelassen (Compose nutzt dann seinen Standard).
+OPTIONAL_VARS=(STATS_UPSTREAM)
 
 die() { echo "[bw-sync-env] FEHLER: $*" >&2; exit 1; }
 
@@ -46,6 +48,18 @@ for v in "${VARS[@]}"; do
   fi
 done
 
+for v in "${OPTIONAL_VARS[@]}"; do
+  resp="$(curl -fsS "$API/object/password/portfolio-$v" 2>/dev/null || true)"
+  val="$(printf '%s' "$resp" | jq -r 'select(.success == true) | .data // empty' 2>/dev/null || true)"
+  if [ -z "$val" ]; then
+    echo "[bw-sync-env] Hinweis: optionales 'portfolio-$v' nicht gesetzt – übersprungen" >&2
+  elif [ "$DRY_RUN" = "1" ]; then
+    echo "[bw-sync-env] OK: portfolio-$v (optional)"
+  else
+    LINES+=("$v=$val")
+  fi
+done
+
 if [ "$DRY_RUN" = "1" ]; then
   echo "[bw-sync-env] dry-run: alle ${#VARS[@]} Secrets vorhanden, nichts geschrieben."
   exit 0
@@ -57,4 +71,4 @@ tmp="$DEPLOY_DIR/.env.tmp.$$"
 ( umask 077; printf '%s\n' "${LINES[@]}" > "$tmp" )
 chmod 600 "$tmp"
 mv -f "$tmp" "$DEPLOY_DIR/.env"
-echo "[bw-sync-env] .env geschrieben ($DEPLOY_DIR/.env, ${#VARS[@]} Variablen)."
+echo "[bw-sync-env] .env geschrieben ($DEPLOY_DIR/.env, ${#LINES[@]} Variablen)."

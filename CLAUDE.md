@@ -13,7 +13,7 @@ Astro, TypeScript, Tailwind CSS, Docker, Docker Compose, Nginx, Node.js, Playwri
 - `webhook/` – Webhook-Handler für Auto-Deploy
 - `tests/` – Playwright-End-to-End-Tests
 - `docker-compose.yml` – Container-Definition
-- `nginx.conf` – Nginx-Reverse-Proxy-Konfiguration
+- `nginx.conf.template` – Nginx-Konfiguration (Template, `${STATS_UPSTREAM}` wird beim Containerstart ersetzt)
 - `docs/` – Projektdokumentation
 
 ## Zugriffe & Infrastruktur
